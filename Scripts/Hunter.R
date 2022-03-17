@@ -4,15 +4,12 @@
 #'     impact on ungulate abundance/behavior
 #'  Requires the functions from the 'Covariate Functions' Script
 
-setwd("G:/My Drive/1 Volunteers/Side projects for interns/Hunter-Cattle-Activity")
-
-
 #'  Packages
 library(data.table)
 
 
 #'  reading in human data
-human_data <- read.csv("FallHuman_detections_2022-03-15.csv")
+human_data <- read.csv("./Data/FallHuman_detections_2022-03-15.csv")
 
 
 #'  Splitting into other human activities
@@ -22,6 +19,10 @@ bow_data <- human_data[human_data$HumanActivity == "Hunter Bow",]
 vehicle_data <- human_data[human_data$Vehicle == T,]
 car_data <- human_data[human_data$HumanActivity == "Vehicle Truck Car",]
 atv_list <- human_data[human_data$HumanActivity == "Vehicle ATV",]
+
+
+source("./Scripts/Covariate Functions.R")
+
 
 
 # ALL HUNT ----------------------------------------------------------------
