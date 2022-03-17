@@ -2,24 +2,30 @@
 #'  Sarah Bassing Quantitative Ecology Lab
 #'  Functions to manipulate data sets used to assess correlation of covariates
 
+#'  ==========================
+#'  NOTES 
+#'  Currently using 5 minute interval to identify unique detection events
+#'  ==========================
+
 #' Required Packages -------------------------------------------------------
-library(dplyr) 
 library(lubridate)
 library(data.table)
+library(tidyverse)
+
 
 #' First Image from Unique Detections
 first_uniq <- function(data){  
   
   #'  Create a column identifying whether each image is an "independent" event
   use_data <- data %>%
-    arrange(CameraLocation, DateTime)
-  
+    arrange(CameraLocation, DateTime) 
+
   #'  Empty vector to be filled
   caps <- c()
-  
+
   #'  Fill first element of the vector to get it started (1st detection event)
   caps[1] <- 1
-  
+
   #'  Giant for loop to run through the rest of the dataset
   #'  1. If camera site is diff from previous row then give unique value. If not then...
   #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
@@ -29,12 +35,12 @@ first_uniq <- function(data){
     if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
     else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
           else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
-                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique 
+                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique
                 else caps[i] = caps[i-1]))
   } # close loop
-  #'  Format the caps vector as a factor  
+  #'  Format the caps vector as a factor
   caps <- as.factor(caps)
-  
+
   #'  Add new column to larger data set- this can then be filtered different ways to pull out specific observations for unique detection events
   capdata <- cbind(as.data.frame(use_data), caps)
   
@@ -55,14 +61,14 @@ max_uniq <- function(data){
   
   #'  Create a column identifying whether each image is an "independent" event
   use_data <- data %>%
-    arrange(CameraLocation, DateTime)
-  
+    arrange(CameraLocation, DateTime) 
+
   #'  Empty vector to be filled
   caps <- c()
-  
+
   #'  Fill first element of the vector to get it started (1st detection event)
   caps[1] <- 1
-  
+
   #'  Giant for loop to run through the rest of the dataset
   #'  1. If camera site is diff from previous row then give unique value. If not then...
   #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
@@ -72,12 +78,12 @@ max_uniq <- function(data){
     if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
     else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
           else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
-                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique 
+                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique
                 else caps[i] = caps[i-1]))
   } # close loop
-  #'  Format the caps vector as a factor  
+  #'  Format the caps vector as a factor
   caps <- as.factor(caps)
-  
+
   #'  Add new column to larger data set- this can then be filtered different ways to pull out specific observations for unique detection events
   capdata <- cbind(as.data.frame(use_data), caps)
   
@@ -96,18 +102,18 @@ max_uniq <- function(data){
 
 
 #' Unique Detections
-uniq <- function(data){  
-  
+uniq <- function(data){
+
   #'  Create a column identifying whether each image is an "independent" event
   use_data <- data %>%
-    arrange(CameraLocation, DateTime)
-  
+    arrange(CameraLocation, DateTime) 
+
   #'  Empty vector to be filled
   caps <- c()
-  
+
   #'  Fill first element of the vector to get it started (1st detection event)
   caps[1] <- 1
-  
+
   #'  Giant for loop to run through the rest of the dataset
   #'  1. If camera site is diff from previous row then give unique value. If not   #’  then...
   #'  2. If species detected is diff from previous row at same site then give unique #’  value. If not then...
@@ -117,15 +123,15 @@ uniq <- function(data){
     if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
     else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
           else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
-                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique 
+                             c("mins")) > 5) caps[i] = i        #change the number based on the time between detections that is unique
                 else caps[i] = caps[i-1]))
   } # close loop
-  #'  Format the caps vector as a factor  
+  #'  Format the caps vector as a factor
   caps <- as.factor(caps)
-  
+
   #'  Add new column to larger data set- this can then be filtered different ways #’  to pull out specific observations for unique detection events
   capdata <- cbind(as.data.frame(use_data), caps)
-  
+
   return(capdata)
 }
 
