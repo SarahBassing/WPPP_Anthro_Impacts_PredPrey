@@ -2,9 +2,6 @@
 #'  Sarah Bassing Quantitative Ecology Lab
 #'  Examining various possible covariate options for cattle grazing impact on ungulate abundance/behavior
 
-setwd("G:/My Drive/1 Volunteers/Side projects for interns/Hunter-Cattle-Activity") #Sarah
-setwd("C:/Users/billy/Desktop/Unprocessed Images/Hunter-Cattle Covariate Examination (R)") #Cameron
-
 
 #'  packages
 library(data.table) 
@@ -14,7 +11,7 @@ library(data.table)
 cow_data <- read.csv("")
 
 
-# ALL HUNT ----------------------------------------------------------------
+# CATTLE ----------------------------------------------------------------
 #' vector of which cameras will be included in the subset
 set.seed(7729) #seed for sampling Camera
 hunt_cam_subset <- sample(unique(hunter_data$CameraLocation), round(length(unique(hunter_data$CameraLocation))*.2))
