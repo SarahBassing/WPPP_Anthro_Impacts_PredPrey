@@ -53,7 +53,7 @@ first_uniq <- function(data){
   return(firstdetection)
 }
 
-
+test <- first_uniq(cow_data_subset)
 
 
 #' Max Count from Unique Detections

@@ -18,10 +18,11 @@ rifle_data <- human_data[human_data$HumanActivity == "Hunter Rifle",]
 bow_data <- human_data[human_data$HumanActivity == "Hunter Bow",]
 vehicle_data <- human_data[human_data$Vehicle == T,]
 car_data <- human_data[human_data$HumanActivity == "Vehicle Truck Car",]
-atv_list <- human_data[human_data$HumanActivity == "Vehicle ATV",]
-hike_list <- human_data[human_data$HumanActivity == "Hiker",]
+atv_data <- human_data[human_data$HumanActivity == "Vehicle ATV",]
+hike_data <- human_data[human_data$HumanActivity == "Hiker",]
 
 
+#' read in the functions that calculate the counts/duration for covariates
 source("./Scripts/Covariate Functions.R")
 
 
@@ -226,31 +227,33 @@ cor(day_atv_cor_df[3:6])
 # HIKER ----------------------------------------------------------------
 
 #' compiling the data for each covariate
-week_atv_cov1 <-  do.call(rbind, cov1(atv_data, "weeks", "human"))
-day_atv_cov1 <- do.call(rbind, cov1(atv_data, "days", "human"))
+week_hike_cov1 <-  do.call(rbind, cov1(hike_data, "weeks", "human"))
+day_hike_cov1 <- do.call(rbind, cov1(hike_data, "days", "human"))
 
-week_atv_cov2 <- do.call(rbind, cov2(atv_data, "weeks", "human"))
-day_atv_cov2 <- do.call(rbind, cov2(atv_data, "days", "human"))
+week_hike_cov2 <- do.call(rbind, cov2(hike_data, "weeks", "human"))
+day_hike_cov2 <- do.call(rbind, cov2(hike_data, "days", "human"))
 
-week_atv_cov3 <- do.call(rbind, cov3(atv_data, "weeks", "human"))
-day_atv_cov3 <- do.call(rbind, cov3(atv_data, "days", "human"))
+week_hike_cov3 <- do.call(rbind, cov3(hike_data, "weeks", "human"))
+day_hike_cov3 <- do.call(rbind, cov3(hike_data, "days", "human"))
 
-week_atv_cov4 <- do.call(rbind, cov4(atv_data, "weeks", "human"))
-day_atv_cov4 <- do.call(rbind, cov4(atv_data, "days", "human"))
+week_hike_cov4 <- do.call(rbind, cov4(hike_data, "weeks", "human"))
+day_hike_cov4 <- do.call(rbind, cov4(hike_data, "days", "human"))
 
 
 ## Pearson's Correlations --------------------------------------------------
 # creating dataframes with the Counts/Durations to be correlated
-week_atv_cor_df <- cbind(week_atv_cov1, week_atv_cov2$Count, week_atv_cov3$Count, week_atv_cov4$Duration)
-colnames(week_atv_cor_df) <- c("CameraLocation", "StartDate", "EndDate", "Cov1", "Cov2", "Cov3", "Cov4") 
-day_atv_cor_df <- cbind(day_atv_cov1, day_atv_cov2$Count, day_atv_cov3$Count, day_atv_cov4$Duration)
-colnames(day_atv_cor_df) <- c("CameraLocation", "Date", "Cov1", "Cov2", "Cov3", "Cov4") 
+week_hike_cor_df <- cbind(week_hike_cov1, week_hike_cov2$Count, week_hike_cov3$Count, week_hike_cov4$Duration)
+colnames(week_hike_cor_df) <- c("CameraLocation", "StartDate", "EndDate", "Cov1", "Cov2", "Cov3", "Cov4") 
+day_hike_cor_df <- cbind(day_hike_cov1, day_hike_cov2$Count, day_hike_cov3$Count, day_hike_cov4$Duration)
+colnames(day_hike_cor_df) <- c("CameraLocation", "Date", "Cov1", "Cov2", "Cov3", "Cov4") 
 
 # Weeks
-cor(week_atv_cor_df[,4:7])
-#cov2 and cov3 highly correlated (.99)
+cor(week_hike_cor_df[,4:7])
+#everything is super correlated (~.85)
 
 
 # Days
-cor(day_atv_cor_df[3:6])
-#cov2 and cov3 highly correlated (.99)
+cor(day_hike_cor_df[3:6])
+#cov1 and cov4 are super correlated (.93)
+#cov2 and cov3 are super correlated (.96)
+#cov4 is slight correlated to cov2/3 (.6/.7)

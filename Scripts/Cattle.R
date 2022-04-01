@@ -4,48 +4,62 @@
 
 
 #'  packages
-library(data.table) 
+library(data.table)
+library(tidyverse)
 
 
-#'  reading in human data
-cow_data <- read.csv("")
+
+#'  reading in cow data from multiple csv and combining them
+cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
+  lapply(read.csv) %>%
+  bind_rows()
+
+#' fixing date format and maknig sure DateTime column is filled for all images
+cow_data$Date <- dmy(cow_data$Date)
+cow_data$DateTime <- as.POSIXct(paste(cow_data$Date, cow_data$Time), format="%Y-%m-%d %H:%M:%S")
+
+#' pulling only cow data
+cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
+
+
+#' read in the functions that calculate the counts/duration for covariates
+source("./Scripts/Covariate Functions.R")
 
 
 # CATTLE ----------------------------------------------------------------
 #' vector of which cameras will be included in the subset
 set.seed(7729) #seed for sampling Camera
-hunt_cam_subset <- sample(unique(hunter_data$CameraLocation), round(length(unique(hunter_data$CameraLocation))*.2))
+cow_cam_subset <- sample(unique(cow_data$CameraLocation), round(length(unique(cow_data$CameraLocation))*.2))
 
-#' compiling the data for each covariate (ALL HUNT)
-week_hunt_cov1 <-  cov1(hunter_data, "weeks", "human")
-day_hunt_cov1 <- cov1(hunter_data, "days", "human")
-
-week_hunt_cov2 <- cov2(hunter_data, "weeks", "human")
-day_hunt_cov2 <- cov2(hunter_data, "days", "human")
-
-week_hunt_cov3 <- cov32(hunter_data, "weeks", "human")
-day_hunt_cov3 <- cov3(hunter_data, "days", "human")
-
-week_hunt_cov4 <- cov4(hunter_data, "weeks", "human")
-day_hunt_cov4 <- cov4(hunter_data, "days", "human")
+#' paring cow_data down to just the subsampled locations
+cow_data_subset <- subset(cow_data, cow_data$CameraLocation %in% cow_cam_subset)
 
 
-#' subsetting
-# Camera
-week_hunt_cov1_sub <- week_hunt_cov1[names(week_hunt_cov1) %in% hunt_cam_subset]
-week_hunt_cov2_sub <- week_hunt_cov2[names(week_hunt_cov2) %in% hunt_cam_subset]
-week_hunt_cov3_sub <- week_hunt_cov3[names(week_hunt_cov3) %in% hunt_cam_subset]
-week_hunt_cov4_sub <- week_hunt_cov4[names(week_hunt_cov4) %in% hunt_cam_subset]
-day_hunt_cov1_sub <- day_hunt_cov1[names(day_hunt_cov1) %in% hunt_cam_subset]
-day_hunt_cov2_sub <- day_hunt_cov2[names(day_hunt_cov2) %in% hunt_cam_subset]
-day_hunt_cov3_sub <- day_hunt_cov3[names(day_hunt_cov3) %in% hunt_cam_subset]
-day_hunt_cov4_sub <- day_hunt_cov4[names(day_hunt_cov4) %in% hunt_cam_subset]
-# Steps
-week_hunt_cov1_sub <- subsample_steps(week_hunt_cov1_sub, seed = 4971)
-week_hunt_cov2_sub <- subsample_steps(week_hunt_cov2_sub, seed = 4971)
-week_hunt_cov3_sub <- subsample_steps(week_hunt_cov3_sub, seed = 4971)
-week_hunt_cov4_sub <- subsample_steps(week_hunt_cov4_sub, seed = 4971)
-day_hunt_cov1_sub <- subsample_steps(day_hunt_cov1_sub, seed = 4971)
-day_hunt_cov2_sub <- subsample_steps(day_hunt_cov2_sub, seed = 4971)
-day_hunt_cov3_sub <- subsample_steps(day_hunt_cov3_sub, seed = 4971)
-day_hunt_cov4_sub <- subsample_steps(day_hunt_cov4_sub, seed = 4971)
+#' compiling the data for each covariate
+week_cow_cov1 <-  do.call(rbind, cov1(cow_data_subset, "weeks", "cow"))
+day_cow_cov1 <- do.call(rbind, cov1(cow_data_subset, "days", "cow"))
+
+week_cow_cov2 <- do.call(rbind, cov2(cow_data_subset, "weeks", "cow"))
+day_cow_cov2 <- do.call(rbind, cov2(cow_data_subset, "days", "cow"))
+
+week_cow_cov3 <- do.call(rbind, cov3(cow_data_subset, "weeks", "cow"))
+day_cow_cov3 <- do.call(rbind, cov3(cow_data_subset, "days", "cow"))
+
+week_cow_cov4 <- do.call(rbind, cov4(cow_data_subset, "weeks", "cow"))
+day_cow_cov4 <- do.call(rbind, cov4(cow_data_subset, "days", "cow"))
+
+
+# creating dataframes with the Counts/Durations to be correlated
+week_cow_cor_df <- cbind(week_cow_cov1, week_cow_cov2$Count, week_cow_cov3$Count, week_cow_cov4$Duration)
+colnames(week_cow_cor_df) <- c("CameraLocation", "StartDate", "EndDate", "Cov1", "Cov2", "Cov3", "Cov4") 
+day_cow_cor_df <- cbind(day_cow_cov1, day_cow_cov2$Count, day_cow_cov3$Count, day_cow_cov4$Duration)
+colnames(day_cow_cor_df) <- c("CameraLocation", "Date", "Cov1", "Cov2", "Cov3", "Cov4") 
+
+# Weeks
+cor(week_cow_cor_df[,4:7])
+#everything super correlated
+
+
+# Days
+cor(day_cow_cor_df[3:6])
+#everything super correlated
