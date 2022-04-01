@@ -14,7 +14,7 @@ cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", f
   lapply(read.csv) %>%
   bind_rows()
 
-#' fixing date format and maknig sure DateTime column is filled for all images
+#' fixing date format and making sure DateTime column is filled for all images
 cow_data$Date <- dmy(cow_data$Date)
 cow_data$DateTime <- as.POSIXct(paste(cow_data$Date, cow_data$Time), format="%Y-%m-%d %H:%M:%S")
 
@@ -28,25 +28,25 @@ source("./Scripts/Covariate Functions.R")
 
 # CATTLE ----------------------------------------------------------------
 #' vector of which cameras will be included in the subset
-set.seed(7729) #seed for sampling Camera
-cow_cam_subset <- sample(unique(cow_data$CameraLocation), round(length(unique(cow_data$CameraLocation))*.2))
+#set.seed(7729) #seed for sampling Camera
+#cow_cam_subset <- sample(unique(cow_data$CameraLocation), round(length(unique(cow_data$CameraLocation))*.2))
 
 #' paring cow_data down to just the subsampled locations
-cow_data_subset <- subset(cow_data, cow_data$CameraLocation %in% cow_cam_subset)
+#cow_data_subset <- subset(cow_data, cow_data$CameraLocation %in% cow_cam_subset)
 
 
 #' compiling the data for each covariate
-week_cow_cov1 <-  do.call(rbind, cov1(cow_data_subset, "weeks", "cow"))
-day_cow_cov1 <- do.call(rbind, cov1(cow_data_subset, "days", "cow"))
+week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
+day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
 
-week_cow_cov2 <- do.call(rbind, cov2(cow_data_subset, "weeks", "cow"))
-day_cow_cov2 <- do.call(rbind, cov2(cow_data_subset, "days", "cow"))
+week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow"))
+day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow"))
 
-week_cow_cov3 <- do.call(rbind, cov3(cow_data_subset, "weeks", "cow"))
-day_cow_cov3 <- do.call(rbind, cov3(cow_data_subset, "days", "cow"))
+week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow"))
+day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow"))
 
-week_cow_cov4 <- do.call(rbind, cov4(cow_data_subset, "weeks", "cow"))
-day_cow_cov4 <- do.call(rbind, cov4(cow_data_subset, "days", "cow"))
+week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow"))
+day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow"))
 
 
 # creating dataframes with the Counts/Durations to be correlated
