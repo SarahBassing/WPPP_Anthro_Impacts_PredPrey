@@ -431,7 +431,7 @@ cov4 <- function(data, time, interest){
 
 
 
-#' Covariate 5 -  Average Duration between Unique Detections in each Timestep (INCOMPLETE)
+#' Covariate 5 -  Time Between Unique Detection of Cattle and Detection of Prey Species (INCOMPLETE)
 # Careful with the input data set since the function will not discriminate by Species/HumanAct
 # time = "weeks", "days"
 # interest = "human", "cow"
