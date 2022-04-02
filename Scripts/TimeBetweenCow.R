@@ -16,8 +16,8 @@ data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.
 
 
 #'  fixing date format and making sure DateTime column is filled for all images
-data$Date <- dmy(cow_data$Date)
-data$DateTime <- as.POSIXct(paste(cow_data$Date, cow_data$Time), format="%Y-%m-%d %H:%M:%S")
+data$Date <- dmy(data$Date)
+data$DateTime <- as.POSIXct(paste(data$Date, data$Time), format="%Y-%m-%d %H:%M:%S")
 
 
 #'  read in the functions that calculate the counts/duration for covariates
@@ -34,12 +34,12 @@ first_rabbitspp <- first_uniq(data[data$Species == "Rabbit Spp",])
 first_unkdeer <- first_uniq(data[data$Species == "Unknown Deer",])
 
 #'  pulling last image in unique detections from cows
-last_cow <- cow_uniq(data[data$Species == "Cattle",])
+last_cow <- last_uniq(data[data$Species == "Cattle",])
 
 
 #'  combine dataframes from cow and prey
-detect_data <- do.call(rbind, list(first_wtd, first_mule, first_elk, first_moose, 
-                                   first_hare, first_rabbitspp, first_unkdeer, last_cow))
+detect_data <- as.data.frame(do.call(rbind, list(first_wtd, first_mule, first_elk, first_moose, 
+                                   first_hare, first_rabbitspp, first_unkdeer, last_cow)))
 
 
 #'  sorting by camera and date/time
@@ -50,7 +50,7 @@ detect_data <- arrange(detect_data, CameraLocation, DateTime)
 camera <- unique(detect_data$CameraLocation)
 for(i in 1:length(camera)){
   # selcting which camera to process
-  tmp_camera <- detect_data[detect_data$CameraLocation == camera[i]]
+  tmp_camera <- detect_data[detect_data$CameraLocation == camera[i],]
   
   MostRecentCow <- NA
   
@@ -65,12 +65,13 @@ for(i in 1:length(camera)){
     }
     
     # if the image is a prey species
-    if(tmp_image$Species != "Cattle"){
+    # suppressing a warning created by is.na() when MostRecentCow is a row and not NA
+    suppressWarnings(if(tmp_image$Species != "Cattle"){
       # marking TimeSinceCow as NA if there has not been a cow detected yet
       # **!!! change this if you want another indicator that a cow has not yet been detected!!!**
-      if(is.na(MostRecentCow) == TRUE){detect_data[j,]$TimeSinceCow <- NA}
+      if(is.na(MostRecentCow) == TRUE){detect_data$TimeSinceCow[j] <- NA}
       # calculating differences between prey detection and latest cow
-      else(detect_data[j,]$TimeSinceCow <- difftime(tmp_image$DateTime, MostRecentCow$DateTime, units="mins"))
-    }
+      else(detect_data$TimeSinceCow[j] <- difftime(tmp_image$DateTime, MostRecentCow$DateTime, units="mins"))
+    })
   }
 }
