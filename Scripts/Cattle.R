@@ -10,10 +10,11 @@
   #'  Notes:
   #'  Requires sourcing functions from the 'Covariate Functions.R' Script to calculate 
   #'  different covariate metrics:
-  #'    Covariate 1 - Raw Counts of Images in each time step of interest (daily/weekly)
-  #'    Covariate 2 - Number of Unique Detentions in each time step of interest
-  #'    Covariate 3 - Sum of Max Count from each Unique Detection in each time step 
-  #'    Covariate 4 - Number of Minutes of hunter activity in each time step of interest
+  #'    Covariate 1 - Sum of individual images in each time step of interest (daily/weekly)
+  #'    Covariate 2 - Sum of number of unique detention events in each time step
+  #'    Covariate 3 - Sum of maximum number of individuals detected in single 
+  #'    image per detection event in each time step
+  #'    Covariate 4 - Sum of minutes across unique detection events in each time step
   #'    Covariate 5 - Time Between Unique Detection of Cattle and Detection of Prey 
   #'    Species (INCOMPLETE)
   #'  ============================================================
@@ -35,7 +36,6 @@
   #' pulling only cow data
   cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
   
-  
   #' read in the functions that calculate the counts/duration for covariates
   source("./Scripts/Covariate Functions.R")
   
@@ -48,7 +48,7 @@
   #' paring cow_data down to just the subsampled locations
   #cow_data_subset <- subset(cow_data, cow_data$CameraLocation %in% cow_cam_subset)
   
-  
+  #' Based on random sample of cameras where individual cows were counted
   #' compiling the data for each covariate
   week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
   day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
@@ -81,5 +81,40 @@
   # Days
   cor(day_cow_cor_df[3:6])
   # everything highly correlated (r = 0.89 - 0.95)
+  
+  
+  
+  
+  ####  ALL CATTLE DETECTIONS ####
+  #'  ----------------------------
+  
+  #'  Read in all detection data
+  det <- read.csv("./Data/Bassing_AllDetections18-21_2022-04-03.csv")
+  moo <- det %>%
+    filter(Species == "Cattle") 
+  
+  #' compiling the data for each covariate
+  week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow"))
+  day_cow_npix <- do.call(rbind, cov1(moo, "days", "cow"))
+  
+  week_cow_ndet <- do.call(rbind, cov2(moo, "weeks", "cow"))
+  day_cow_ndet <- do.call(rbind, cov2(moo, "days", "cow"))
+  
+  week_cow_nmax <- do.call(rbind, cov3(moo, "weeks", "cow"))
+  day_cow_nmax <- do.call(rbind, cov3(moo, "days", "cow"))
+  
+  week_cow_ntime <- do.call(rbind, cov4(moo, "weeks", "cow"))
+  day_cow_ntime <- do.call(rbind, cov4(moo, "days", "cow"))
+  
+  
+  # creating dataframes with the Counts/Durations to be correlated
+  week_cow_df <- cbind(week_cow_npix, week_cow_ndet$Count, week_cow_nmax$Count, 
+                       week_cow_ntime$Duration)
+  colnames(week_cow_df) <- c("CameraLocation", "StartDate", "EndDate", "n_images", 
+                             "n_detections", "n_cow_max", "n_minutes") 
+  day_cow_df <- cbind(day_cow_npix, day_cow_ndet$Count, day_cow_nmax$Count, 
+                      day_cow_ntime$Duration)
+  colnames(day_cow_df) <- c("CameraLocation", "Date", "n_images", "n_detections", 
+                            "n_cow_max", "n_minutes") 
   
   
