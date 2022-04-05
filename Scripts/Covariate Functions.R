@@ -182,7 +182,7 @@ uniq <- function(data){
 
 
 
-#' Covariate 1 - Raw Counts of Images in each Timestep
+#' Covariate 1 - Sum of individual images in each time step of interest (daily/weekly)
 # Careful with the input data set since the function will not discriminate by Species/HumanAct
 # time = "weeks", "days"
 # interest = "human", "cow"
@@ -223,7 +223,7 @@ cov1 <- function(data, time, interest){
                                              Count = 0)}
     if(time == "days"){tmp_df <- data.frame(CameraLocation = locations[i], Date = time_seq , Count = 0)}
     
-    #loop to calculate raw count per timestep
+    # loop to sum total number of images per time step
     for(j in 1:(length(time_seq)-1)){
       
       tmp_df[j, "Count"] <- nrow(tmp_data[as.Date(tmp_data$DateTime) >= as.Date(time_seq[j]) 
@@ -238,17 +238,19 @@ cov1 <- function(data, time, interest){
 
 
 
-#' Covariate 2 -  Number of Unique Detentions in each Timestep
+#' Covariate 2 -  Sum number of unique detention events in each time step
 # Careful with the input data set since the function will not discriminate by Species/HumanAct
 # time = "weeks", "days"
 # interest = "human", "cow"
 cov2 <- function(data, time, interest){
   
+  #'  Retain first image from each unique detection
   first_uniq_data <- first_uniq(data)
   
+  #'  Identify unique camera location names
   locations <- unique(first_uniq_data$CameraLocation)
   
-  #' creating list that will be filled for each camera
+  #' Create list that will be filled for each camera
   cov2_list <- vector("list", length = length(locations))
   names(cov2_list) <- locations
   
@@ -282,7 +284,7 @@ cov2 <- function(data, time, interest){
                                              Count = 0)}
     if(time == "days"){tmp_df <- data.frame(CameraLocation = locations[i],Date = time_seq , Count = 0)}
     
-    #loop to calculate raw count per timestep
+    # loop to sum total number of unique detection events per time step
     for(j in 1:(length(time_seq)-1)){
       
       tmp_df[j, "Count"] <- nrow(tmp_data[as.Date(tmp_data$DateTime) >= as.Date(time_seq[j]) 
@@ -297,12 +299,15 @@ cov2 <- function(data, time, interest){
 
 
 
-#' Covariate 3 -  Sum of Max Count from each Unique Detection in each Timestep
+#' Covariate 3 -  Sum of maximum number of individuals detected in single image 
+#'                from each unique detection event in each time step
 # Careful with the input data set since the function will not discriminate by Species/HumanAct
 # time = "weeks", "days"
 # interest = "human", "cow"
 cov3 <- function(data, time, interest){
   
+  #'  Retain maximum number of individuals counted within a single image from each 
+  #'  unique detection  
   max_uniq_data <- max_uniq(data)
   
   locations <- unique(max_uniq_data$CameraLocation)
@@ -341,7 +346,8 @@ cov3 <- function(data, time, interest){
                                              Count = 0)}
     if(time == "days"){tmp_df <- data.frame(CameraLocation = locations[i],Date = time_seq , Count = 0)}
     
-    #loop to calculate raw count per timestep
+    # loop to sum maximum number of individuals detected in a single image during 
+    # each unique detection event per time step
     for(j in 1:(length(time_seq)-1)){
 
       tmp_df[j, "Count"]  <- sum(tmp_data[as.Date(tmp_data$DateTime) >= as.Date(time_seq[j]) 
@@ -354,14 +360,13 @@ cov3 <- function(data, time, interest){
 
 
 
-
-
-#' Covariate 4 -  Number of Minutes in each Timestep
+#' Covariate 4 -  Sum of minutes across unique detection events in each time step
 # Careful with the input data set since the function will not discriminate by Species/HumanAct
 # time = "weeks", "days"
 # interest = "human", "cow"
 cov4 <- function(data, time, interest){
   
+  #'  Calculate amount of time that passes during each unique detection event
   uniq_data <- uniq(data)
   
   locations <- unique(uniq_data$CameraLocation)
@@ -409,7 +414,7 @@ cov4 <- function(data, time, interest){
       detections <- as.vector(unique(tmp_timestep$caps))
       tmp_duration <- vector()
       
-      #if there are no detection in the timestep set duration to 0
+      #if there are no detection in the time step set duration to 0
       if(nrow(tmp_timestep) != 0){
         for(k in 1:length(detections)){
           
@@ -418,6 +423,7 @@ cov4 <- function(data, time, interest){
           #can change time metric
           tmp_duration[k] <- as.numeric(difftime(tmp_detection[nrow(tmp_detection),]$DateTime, tmp_detection[1,]$DateTime, units="secs"))
         }
+        #'  Sum amount of time passed within each detection event
         tmp_df[j, "Duration"] <- sum(tmp_duration)
       } else(tmp_df[j, "Duration"] <- 0)
 
