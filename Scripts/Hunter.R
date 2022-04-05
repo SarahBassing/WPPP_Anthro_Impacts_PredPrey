@@ -10,10 +10,11 @@
   #'  Notes:
   #'  Requires sourcing functions from the 'Covariate Functions.R' Script to calculate 
   #'  different covariate metrics:
-  #'    Covariate 1 - Raw Counts of Images in each time step of interest (daily/weekly)
-  #'    Covariate 2 - Number of Unique Detentions in each time step of interest
-  #'    Covariate 3 - Sum of Max Count from each Unique Detection in each time step 
-  #'    Covariate 4 - Number of Minutes of hunter activity in each time step of interest
+  #'    Covariate 1 - Sum of individual images in each time step of interest (daily/weekly)
+  #'    Covariate 2 - Sum of number of unique detention events in each time step
+  #'    Covariate 3 - Sum of maximum number of individuals detected in single 
+  #'    image per detection event in each time step
+  #'    Covariate 4 - Sum of minutes across unique detection events in each time step
   #'  ============================================================
   
   #'  Packages
