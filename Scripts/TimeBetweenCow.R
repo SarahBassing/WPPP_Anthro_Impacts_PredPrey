@@ -12,7 +12,8 @@ library(tidyverse)
 #'  reading in cow data from multiple csv and combining them
 data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
   lapply(read.csv) %>%
-  bind_rows()
+  bind_rows() %>%
+  dplyr::select(-X)
 
 
 #'  fixing date format and making sure DateTime column is filled for all images
@@ -49,7 +50,7 @@ detect_data <- arrange(detect_data, CameraLocation, DateTime)
 #'  loop calculating the time between the most recent cow detection and prey detection
 camera <- unique(detect_data$CameraLocation)
 for(i in 1:length(camera)){
-  # selcting which camera to process
+  # selecting which camera to process
   tmp_camera <- detect_data[detect_data$CameraLocation == camera[i],]
   
   MostRecentCow <- NA
