@@ -15,8 +15,6 @@
   #'    Covariate 3 - Sum of maximum number of individuals detected in single 
   #'    image per detection event in each time step
   #'    Covariate 4 - Sum of minutes across unique detection events in each time step
-  #'    Covariate 5 - Time Between Unique Detection of Cattle and Detection of Prey 
-  #'    Species (INCOMPLETE)
   #'  ============================================================
   
   #'  packages
