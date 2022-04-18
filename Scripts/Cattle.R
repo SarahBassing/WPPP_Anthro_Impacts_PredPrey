@@ -12,15 +12,14 @@
   #'  different covariate metrics:
   #'    Covariate 1 - Sum of individual images in each time step of interest (daily/weekly)
   #'    Covariate 2 - Sum of number of unique detention events in each time step
-  #'    Covariate 3 - Sum of maximum number of individuals detected in single 
+  #'    Covariate 3 - Sum of maximum number of individuals detected in a single 
   #'    image per detection event in each time step
   #'    Covariate 4 - Sum of minutes across unique detection events in each time step
-  #'    Covariate 5 - Time Between Unique Detection of Cattle and Detection of Prey 
-  #'    Species (INCOMPLETE)
   #'  ============================================================
   
   #'  packages
   library(data.table)
+  library(lubridate)
   library(tidyverse)
   
   #'  reading in cow data from multiple csv and combining them
@@ -53,37 +52,44 @@
   week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
   day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
   
-  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow"))
-  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow"))
+  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow", m = 30))
+  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow", m = 30))
   
-  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow"))
-  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow"))
+  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow", m = 30))
+  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow", m = 30))
   
-  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow"))
-  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow"))
-  
-  # week_cow_cov5 <- do.call(rbind, cov5(cow_data, "weeks", "cow"))
-  # day_cow_cov5 <- do.call(rbind, cov5(cow_data, "days", "cow"))
+  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow", m = 30))
+  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow", m = 30))
   
   
   # creating dataframes with the Counts/Durations to be correlated
-  week_cow_cor_df <- cbind(week_cow_cov1, week_cow_cov2$Count, week_cow_cov3$Count, 
+  week_cow_cor_df <- cbind(week_cow_cov1, week_cow_cov2$n_Detections, week_cow_cov3$Count, 
                            week_cow_cov4$Duration)
   colnames(week_cow_cor_df) <- c("CameraLocation", "StartDate", "EndDate", 
-                                 "Cov1", "Cov2", "Cov3", "Cov4") 
-  day_cow_cor_df <- cbind(day_cow_cov1, day_cow_cov2$Count, day_cow_cov3$Count, 
+                                 "Cov1_n_Images", "Cov2_n_Detections", 
+                                 "Cov3_max_Individuals", "Cov4_Duration") 
+  day_cow_cor_df <- cbind(day_cow_cov1, day_cow_cov2$n_Detections, day_cow_cov3$Count, 
                           day_cow_cov4$Duration)
-  colnames(day_cow_cor_df) <- c("CameraLocation", "Date", "Cov1", "Cov2", "Cov3", 
-                                "Cov4") 
+  colnames(day_cow_cor_df) <- c("CameraLocation", "Date", "Cov1_n_Images", 
+                                "Cov2_n_Detections", "Cov3_max_Individuals", 
+                                "Cov4_Duration") 
   
   # Weeks
-  cor(week_cow_cor_df[,4:7])
-  # everything is highly correlated (r = 0.95 - 0.98)
+  cor(week_cow_cor_df[,4:7]) 
+  # m = 5 minutes: r = 0.95 - 0.98 (everything is highly correlated)
+  # m = 10 minutes: r = 0.92 - 0.98
+  # m = 30 minutes: r = 0.89 - 0.97
+  # m = 60 minutes: r = 0.81 - 0.96
+  # correlation declines slowly as m increases for weekly cattle grazing activity
   
   
   # Days
   cor(day_cow_cor_df[3:6])
-  # everything highly correlated (r = 0.89 - 0.95)
+  # m = 5 minutes: r = 0.89 - 0.95 (everything highly correlated)
+  # m = 10 minutes: r = 0.84 - 0.95
+  # m = 30 minutes: r = 0.74 - 0.92
+  # m = 60 minutes: r = 0.68 - 0.91
+  # correlation declines noticeably as m increases for daily cattle grazing activity
   
   
   
@@ -97,17 +103,17 @@
     filter(Species == "Cattle") 
   
   #' compiling the data for each covariate
-  week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow"))
-  day_cow_npix <- do.call(rbind, cov1(moo, "days", "cow"))
+  week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow", m = 5))
+  day_cow_npix <- do.call(rbind, cov1(moo, "days", "cow", m = 5))
   
-  week_cow_ndet <- do.call(rbind, cov2(moo, "weeks", "cow"))
-  day_cow_ndet <- do.call(rbind, cov2(moo, "days", "cow"))
+  week_cow_ndet <- do.call(rbind, cov2(moo, "weeks", "cow", m = 5))
+  day_cow_ndet <- do.call(rbind, cov2(moo, "days", "cow", m = 5))
   
-  week_cow_nmax <- do.call(rbind, cov3(moo, "weeks", "cow"))
-  day_cow_nmax <- do.call(rbind, cov3(moo, "days", "cow"))
+  week_cow_nmax <- do.call(rbind, cov3(moo, "weeks", "cow", m = 5))
+  day_cow_nmax <- do.call(rbind, cov3(moo, "days", "cow", m = 5))
   
-  week_cow_ntime <- do.call(rbind, cov4(moo, "weeks", "cow"))
-  day_cow_ntime <- do.call(rbind, cov4(moo, "days", "cow"))
+  week_cow_ntime <- do.call(rbind, cov4(moo, "weeks", "cow", m = 5))
+  day_cow_ntime <- do.call(rbind, cov4(moo, "days", "cow", m = 5))
   
   
   # Create data frames with the sums/times
