@@ -24,11 +24,9 @@
   
   #'  reading in complete cow dataset
   cow_data <- read.csv("./Data/All_cattle_detections.csv")
-  
-
-# -------------------------------------------------------------------------
 
   
+# Decommissioned code to pull and combine multiple camera csv  -------------
   #'  reading in cow data from multiple csv and combining them
   #cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
     #lapply(read.csv) %>%
@@ -41,13 +39,13 @@
   
   #' pulling only cow data
   #cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
+
+# -------------------------------------------------------------------------
+
   
   #' read in the functions that calculate the counts/duration for covariates
   source("./Scripts/Covariate Functions.R")
   
-
-# -------------------------------------------------------------------------
-
   
   # CATTLE ----------------------------------------------------------------
   #' vector of which cameras will be included in the subset
@@ -167,5 +165,4 @@
   #                     day_cow_ntime$Duration)
   # colnames(day_cow_df) <- c("CameraLocation", "Date", "n_images", "n_detections", 
   #                           "n_cow_max", "n_minutes") 
-  
   
