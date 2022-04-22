@@ -52,14 +52,14 @@
   week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
   day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
   
-  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow", m = 30))
-  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow", m = 30))
+  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow", m = 5))
+  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow", m = 5))
   
-  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow", m = 30))
-  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow", m = 30))
+  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow", m = 5))
+  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow", m = 5))
   
-  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow", m = 30))
-  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow", m = 30))
+  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow", m = 5))
+  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow", m = 5))
   
   
   # creating dataframes with the Counts/Durations to be correlated
@@ -98,13 +98,20 @@
   #'  ----------------------------
   
   #'  Read in all detection data
-  det <- read.csv("./Data/Bassing_AllDetections18-21_2022-04-03.csv")
-  moo <- det %>%
+  # det <- read.csv("./Data/Bassing_AllDetections18-21_2022-04-03.csv")
+  megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>% 
+    dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation", 
+                  "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle", 
+                  "Species", "HumanActivity", "Count") %>%
+    filter(!grepl("Moultrie", CameraLocation))
+  moo <- megadata %>%
     filter(Species == "Cattle") 
   
+  # write.csv(moo, "./Data/All_cattle_detections.csv")
+  
   #' compiling the data for each covariate
-  week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow", m = 5))
-  day_cow_npix <- do.call(rbind, cov1(moo, "days", "cow", m = 5))
+  week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow"))
+  day_cow_npix <- do.call(rbind, cov1(moo, "days", "cow"))
   
   week_cow_ndet <- do.call(rbind, cov2(moo, "weeks", "cow", m = 5))
   day_cow_ndet <- do.call(rbind, cov2(moo, "days", "cow", m = 5))
@@ -122,9 +129,24 @@
     full_join(week_cow_nmax, by = c("CameraLocation", "StartDate", "EndDate")) %>%
     full_join(week_cow_ntime, by = c("CameraLocation", "StartDate", "EndDate"))
   day_cow_df <- day_cow_npix %>%
-    full_join(day_cow_ndet, by = c("CameraLocation", "StartDate", "EndDate")) %>%
-    full_join(day_cow_nmax, by = c("CameraLocation", "StartDate", "EndDate")) %>%
-    full_join(day_cow_ntime, by = c("CameraLocation", "StartDate", "EndDate"))
+    full_join(day_cow_ndet, by = c("CameraLocation", "Date")) %>%
+    full_join(day_cow_nmax, by = c("CameraLocation", "Date")) %>%
+    full_join(day_cow_ntime, by = c("CameraLocation", "Date"))
+  
+  #'  Save
+  write.csv(week_cow_df, file = "./Outputs/CamTrap_Activity/weekly_cattle_activity.csv")
+  write.csv(day_cow_df, file = "./Outputs/CamTrap_Activity/daily_cattle_activity.csv")
+  
+  
+  #'  Check correlation among variables for all cameras
+  #'  Remember max_individuals does not include real counts so this metric is not
+  #'  very useful
+  #'  Weeks
+  cor(week_cow_cor_df[,4:7]) 
+  #'  Days
+  cor(day_cow_cor_df[3:6])
+  
+  
   
   
   # week_cow_df <- cbind(week_cow_npix, week_cow_ndet$Count, week_cow_nmax$Count, 
