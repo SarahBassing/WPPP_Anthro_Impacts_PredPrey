@@ -39,7 +39,7 @@
   
   #' pulling only cow data
   #cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
-
+  
 # -------------------------------------------------------------------------
 
   
