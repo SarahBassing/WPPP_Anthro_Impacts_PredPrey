@@ -22,6 +22,9 @@
   library(lubridate)
   library(tidyverse)
   
+  #'  reading in complete cow dataset
+  cow_data <- read.csv("./Data/All_cattle_detections.csv")
+  
   #'  reading in cow data from multiple csv and combining them
   cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
     lapply(read.csv) %>%
