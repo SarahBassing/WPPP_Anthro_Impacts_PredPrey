@@ -207,16 +207,26 @@
       tmp_data <- data[data$CameraLocation == locations[i],]
       
       #creating a fixed time sequence depending on 'interest'
+      #requiring a check to see if last row in tmp_data has the same year as first row
+      #if the data runs past a year, will add extra rows to account for another year
       year <- year(tmp_data[1,]$Date)
+      year_check <- year(tmp_data[nrow(tmp_data),]$Date)
       if(interest == "human"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-30")), by=time)}
-        else(time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
+        else(time_seq <- time_seq, seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
+      if(year != year_check & interest == "human"){
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-30")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-31")), by=time)))}
+      
       
       if(interest == "cow"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-11-04")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-10-31")), by=time))}
+      if(year != year_check & interest == "cow"){
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-11-04")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-10-31")), by=time)))}
       
-      
+        
       #temporary data frame to put
       #if statements for difference in data frame setup between days and weeks
       if(time == "weeks"){tmp_df <- data.frame(CameraLocation = locations[i],
