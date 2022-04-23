@@ -49,6 +49,8 @@
   
   #' finding unique detections
   cow_data <- uniq(cow_data, 5)
+  #uniq_df <- write.csv(cow_data, "./Data/uniq_detections.csv")
+  #cow_data <- read.csv("./Data/uniq_detections.csv")
   
   
   # CATTLE ----------------------------------------------------------------
