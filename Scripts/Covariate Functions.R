@@ -227,7 +227,9 @@
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
-      tmp_data <- data[data$CameraLocation == locations[i],]
+      tmp_data <- data[data$CameraLocation == locations[i],] %>%
+        arrange(CameraLocation, DateTime)
+        
       
       #creating a fixed time sequence depending on 'interest'
       #requiring a check to see if last row in tmp_data has the same year as first row
@@ -249,7 +251,6 @@
         if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
         else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
       
-        
       #temporary data frame to put
       #if statements for difference in data frame setup between days and weeks
       if(time == "weeks"){tmp_df <- data.frame(CameraLocation = locations[i],
@@ -322,7 +323,6 @@
       if(year != year(year_check) & interest == "cow"){
         if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
         else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
-      
       
       
       #temporary data frame to put
