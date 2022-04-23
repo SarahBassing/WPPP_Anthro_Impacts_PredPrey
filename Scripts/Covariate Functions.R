@@ -283,8 +283,11 @@
   #'  m = interval used to define unique detection event
   cov2 <- function(data, time, interest, m){
     
-    #'  Retain first image from each unique detection
-    first_uniq_data <- first_uniq(data, m)
+    #'  Filter unique detections to pull out the first image of every detection event
+    first_uniq_data <- data %>% 
+      group_by(caps) %>% 
+      slice(1L) %>%
+      ungroup()
     
     #'  Identify unique camera location names
     locations <- unique(first_uniq_data$CameraLocation)
@@ -359,10 +362,14 @@
   #'  m = interval used to define unique detection event
   cov3 <- function(data, time, interest, m){
     
-    #'  Retain maximum number of individuals counted within a single image from each 
-    #'  unique detection  
-    max_uniq_data <- max_uniq(data, m)
+    # Filter unique detections to pull out the max count from every detection event
+    max_uniq_data <- data %>% 
+      group_by(caps) %>% 
+      slice_max(Count) %>%
+      slice_head(n=1) %>%
+      ungroup()
     
+    #'  Identify unique camera location names
     locations <- unique(max_uniq_data$CameraLocation)
     
     #' creating list that will be filled for each camera
@@ -436,9 +443,9 @@
   #'  m = interval used to define unique detection event
   cov4 <- function(data, time, interest, m){
     
-    #'  Calculate amount of time that passes during each unique detection event
-    uniq_data <- uniq(data, m)
+    uniq_data <- data
     
+    #'  Identify unique camera location names
     locations <- unique(uniq_data$CameraLocation)
     
     #' creating list that will be filled for each camera
