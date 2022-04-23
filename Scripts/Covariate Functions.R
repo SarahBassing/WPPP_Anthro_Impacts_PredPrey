@@ -211,7 +211,8 @@
   #'  interest = "human", "cow"
   cov1 <- function(data, time, interest){
     
-    locations <- 1
+    #'  Identify unique camera location names
+    locations <- unique(data$CameraLocation)
     
     #' creating list that will be filled for each camera
     cov1_list <- vector("list", length = length(locations))
@@ -222,7 +223,7 @@
     #'  each data frames has the raw count in each timestep
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
-    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Calculating covariate 1 values" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -296,7 +297,7 @@
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
     #'  each data frames has the raw count in each timestep
-    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Calculating covariate 2 values" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -373,7 +374,7 @@
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
     #'  each data frames has the raw count in each timestep
-    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Calculating covariate 3 values" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -450,7 +451,7 @@
     #'  2(j). goes trough each timestep
     #'  3(k). goes through each unique detection calculating the durations
     #'  each data frames has the raw count in each timestep
-    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Calculating covariate 4 values" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
