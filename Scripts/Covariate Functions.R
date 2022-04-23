@@ -284,10 +284,13 @@
   cov2 <- function(data, time, interest, m){
     
     #'  Filter unique detections to pull out the first image of every detection event
+    #'  FOR COW: Using output of uniq function as input 
+    #'  FOR HUNT: Using first_uniq function
+    if(interest == "cow"){
     first_uniq_data <- data %>% 
       group_by(caps) %>% 
       slice(1L) %>%
-      ungroup()
+      ungroup()} else(first_uniq_data <- uniq_first(data, m))
     
     #'  Identify unique camera location names
     locations <- unique(first_uniq_data$CameraLocation)
@@ -362,12 +365,16 @@
   #'  m = interval used to define unique detection event
   cov3 <- function(data, time, interest, m){
     
-    # Filter unique detections to pull out the max count from every detection event
-    max_uniq_data <- data %>% 
-      group_by(caps) %>% 
-      slice_max(Count) %>%
-      slice_head(n=1) %>%
-      ungroup()
+    #'  Filter unique detections to pull out the max count from every detection event
+    #'  FOR COW: Using output of uniq function as input 
+    #'  FOR HUNT: Using first_uniq function
+    if(interest == "cow"){
+      max_uniq_data <- data %>% 
+        group_by(caps) %>% 
+        slice_max(Count) %>%
+        slice_head(n=1) %>%
+        ungroup()} else(max_uniq_data <- max_uniq(data, m))
+
     
     #'  Identify unique camera location names
     locations <- unique(max_uniq_data$CameraLocation)
@@ -443,7 +450,11 @@
   #'  m = interval used to define unique detection event
   cov4 <- function(data, time, interest, m){
     
-    uniq_data <- data
+    #'  FOR COW: Using output of uniq function as input 
+    #'  FOR HUNT: Using first_uniq function
+    if(interest == "cow"){
+      uniq_data <- data} else(uniq_data <- uniq(data, m))
+
     
     #'  Identify unique camera location names
     locations <- unique(uniq_data$CameraLocation)
