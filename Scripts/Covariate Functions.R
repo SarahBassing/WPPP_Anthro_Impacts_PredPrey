@@ -217,16 +217,16 @@
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-30")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
       if(year_check > paste0(year+1,"-7-31") & interest == "human"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-30")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-30")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-31")), by=time)))}
       
       
       if(interest == "cow"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-11-04")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-10-31")), by=time))}
       if(year != year(year_check) & interest == "cow"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-11-04")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-10-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
       
         
       #temporary data frame to put
@@ -291,16 +291,16 @@
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-30")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
       if(year_check > paste0(year+1,"-7-31") & interest == "human"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-30")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-30")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-31")), by=time)))}
       
       
       if(interest == "cow"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-11-04")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-10-31")), by=time))}
       if(year != year(year_check) & interest == "cow"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-11-04")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-10-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
       
       
       
@@ -368,16 +368,16 @@
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-30")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
       if(year_check > paste0(year+1,"-7-31") & interest == "human"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-30")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-30")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-31")), by=time)))}
       
       
       if(interest == "cow"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-11-04")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-10-31")), by=time))}
       if(year != year(year_check) & interest == "cow"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-11-04")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-10-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
       
       
       
@@ -413,7 +413,6 @@
   #'  time = "weeks", "days"
   #'  interest = "human", "cow"
   #'  m = interval used to define unique detection event
-  progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
   cov4 <- function(data, time, interest, m){
     
     #'  Calculate amount of time that passes during each unique detection event
@@ -431,6 +430,7 @@
     #'  2(j). goes trough each timestep
     #'  3(k). goes through each unique detection calculating the durations
     #'  each data frames has the raw count in each timestep
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -445,16 +445,16 @@
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-30")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-8-01")), to=as.Date(paste0(year+1,"-1-31")), by=time))}
       if(year_check > paste0(year+1,"-7-31") & interest == "human"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-30")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-8-01")), to=as.Date(paste0(year_check+1,"-1-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-30")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-8-01")), to=as.Date(paste0(year(year_check)+1,"-1-31")), by=time)))}
       
       
       if(interest == "cow"){
         if(time == "weeks"){time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-11-04")), by=time)}
         else(time_seq <- seq(from=as.Date(paste0(year,"-4-01")), to=as.Date(paste0(year,"-10-31")), by=time))}
       if(year != year(year_check) & interest == "cow"){
-        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-11-04")), by=time))}
-        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year_check,"-4-01")), to=as.Date(paste0(year_check,"-10-31")), by=time)))}
+        if(time == "weeks"){time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-11-04")), by=time))}
+        else(time_seq <- c(time_seq, seq(from=as.Date(paste0(year(year_check),"-4-01")), to=as.Date(paste0(year(year_check),"-10-31")), by=time)))}
       
       
       
