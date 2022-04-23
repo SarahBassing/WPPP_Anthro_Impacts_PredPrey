@@ -64,14 +64,14 @@
   week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
   day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
   
-  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow", m = 5))
-  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow", m = 5))
+  week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow"))
+  day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow"))
   
-  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow", m = 5))
-  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow", m = 5))
+  week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow"))
+  day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow"))
   
-  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow", m = 5))
-  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow", m = 5))
+  week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow"))
+  day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow"))
   
   
   # creating dataframes with the Counts/Durations to be correlated
