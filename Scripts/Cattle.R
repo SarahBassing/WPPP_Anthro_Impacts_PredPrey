@@ -45,6 +45,10 @@
   
   #' read in the functions that calculate the counts/duration for covariates
   source("./Scripts/Covariate Functions.R")
+
+  
+  #' finding unique detections
+  cow_data <- uniq(cow_data, 5)
   
   
   # CATTLE ----------------------------------------------------------------
