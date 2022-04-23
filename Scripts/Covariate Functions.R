@@ -14,6 +14,7 @@
   library(lubridate)
   library(data.table)
   library(tidyverse)
+  library(progress)
   
   
   ####  Functions to identify different types of detections  ####
@@ -201,6 +202,7 @@
     #'  each data frames has the raw count in each timestep
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -242,7 +244,12 @@
                                             & as.Date(tmp_data$DateTime) < as.Date(time_seq[j+1]),])
       }
       cov1_list[[i]] <- tmp_df
+      
+      #progress bar tick
+      all.pb$tick()
     }
+    all.pb$close
+    
     return(cov1_list)
   }
   
@@ -269,6 +276,7 @@
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
     #'  each data frames has the raw count in each timestep
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -311,7 +319,12 @@
                                             & as.Date(tmp_data$DateTime) < as.Date(time_seq[j+1]),])
       }
       cov2_list[[i]] <- tmp_df
+      
+      #progress bar tick
+      all.pb$tick()
     }
+    all.pb$close
+    
     return(cov2_list)
   }
   
@@ -340,6 +353,7 @@
     #'  1(i). goes through each camera location 
     #'  2(j). goes trough each timestep
     #'  each data frames has the raw count in each timestep
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
     for(i in 1:length(locations)){
       
       #temporary data set for camera location i
@@ -383,7 +397,12 @@
                                             & as.Date(tmp_data$DateTime) < as.Date(time_seq[j+1]),]$Count)
       }
       cov3_list[[i]] <- tmp_df
+      
+      #progress bar tick
+      all.pb$tick()
     }
+    all.pb$close
+    
     return(cov3_list)
   }
   
@@ -394,6 +413,7 @@
   #'  time = "weeks", "days"
   #'  interest = "human", "cow"
   #'  m = interval used to define unique detection event
+  progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Complete in ~ :eta" , total = length(locations))
   cov4 <- function(data, time, interest, m){
     
     #'  Calculate amount of time that passes during each unique detection event
@@ -469,7 +489,12 @@
   
       }
       cov4_list[[i]] <- tmp_df
+      
+      #progress bar tick
+      all.pb$tick()
     }
+    all.pb$close
+    
     return(cov4_list)
   }
 
