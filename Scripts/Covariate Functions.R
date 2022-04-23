@@ -38,13 +38,18 @@
     #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
     #'  3. If DateTime is >m min from previous DateTime at same site for same species then give unique value. If not then...
     #'  4. Capture value is the same as that in the previous row
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Setting unique detections" , total = nrow(data)-1)
     for (i in 2:nrow(data)){
       if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
       else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
             else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
                                c("mins")) > m) caps[i] = i        
                   else caps[i] = caps[i-1]))
+      
+      #progress bar tick
+      progbar$tick()
     } # close loop
+    progbar$close
     #'  Format the caps vector as a factor
     caps <- as.factor(caps)
   
@@ -79,13 +84,18 @@
     #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
     #'  3. If DateTime is >m min from previous DateTime at same site for same species then give unique value. If not then...
     #'  4. Capture value is the same as that in the previous row
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Setting unique detections" , total = nrow(data)-1)
     for (i in 2:nrow(data)){
       if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
       else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
             else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
                                c("mins")) > m) caps[i] = i        
                   else caps[i] = caps[i-1]))
+      
+      #progress bar tick
+      progbar$tick()
     } # close loop
+    progbar$close
     #'  Format the caps vector as a factor
     caps <- as.factor(caps)
     
@@ -120,13 +130,18 @@
     #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
     #'  3. If DateTime is >m min from previous DateTime at same site for same species then give unique value. If not then...
     #'  4. Capture value is the same as that in the previous row
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Setting unique detections" , total = nrow(data)-1)
     for (i in 2:nrow(use_data)){
       if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
       else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
             else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
                                c("mins")) > m) caps[i] = i        
                   else caps[i] = caps[i-1]))
+      
+      #progress bar tick
+      progbar$tick()
     } # close loop
+    progbar$close
     #'  Format the caps vector as a factor
     caps <- as.factor(caps)
   
@@ -162,13 +177,18 @@
     #'  2. If species detected is diff from previous row at same site then give unique value. If not then...
     #'  3. If DateTime is >m min from previous DateTime at same site for same species then give unique value. If not then...
     #'  4. Capture value is the same as that in the previous row
+    progbar <- progress_bar$new(format = "[:bar] :percent in :elapsedfull. Setting unique detections" , total = nrow(data)-1)
     for (i in 2:nrow(use_data)){
       if (use_data$CameraLocation[i-1] != use_data$CameraLocation[i]) caps[i] = i
       else (if (use_data$Species[i-1] != use_data$Species[i]) caps[i] = i
             else (if (difftime(use_data$DateTime[i], use_data$DateTime[i-1], units =
                                c("mins")) > m) caps[i] = i        
                   else caps[i] = caps[i-1]))
+      
+      #progress bar tick
+      progbar$tick()
     } # close loop
+    progbar$close
     #'  Format the caps vector as a factor
     caps <- as.factor(caps)
   
@@ -191,7 +211,7 @@
   #'  interest = "human", "cow"
   cov1 <- function(data, time, interest){
     
-    locations <- unique(data$CameraLocation)
+    locations <- 1
     
     #' creating list that will be filled for each camera
     cov1_list <- vector("list", length = length(locations))
