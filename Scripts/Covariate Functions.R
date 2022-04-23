@@ -246,9 +246,9 @@
       cov1_list[[i]] <- tmp_df
       
       #progress bar tick
-      all.pb$tick()
+      progbar$tick()
     }
-    all.pb$close
+    progbar$close
     
     return(cov1_list)
   }
@@ -321,9 +321,9 @@
       cov2_list[[i]] <- tmp_df
       
       #progress bar tick
-      all.pb$tick()
+      progbar$tick()
     }
-    all.pb$close
+    progbar$close
     
     return(cov2_list)
   }
@@ -399,9 +399,9 @@
       cov3_list[[i]] <- tmp_df
       
       #progress bar tick
-      all.pb$tick()
+      progbar$tick()
     }
-    all.pb$close
+    progbar$close
     
     return(cov3_list)
   }
@@ -491,9 +491,9 @@
       cov4_list[[i]] <- tmp_df
       
       #progress bar tick
-      all.pb$tick()
+      progbar$tick()
     }
-    all.pb$close
+    progbar$close
     
     return(cov4_list)
   }
