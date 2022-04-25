@@ -4,10 +4,16 @@
   #'  Quantitative Ecology Lab
   #'  March 2022
   #'  ============================================================
-  #'  Script examining possible cattle grazing activity metrics from camera trap 
+  #'  Script examines & generates cattle grazing activity metrics from camera  
   #'  data on public lands to use as covariates representing impact of grazing 
-  #'  activity on wildlife occurrence & activity patterns.
-  #'  Notes:
+  #'  activity on wildlife occurrence & activity patterns. Goal is to determine 
+  #'  which activity metrics are most correlated with the actual count of cattle 
+  #'  detected in each image within a given time period. Therefore, comparing 
+  #'  the sum of the maximum number of uniquely identifiable individuals per 
+  #'  detection event, i.e., covariate #3 - the maximum number of cows in a single 
+  #'  image, to other detection metrics. Then generates these metrics for entire
+  #'  data set.
+  #'  
   #'  Requires sourcing functions from the 'Covariate Functions.R' Script to calculate 
   #'  different covariate metrics:
   #'    Covariate 1 - Sum of individual images in each time step of interest (daily/weekly)
@@ -17,66 +23,69 @@
   #'    Covariate 4 - Sum of minutes across unique detection events in each time step
   #'  ============================================================
   
-  #'  packages
+  #'  Load packages
   library(data.table)
   library(lubridate)
   library(tidyverse)
   
-  #'  reading in complete cow dataset
+  #'  Source functions that calculate the counts/duration for covariates
+  source("./Scripts/Covariate Functions.R")
+  
+  #'  Read in complete cow dataset
+  # megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>%
+  #   dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation",
+  #                 "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle",
+  #                 "Species", "HumanActivity", "Count") %>%
+  #   filter(!grepl("Moultrie", CameraLocation))
+  # moo <- megadata %>%
+  #   filter(Species == "Cattle")
+  # write.csv(moo, "./Data/All_cattle_detections.csv")
   cow_data <- read.csv("./Data/All_cattle_detections.csv")
 
-  
-# Decommissioned code to pull and combine multiple camera csv  -------------
-  #'  reading in cow data from multiple csv and combining them
-  #cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
-    #lapply(read.csv) %>%
-    #bind_rows() %>%
-    #dplyr::select(-X)
-  
-  #' fixing date format and making sure DateTime column is filled for all images
-  #cow_data$Date <- dmy(cow_data$Date)
-  #cow_data$DateTime <- as.POSIXct(paste(cow_data$Date, cow_data$Time), format="%Y-%m-%d %H:%M:%S")
-  
-  #' pulling only cow data
-  #cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
-  
-# -------------------------------------------------------------------------
-
-  
-  #' read in the functions that calculate the counts/duration for covariates
-  source("./Scripts/Covariate Functions.R")
-
-  
-  #' finding unique detections
+  #'  Identify unique detection events
   cow_data <- uniq(cow_data, 5)
-  #uniq_df <- write.csv(cow_data, "./Data/uniq_detections.csv")
-  #cow_data <- read.csv("./Data/uniq_detections.csv")
+  # uniq_df <- write.csv(cow_data, "./Data/uniq_detections.csv")
+  cow_data <- read.csv("./Data/uniq_detections.csv")
+  moo <- cow_data
   
   
-  # CATTLE ----------------------------------------------------------------
-  #' vector of which cameras will be included in the subset
-  #set.seed(7729) #seed for sampling Camera
-  #cow_cam_subset <- sample(unique(cow_data$CameraLocation), round(length(unique(cow_data$CameraLocation))*.2))
+  ####  Correlation test among cow count data & other activity metrics  ####  
+  #'  ------------------------------------------------------------------
   
-  #' paring cow_data down to just the subsampled locations
-  #cow_data_subset <- subset(cow_data, cow_data$CameraLocation %in% cow_cam_subset)
+  #'  Read in cow data from multiple csv and combining them
+  #'  These data include actual counts of each cow detected in an image
+  cow_data <- list.files(path = "./Data/Cow count csv files", pattern = "*.csv", full.names = T) %>%
+    lapply(read.csv) %>%
+    bind_rows() %>%
+    dplyr::select(-X)
+
+  #'  Fix date format and make sure DateTime column is filled for all images
+  cow_data$Date <- dmy(cow_data$Date)
+  cow_data$DateTime <- as.POSIXct(paste(cow_data$Date, cow_data$Time), format="%Y-%m-%d %H:%M:%S")
+
+  #'  Pull only cow data
+  cow_data <- as.data.frame(cow_data[cow_data$Species == "Cattle",])
   
-  #' Based on random sample of cameras where individual cows were counted
-  #' compiling the data for each covariate
+  #'  Generate cattle activity metrics using 4 methods
+  #'  1. Number of cattle images per week (or day)
   week_cow_cov1 <-  do.call(rbind, cov1(cow_data, "weeks", "cow"))
   day_cow_cov1 <- do.call(rbind, cov1(cow_data, "days", "cow"))
   
+  #'  2. Number of unique detections per week (or day)
   week_cow_cov2 <- do.call(rbind, cov2(cow_data, "weeks", "cow"))
   day_cow_cov2 <- do.call(rbind, cov2(cow_data, "days", "cow"))
   
+  #'  3. Maximum number of cows detected in a single image per detection event
+  #'  per week (or day)
   week_cow_cov3 <- do.call(rbind, cov3(cow_data, "weeks", "cow"))
   day_cow_cov3 <- do.call(rbind, cov3(cow_data, "days", "cow"))
   
+  #'  4. Amount of time cattle spent in front of camera per week (or day)
   week_cow_cov4 <- do.call(rbind, cov4(cow_data, "weeks", "cow"))
   day_cow_cov4 <- do.call(rbind, cov4(cow_data, "days", "cow"))
   
   
-  # creating dataframes with the Counts/Durations to be correlated
+  #'  Create dfs with the Counts/Durations
   week_cow_cor_df <- cbind(week_cow_cov1, week_cow_cov2$n_Detections, week_cow_cov3$Count, 
                            week_cow_cov4$Duration)
   colnames(week_cow_cor_df) <- c("CameraLocation", "StartDate", "EndDate", 
@@ -88,40 +97,44 @@
                                 "Cov2_n_Detections", "Cov3_max_Individuals", 
                                 "Cov4_Duration") 
   
-  # Weeks
+  #'  Run correlation test among four metrics
+  #'  Weekly cattle activity
   cor(week_cow_cor_df[,4:7]) 
-  # m = 5 minutes: r = 0.95 - 0.98 (everything is highly correlated)
-  # m = 10 minutes: r = 0.92 - 0.98
-  # m = 30 minutes: r = 0.89 - 0.97
-  # m = 60 minutes: r = 0.81 - 0.96
-  # correlation declines slowly as m increases for weekly cattle grazing activity
+  #'  m = 5 minutes: r = 0.95 - 0.98 (everything is highly correlated)
+  #'  m = 10 minutes: r = 0.92 - 0.98
+  #'  m = 30 minutes: r = 0.89 - 0.97
+  #'  m = 60 minutes: r = 0.81 - 0.96
+  #'  Correlation declines slowly as m increases for weekly cattle grazing activity
   
   
-  # Days
+  #'  Daily cattle activity
   cor(day_cow_cor_df[3:6])
-  # m = 5 minutes: r = 0.89 - 0.95 (everything highly correlated)
-  # m = 10 minutes: r = 0.84 - 0.95
-  # m = 30 minutes: r = 0.74 - 0.92
-  # m = 60 minutes: r = 0.68 - 0.91
-  # correlation declines noticeably as m increases for daily cattle grazing activity
+  #'  m = 5 minutes: r = 0.89 - 0.95 (everything highly correlated)
+  #'  m = 10 minutes: r = 0.84 - 0.95
+  #'  m = 30 minutes: r = 0.74 - 0.92
+  #'  m = 60 minutes: r = 0.68 - 0.91
+  #'  Correlation declines noticeably as m increases for daily cattle grazing activity
   
   
   
   
-  ####  ALL CATTLE DETECTIONS ####
-  #'  ----------------------------
+  ####  Generate cattle metrics for ALL cattle detections ####
+  #'  ----------------------------------------------------
   
-  #'  Read in all detection data
-  # det <- read.csv("./Data/Bassing_AllDetections18-21_2022-04-03.csv")
-  megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>% 
-    dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation", 
-                  "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle", 
-                  "Species", "HumanActivity", "Count") %>%
-    filter(!grepl("Moultrie", CameraLocation))
-  moo <- megadata %>%
-    filter(Species == "Cattle") 
+  #' #'  Read in all detection data
+  #' megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>%
+  #'   dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation",
+  #'                 "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle",
+  #'                 "Species", "HumanActivity", "Count") %>%
+  #'   filter(!grepl("Moultrie", CameraLocation))
+  #' moo <- megadata %>%
+  #'   filter(Species == "Cattle")
+  #' write.csv(moo, "./Data/All_cattle_detections.csv")
   
-  # write.csv(moo, "./Data/All_cattle_detections.csv")
+  #'  Data already run through first_uniq function to identify detection events
+  #'  This speeds up the code below
+  cow_data <- read.csv("./Data/uniq_detections.csv")
+  moo <- cow_data
   
   #' compiling the data for each covariate
   week_cow_npix <-  do.call(rbind, cov1(moo, "weeks", "cow"))
