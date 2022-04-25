@@ -284,13 +284,14 @@
   cov2 <- function(data, time, interest, m){
     
     #'  Filter unique detections to pull out the first image of every detection event
-    #'  FOR COW: Using output of uniq function as input 
+    #'  FOR COW: Using output of uniq function as input
     #'  FOR HUNT: Using first_uniq function
     if(interest == "cow"){
-    first_uniq_data <- data %>% 
-      group_by(caps) %>% 
+    first_uniq_data <- data %>%
+      group_by(caps) %>%
       slice(1L) %>%
-      ungroup()} else(first_uniq_data <- uniq_first(data, m))
+      ungroup()} else(first_uniq_data <- first_uniq(data, m))
+    # first_uniq_data <- first_uniq(data, m)
     
     #'  Identify unique camera location names
     locations <- unique(first_uniq_data$CameraLocation)
