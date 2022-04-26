@@ -174,14 +174,3 @@
   cor(day_cow_cor_df[3:6])
   
   
-  
-  
-  # week_cow_df <- cbind(week_cow_npix, week_cow_ndet$Count, week_cow_nmax$Count, 
-  #                      week_cow_ntime$Duration)
-  # colnames(week_cow_df) <- c("CameraLocation", "StartDate", "EndDate", "n_images", 
-  #                            "n_detections", "n_cow_max", "n_minutes") 
-  # day_cow_df <- cbind(day_cow_npix, day_cow_ndet$Count, day_cow_nmax$Count, 
-  #                     day_cow_ntime$Duration)
-  # colnames(day_cow_df) <- c("CameraLocation", "Date", "n_images", "n_detections", 
-  #                           "n_cow_max", "n_minutes") 
-  
