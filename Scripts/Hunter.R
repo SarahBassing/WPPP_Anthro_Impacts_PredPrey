@@ -21,7 +21,7 @@
   library(data.table)
   
   
-  #'  reading in human data
+  #'  Read in human data
   human_data <- read.csv("./Data/FallHuman_detections_2022-03-15.csv")
   
   
@@ -39,8 +39,131 @@
   source("./Scripts/Covariate Functions.R")
   
   
+  #' #'  Identify unique detection events
+  #' hunter_data <- uniq(hunter_data, 5)
+  #' rifle_data <- uniq(rifle_data, 5)
+  #' bow_data <- uniq(bow_data, 5)
+  #' vehicle_data <- uniq(vehicle_data, 5)
+  #' car_data <- uniq(car_data, 5)
+  #' atv_data <- uniq(atv_data, 5)
+  #' hike_data <- uniq(hike_data, 5)
+
   
-  #' ALL HUNT ----------------------------------------------------------------
+  
+  ####  Generate hunter metrics for ALL hunter detections ####
+  
+  #'  All hunters on-foot
+  #'  --------------------
+  #'  1. Number of hunter images per week (or day)
+  week_hunt_npix <-  do.call(rbind, cov1(hunter_data, "weeks", "human"))
+  day_hunt_npix <- do.call(rbind, cov1(hunter_data, "days", "human"))
+  
+  #'  2. Number of unique detections per week (or day)
+  week_hunt_ndet <- do.call(rbind, cov2(hunter_data, "weeks", "human", m = 5))
+  day_hunt_ndet <- do.call(rbind, cov2(hunter_data, "days", "human", m = 5))
+  
+  #'  3. Maximum number of hunters detected in a single image per detection event
+  #'  per week (or day)
+  week_hunt_nmax <- do.call(rbind, cov3(hunter_data, "weeks", "human", m = 5))
+  day_hunt_nmax <- do.call(rbind, cov3(hunter_data, "days", "human", m = 5))
+  
+  #'  4. Amount of time hunters spent in front of camera per week (or day)
+  week_hunt_ntime <- do.call(rbind, cov4(hunter_data, "weeks", "human", m = 5))
+  day_hunt_ntime <- do.call(rbind, cov4(hunter_data, "days", "human", m = 5))
+  
+  #'  Create data frames with the sums/times
+  week_hunt_df <- week_hunt_npix %>%
+    full_join(week_hunt_ndet, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_hunt_nmax, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_hunt_ntime, by = c("CameraLocation", "StartDate", "EndDate"))
+  day_hunt_df <- day_hunt_npix %>%
+    full_join(day_hunt_ndet, by = c("CameraLocation", "Date")) %>%
+    full_join(day_hunt_nmax, by = c("CameraLocation", "Date")) %>%
+    full_join(day_hunt_ntime, by = c("CameraLocation", "Date"))
+  
+  #'  Save
+  write.csv(week_hunt_df, file = "./Outputs/CamTrap_Activity/weekly_hunter_activity.csv")
+  write.csv(day_hunt_df, file = "./Outputs/CamTrap_Activity/daily_hunter_activity.csv")
+  
+  #'  Check correlation among variables for all cameras
+  #'  Weeks
+  cor(week_hunt_df[,4:7])
+  #'  Days
+  cor(day_hunt_df[3:6])
+  
+  
+  #'  Rifle hunters only
+  #'  -------------------
+  #'  1. Number of rifle hunter images per week (or day)
+  week_rifle_npix <-  do.call(rbind, cov1(rifle_data, "weeks", "human"))
+  day_rifle_npix <- do.call(rbind, cov1(rifle_data, "days", "human"))
+  
+  #'  2. Number of unique detections per week (or day)
+  week_rifle_ndet <- do.call(rbind, cov2(rifle_data, "weeks", "human", m = 5))
+  day_rifle_ndet <- do.call(rbind, cov2(rifle_data, "days", "human", m = 5))
+  
+  #'  3. Maximum number of rifle hunters detected in a single image per detection 
+  #'  event per week (or day)
+  week_rifle_nmax <- do.call(rbind, cov3(rifle_data, "weeks", "human", m = 5))
+  day_rifle_nmax <- do.call(rbind, cov3(rifle_data, "days", "human", m = 5))
+  
+  #'  4. Amount of time rifle hunters spent in front of camera per week (or day)
+  week_rifle_ntime <- do.call(rbind, cov4(rifle_data, "weeks", "human", m = 5))
+  day_rifle_ntime <- do.call(rbind, cov4(rifle_data, "days", "human", m = 5))
+  
+  #'  Create data frames with the sums/times
+  week_rifle_df <- week_rifle_npix %>%
+    full_join(week_rifle_ndet, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_rifle_nmax, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_rifle_ntime, by = c("CameraLocation", "StartDate", "EndDate"))
+  day_rifle_df <- day_rifle_npix %>%
+    full_join(day_rifle_ndet, by = c("CameraLocation", "Date")) %>%
+    full_join(day_rifle_nmax, by = c("CameraLocation", "Date")) %>%
+    full_join(day_rifle_ntime, by = c("CameraLocation", "Date"))
+  
+  #'  Save
+  write.csv(week_rifle_df, file = "./Outputs/CamTrap_Activity/weekly_rifle_hunter_activity.csv")
+  write.csv(day_rifle_df, file = "./Outputs/CamTrap_Activity/daily_rifle_hunter_activity.csv")
+  
+  
+  #'  Vehicles only
+  #'  -------------
+  #'  1. Number of car/truck images per week (or day)
+  week_truck_npix <-  do.call(rbind, cov1(car_data, "weeks", "human"))
+  day_truck_npix <- do.call(rbind, cov1(car_data, "days", "human"))
+  
+  #'  2. Number of unique detections per week (or day)
+  week_truck_ndet <- do.call(rbind, cov2(car_data, "weeks", "human", m = 5))
+  day_truck_ndet <- do.call(rbind, cov2(car_data, "days", "human", m = 5))
+  
+  #'  3. Maximum number of car/truck detected in a single image per detection 
+  #'  event per week (or day)
+  week_truck_nmax <- do.call(rbind, cov3(car_data, "weeks", "human", m = 5))
+  day_truck_nmax <- do.call(rbind, cov3(car_data, "days", "human", m = 5))
+  
+  #'  4. Amount of time car/truck spent in front of camera per week (or day)
+  week_truck_ntime <- do.call(rbind, cov4(car_data, "weeks", "human", m = 5))
+  day_truck_ntime <- do.call(rbind, cov4(car_data, "days", "human", m = 5))
+  
+  #'  Create data frames with the sums/times
+  week_truck_df <- week_truck_npix %>%
+    full_join(week_truck_ndet, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_truck_nmax, by = c("CameraLocation", "StartDate", "EndDate")) %>%
+    full_join(week_truck_ntime, by = c("CameraLocation", "StartDate", "EndDate"))
+  day_truck_df <- day_truck_npix %>%
+    full_join(day_truck_ndet, by = c("CameraLocation", "Date")) %>%
+    full_join(day_truck_nmax, by = c("CameraLocation", "Date")) %>%
+    full_join(day_truck_ntime, by = c("CameraLocation", "Date"))
+  
+  #'  Save
+  write.csv(week_truck_df, file = "./Outputs/CamTrap_Activity/weekly_truck_activity.csv")
+  write.csv(day_truck_df, file = "./Outputs/CamTrap_Activity/daily_truck_activity.csv")
+  
+  
+  
+  
+  ####  Correlation test among cow count data & other activity metrics  ####  
+  #### ALL HUNTERS ON FOOT ---------------------------------------------
   #' Rifle and bow hunters combined
   
   #' compiling the data for each covariate (ALL HUNT)
@@ -84,7 +207,7 @@
   # m = 30 minutes: cov1, cov2, cov3 all highly correlated (r = 0.80 - 0.94)
   #                 cov4 least correlated (r = 0.39 - 0.59)
   
-  # RIFLE HUNT --------------------------------------------------------------
+  #### RIFLE HUNT --------------------------------------------------------
   
   #' compiling the data for each covariate (RIFLE HUNT)
   week_rifle_cov1 <-  do.call(rbind, cov1(rifle_data, "weeks", "human"))
@@ -124,7 +247,7 @@
   #cov4 is most correlated with cov1 (0.67), much lower with other covs (~0.47)
   
   
-  # BOW HUNT ----------------------------------------------------------------
+  #### BOW HUNT -----------------------------------------------------------
   
   #' compiling the data for each covariate (BOW HUNT)
   week_bow_cov1 <-  do.call(rbind, cov1(bow_data, "weeks", "human"))
@@ -162,7 +285,7 @@
   # everything is highly correlated (r = 0.80 - 0.95)
   
   
-  # VEHICLES ----------------------------------------------------------------
+  #### VEHICLES ----------------------------------------------------------
   #' This is done with Vehicle = T, so includes trucks, ATVs, dirt bikes, & snowmobiles
   
   #' compiling the data for each covariate
@@ -201,7 +324,7 @@
   # everything is highly correlated (r = 0.69 - 0.99)
   
   
-  # CARS ----------------------------------------------------------------
+  #### CARS ------------------------------------------------------------
   #'  Truck/cars only!
   
   #' compiling the data for each covariate
@@ -240,7 +363,7 @@
   # everything is highly correlated (r = 0.71 - 0.99)
   
   
-  # ATV ----------------------------------------------------------------
+  #### ATV --------------------------------------------------------------
   
   #' compiling the data for each covariate
   week_atv_cov1 <-  do.call(rbind, cov1(atv_data, "weeks", "human"))
@@ -282,7 +405,7 @@
   # cov1 not correlated with cov2, cov3, or cov4 (r = 0.39 - 0.58)
   
   
-  # HIKER ----------------------------------------------------------------
+  #### HIKER -----------------------------------------------------------
   
   #' compiling the data for each covariate
   week_hike_cov1 <-  do.call(rbind, cov1(hike_data, "weeks", "human"))
