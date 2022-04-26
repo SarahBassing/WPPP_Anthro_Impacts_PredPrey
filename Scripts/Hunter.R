@@ -159,7 +159,11 @@
   write.csv(week_truck_df, file = "./Outputs/CamTrap_Activity/weekly_truck_activity.csv")
   write.csv(day_truck_df, file = "./Outputs/CamTrap_Activity/daily_truck_activity.csv")
   
-  
+  #'  Check correlation among variables for all cameras
+  #'  Weeks
+  cor(week_truck_df[,4:7])
+  #'  Days
+  cor(day_truck_df[3:6])
   
   
   ####  Correlation test among cow count data & other activity metrics  ####  
