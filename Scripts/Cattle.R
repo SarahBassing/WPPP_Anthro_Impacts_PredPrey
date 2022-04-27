@@ -32,19 +32,19 @@
   source("./Scripts/Covariate Functions.R")
   
   #'  Read in complete cow dataset
-  # megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>%
-  #   dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation",
-  #                 "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle",
-  #                 "Species", "HumanActivity", "Count") %>%
-  #   filter(!grepl("Moultrie", CameraLocation))
-  # moo <- megadata %>%
-  #   filter(Species == "Cattle")
-  # write.csv(moo, "./Data/All_cattle_detections.csv")
-  cow_data <- read.csv("./Data/All_cattle_detections.csv")
-
-  #'  Identify unique detection events
-  cow_data <- uniq(cow_data, 5)
-  # uniq_df <- write.csv(cow_data, "./Data/uniq_detections.csv")
+  #' megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-27.csv") %>% #2022-04-14
+  #'   dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation",
+  #'                 "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle",
+  #'                 "Species", "HumanActivity", "Count") %>%
+  #'   filter(!grepl("Moultrie", CameraLocation))
+  #' moo <- megadata %>%
+  #'   filter(Species == "Cattle")
+  #' write.csv(moo, "./Data/All_cattle_detections.csv")
+  #' cow_data <- read.csv("./Data/All_cattle_detections.csv")
+  #' 
+  #' #'  Identify unique detection events
+  #' cow_data <- uniq(cow_data, 5)
+  #' uniq_df <- write.csv(cow_data, "./Data/uniq_detections.csv")
   cow_data <- read.csv("./Data/uniq_detections.csv")
   moo <- cow_data
   
@@ -166,11 +166,11 @@
   
   
   #'  Check correlation among variables for all cameras
-  #'  Remember max_individuals does not include real counts so this metric is not
-  #'  very useful
+  #'  Remember max_individuals does not include real counts so correlations with
+  #'  this variable are meaningless
   #'  Weeks
-  cor(week_cow_cor_df[,4:7]) 
+  cor(week_cow_df[,4:7]) 
   #'  Days
-  cor(day_cow_cor_df[3:6])
+  cor(day_cow_df[3:6])
   
   
