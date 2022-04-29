@@ -272,12 +272,17 @@
   #'  Note: grazing DH for grazing season vs hunter & vehicle DHs for hunting season
   
   ####  CATTLE  ####
+  #'  Survey-level covariate for grazing season only
   cattle_graze18 <- DH_counts(cattle2018, "Grazing", "2018-07-01")
   DH_cattle_graze18 <- cattle_graze18[[1]][1:125,1:13]   
   cattle_graze19 <- DH_counts(cattle2019, "Grazing", "2019-07-01")
   DH_cattle_graze19 <- cattle_graze19[[1]][126:242,1:13] 
   cattle_graze20 <- DH_counts(cattle2020, "Grazing", "2020-07-01")
   DH_cattle_graze20 <- cattle_graze20[[1]][243:361,1:13] 
+  
+  DH_cattle_graze1820 <- rbind(DH_cattle_graze18, DH_cattle_graze19, DH_cattle_graze20)
+  DH_cattle_graze1820_NE <- DH_cattle_graze1820[grepl("NE", row.names(DH_cattle_graze1820)),]
+  DH_cattle_graze1820_OK <- DH_cattle_graze1820[grepl("OK", row.names(DH_cattle_graze1820)),]
   
   #'  Generate site-level measure of grazing activity for each camera by summing
   #'  number of cattle detections across entire study period
@@ -291,12 +296,17 @@
 
   
   ####  ALL HUNTERS ON-FOOT  ####
+  #'  Survey-level covariate for hunting season only
   all_hunt18 <- DH_counts(hunters2018, "Bow_Rifle_Hunting", "2018-10-01")
   DH_all_hunt18 <- all_hunt18[[1]][1:125,1:8]  
   all_hunt19 <- DH_counts(hunters2019, "Bow_Rifle_Hunting", "2019-10-01")
   DH_all_hunt19 <- all_hunt19[[1]][126:242,1:8] 
   all_hunt20 <- DH_counts(hunters2020, "Bow_Rifle_Hunting", "2020-10-01")
   DH_all_hunt20 <- all_hunt20[[1]][243:361,1:8]
+  
+  DH_all_hunt1820 <- rbind(DH_all_hunt18, DH_all_hunt19, DH_all_hunt20)
+  DH_all_hunt1820_NE <- DH_all_hunt1820[grepl("NE", row.names(DH_all_hunt1820)),]
+  DH_all_hunt1820_OK <- DH_all_hunt1820[grepl("OK", row.names(DH_all_hunt1820)),]
   
   #'  Generate site-level measure of hunting activity for each camera by summing
   #'  number of hunter detections across entire study period
@@ -310,12 +320,17 @@
   
   
   ####  VEHICLE TRAFFIC  ####
+  #'  Survey-level covariate for hunting season only
   vehicle18 <- DH_counts(hunters2018, "Vehicle_traffic", "2018-10-01")
   DH_vehicle18 <- vehicle18[[1]][1:125,1:8]  
   vehicle19 <- DH_counts(hunters2019, "Vehicle_traffic", "2019-10-01")
   DH_vehicle19 <- vehicle19[[1]][126:242,1:8] 
   vehicle20 <- DH_counts(hunters2020, "Vehicle_traffic", "2020-10-01")
   DH_vehicle20 <- vehicle20[[1]][243:361,1:8]
+  
+  DH_vehicle1820 <- rbind(DH_vehicle18, DH_vehicle19, DH_vehicle20)
+  DH_vehicle1820_NE <- DH_vehicle1820[grepl("NE", row.names(DH_vehicle1820)),]
+  DH_vehicle1820_OK <- DH_vehicle1820[grepl("OK", row.names(DH_vehicle1820)),]
   
   #'  Generate site-level measure of hunting activity for each camera by summing
   #'  number of vehicle detections across entire study period
@@ -333,7 +348,7 @@
     full_join(VehicleActivity, by = "CameraLocation") %>%
     relocate(CameraLocation, .before = "GrazingActivity")
   
-  save(anthro_covs, file = "./Outputs/anthro_covs.RData")
+  # save(anthro_covs, file = "./Outputs/anthro_covs.RData")
   
   ####  Summary Stats  ####
   #'  -----------------
