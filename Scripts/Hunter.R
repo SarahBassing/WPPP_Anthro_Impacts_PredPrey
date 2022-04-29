@@ -22,7 +22,21 @@
   
   
   #'  Read in human data
-  human_data <- read.csv("./Data/FallHuman_detections_2022-03-15.csv")
+  # megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-27.csv") %>% #2022-04-14
+  #   dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation",
+  #                 "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle",
+  #                 "Species", "HumanActivity", "Count") %>%
+  #   filter(!grepl("Moultrie", CameraLocation))
+  # human <- megadata %>%
+  #   filter(Human == "TRUE" | Vehicle == "TRUE")
+  # write.csv(human, "./Data/All_human_detections.csv")
+  
+  human_data <- read.csv("./Data/All_human_detections.csv") %>%
+    #'  Filter to just the hunting season
+    mutate(
+      Month = strftime(Date, "%m")
+    ) %>%
+    filter(Month == "01" | Month == "08" | Month == "09" | Month == "10" | Month == "11" | Month == "12")
   
   
   #'  Splitting into other human activities
