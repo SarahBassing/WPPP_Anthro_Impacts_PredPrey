@@ -284,17 +284,7 @@
   DH_cattle_graze1820_NE <- DH_cattle_graze1820[grepl("NE", row.names(DH_cattle_graze1820)),]
   DH_cattle_graze1820_OK <- DH_cattle_graze1820[grepl("OK", row.names(DH_cattle_graze1820)),]
   
-  #'  Generate site-level measure of grazing activity for each camera by summing
-  #'  number of cattle detections across entire study period
-  sum_graze18 <- rowSums(DH_cattle_graze18, na.rm = TRUE)
-  sum_graze19 <- rowSums(DH_cattle_graze19, na.rm = TRUE)
-  sum_graze20 <- rowSums(DH_cattle_graze20, na.rm = TRUE)
-  
-  GrazingActivity <- as.data.frame(c(sum_graze18, sum_graze19, sum_graze20)) %>%
-    cbind(row.names(.))
-  colnames(GrazingActivity) <- c("GrazingActivity", "CameraLocation")
 
-  
   ####  ALL HUNTERS ON-FOOT  ####
   #'  Survey-level covariate for hunting season only
   all_hunt18 <- DH_counts(hunters2018, "Bow_Rifle_Hunting", "2018-10-01")
@@ -307,16 +297,6 @@
   DH_all_hunt1820 <- rbind(DH_all_hunt18, DH_all_hunt19, DH_all_hunt20)
   DH_all_hunt1820_NE <- DH_all_hunt1820[grepl("NE", row.names(DH_all_hunt1820)),]
   DH_all_hunt1820_OK <- DH_all_hunt1820[grepl("OK", row.names(DH_all_hunt1820)),]
-  
-  #'  Generate site-level measure of hunting activity for each camera by summing
-  #'  number of hunter detections across entire study period
-  sum_hunt18 <- rowSums(DH_all_hunt18, na.rm = TRUE)
-  sum_hunt19 <- rowSums(DH_all_hunt19, na.rm = TRUE)
-  sum_hunt20 <- rowSums(DH_all_hunt20, na.rm = TRUE)
-  
-  HuntingActivity <- as.data.frame(c(sum_hunt18, sum_hunt19, sum_hunt20)) %>%
-    cbind(row.names(.))
-  colnames(HuntingActivity) <- c("HuntingActivity", "CameraLocation")
   
   
   ####  VEHICLE TRAFFIC  ####
@@ -332,8 +312,56 @@
   DH_vehicle1820_NE <- DH_vehicle1820[grepl("NE", row.names(DH_vehicle1820)),]
   DH_vehicle1820_OK <- DH_vehicle1820[grepl("OK", row.names(DH_vehicle1820)),]
   
-  #'  Generate site-level measure of hunting activity for each camera by summing
-  #'  number of vehicle detections across entire study period
+  
+  ####  SAMPLING EFFORT  ####
+  #'  -------------------
+  #'  Pull out sampling effort for annual grazing season and hunting season
+  SEffort_graze18 <- cattle_graze18[[2]][1:125,1:13]
+  SEffort_graze19 <- cattle_graze19[[2]][126:242,1:13]
+  SEffort_graze20 <- cattle_graze20[[2]][243:361,1:13]
+  SEffort_hunt18 <- all_hunt18[[2]][1:125,1:8]
+  SEffort_hunt19 <- all_hunt19[[2]][126:242,1:8]
+  SEffort_hunt20 <- all_hunt20[[2]][243:361,1:8]
+  
+  #'  Sum number of trap nights per camera
+  SEffort_graze1820 <- rbind(SEffort_graze18, SEffort_graze19, SEffort_graze20)
+  TrpNgts_graze1820 <- as.data.frame(rowSums(SEffort_graze1820))
+  colnames(TrpNgts_graze1820) <- "Trap_Nights"
+  TrpNgts_graze1820_NE <- TrpNgts_graze1820[grepl("NE", row.names(TrpNgts_graze1820)),]
+  TrpNgts_graze1820_OK <- TrpNgts_graze1820[grepl("OK", row.names(TrpNgts_graze1820)),]
+  
+  SEffort_hunt1820 <- rbind(SEffort_hunt18, SEffort_hunt19, SEffort_hunt20)
+  TrpNgts_hunt1820 <- as.data.frame(rowSums(SEffort_hunt1820))
+  colnames(TrpNgts_hunt1820) <- "Trap_Nights"
+  TrpNgts_hunt1820_NE <- TrpNgts_hunt1820[grepl("NE", row.names(TrpNgts_hunt1820)),]
+  TrpNgts_hunt1820_OK <- TrpNgts_hunt1820[grepl("OK", row.names(TrpNgts_hunt1820)),]
+  
+  
+  #'  Generate site-level measure of anthropgogenic activity for each camera,
+  #'  standardized by number of trap nights per site 
+  #'  Total cattle detection events across entire study period
+  sum_graze18 <- rowSums(DH_cattle_graze18, na.rm = TRUE)
+  sum_graze19 <- rowSums(DH_cattle_graze19, na.rm = TRUE)
+  sum_graze20 <- rowSums(DH_cattle_graze20, na.rm = TRUE)
+  
+  GrazingActivity <- as.data.frame(c(sum_graze18, sum_graze19, sum_graze20)) %>%
+    cbind(row.names(.)) %>%
+    cbind(TrpNgts_graze1820) 
+  colnames(GrazingActivity) <- c("GrazingActivity", "CameraLocation", "TrapNights")
+  GrazingActivity <- GrazingActivity %>%
+    transmute(CameraLocation, GrazingActivity = GrazingActivity/TrapNights)
+  
+  
+  #'  Total hunter detection events across entire study period
+  sum_hunt18 <- rowSums(DH_all_hunt18, na.rm = TRUE)
+  sum_hunt19 <- rowSums(DH_all_hunt19, na.rm = TRUE)
+  sum_hunt20 <- rowSums(DH_all_hunt20, na.rm = TRUE)
+  
+  HuntingActivity <- as.data.frame(c(sum_hunt18, sum_hunt19, sum_hunt20)) %>%
+    cbind(row.names(.))
+  colnames(HuntingActivity) <- c("HuntingActivity", "CameraLocation")
+  
+  #'  Total vehicle detection events across entire study period
   sum_traffic18 <- rowSums(DH_vehicle18, na.rm = TRUE)
   sum_traffic19 <- rowSums(DH_vehicle19, na.rm = TRUE)
   sum_traffic20 <- rowSums(DH_vehicle20, na.rm = TRUE)
@@ -343,12 +371,17 @@
   colnames(VehicleActivity) <- c("VehicleActivity", "CameraLocation")
   
   
+  
   #'  Create single site-level df of anthropogenic activity to add to occupancy covs
   anthro_covs <- full_join(GrazingActivity, HuntingActivity, by = "CameraLocation") %>%
     full_join(VehicleActivity, by = "CameraLocation") %>%
     relocate(CameraLocation, .before = "GrazingActivity")
   
   # save(anthro_covs, file = "./Outputs/anthro_covs.RData")
+  
+  
+  
+  
   
   ####  Summary Stats  ####
   #'  -----------------
