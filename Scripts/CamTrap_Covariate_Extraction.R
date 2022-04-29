@@ -32,9 +32,11 @@
   CameraLocation <- station_covs$CameraLocation
   Year <- station_covs$Year
   
-  #'  Load cattle and hunting activity variables generated from Cattle_Hunter_Activity.R
-  #'  script after running correlation analyses in Cattle.R and Hunter.R to 
-  #'  determine which metrics are most correlated with actual count of individuals
+  #'  Load site-level grazing & hunting activity data (i.e., total number of 
+  #'  detection events at a camera site during study period) created by 
+  #'  Cattle_Hunter_Activity.R script after running correlation analyses in 
+  #'  Cattle.R and Hunter.R to determine which metrics are most correlated with 
+  #'  actual count of individuals
   load("./Outputs/anthro_covs.RData")
   
   #'  Define desired projections
