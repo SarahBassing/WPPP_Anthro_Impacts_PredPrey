@@ -71,7 +71,7 @@
     filter(!(Animal == "FALSE" & Human == "FALSE" & Vehicle == "FALSE") | (Animal == "false" & Human == "false" & Vehicle == "false")) %>%
     #'  Remove observations of humans
     filter(!is.na(Species)) %>%
-    filter(Species != "Cattle") %>%
+    # filter(Species != "Cattle") %>%
     mutate(
       DateTime = as.POSIXct(DateTime,
                             format="%Y-%m-%d %H:%M:%S",tz="America/Los_Angeles"),
@@ -357,6 +357,11 @@
   DH_bob_graze19 <- bob_graze19[[1]][126:242,1:13] 
   bob_graze20 <- DH(images_graze2020, "Bobcat", "2020-07-01")
   DH_bob_graze20 <- bob_graze20[[1]][243:361,1:13] 
+  
+  DH_bob_graze1820 <- rbind(DH_bob_graze18, DH_bob_graze19, DH_bob_graze20)
+  DH_bob_graze1820_NE <- DH_bob_graze1820[grepl("NE", row.names(DH_bob_graze1820)),]
+  DH_bob_graze1820_OK <- DH_bob_graze1820[grepl("OK", row.names(DH_bob_graze1820)),]
+  
   #'  Hunting season
   bob_hunt18 <- DH(images_hunt2018, "Bobcat", "2018-10-01")
   DH_bob_hunt18 <- bob_hunt18[[1]][1:125,1:8]  
@@ -364,6 +369,10 @@
   DH_bob_hunt19 <- bob_hunt19[[1]][126:242,1:8] 
   bob_hunt20 <- DH(images_hunt2020, "Bobcat", "2020-10-01")
   DH_bob_hunt20 <- bob_hunt20[[1]][243:361,1:8]
+  
+  DH_bob_hunt1820 <- rbind(DH_bob_hunt18, DH_bob_hunt19, DH_bob_hunt20)
+  DH_bob_hunt1820_NE <- DH_bob_hunt1820[grepl("NE", row.names(DH_bob_hunt1820)),]
+  DH_bob_hunt1820_OK <- DH_bob_hunt1820[grepl("OK", row.names(DH_bob_hunt1820)),]
   
   ####  BLACK BEARS  ####
   #'  Grazing season
@@ -373,6 +382,11 @@
   DH_bear_graze19 <- bear_graze19[[1]][126:242,1:13] 
   bear_graze20 <- DH(images_graze2020, "Black Bear", "2020-07-01")
   DH_bear_graze20 <- bear_graze20[[1]][243:361,1:13] 
+  
+  DH_bear_graze1820 <- rbind(DH_bear_graze18, DH_bear_graze19, DH_bear_graze20)
+  DH_bear_graze1820_NE <- DH_bear_graze1820[grepl("NE", row.names(DH_bear_graze1820)),]
+  DH_bear_graze1820_OK <- DH_bear_graze1820[grepl("OK", row.names(DH_bear_graze1820)),]
+  
   #'  Hunting season
   bear_hunt18 <- DH(images_hunt2018, "Black Bear", "2018-10-01")
   DH_bear_hunt18 <- bear_hunt18[[1]][1:125,1:8]  
@@ -380,6 +394,10 @@
   DH_bear_hunt19 <- bear_hunt19[[1]][126:242,1:8] 
   bear_hunt20 <- DH(images_hunt2020, "Black Bear", "2020-10-01")
   DH_bear_hunt20 <- bear_hunt20[[1]][243:361,1:8]
+  
+  DH_bear_hunt1820 <- rbind(DH_bear_hunt18, DH_bear_hunt19, DH_bear_hunt20)
+  DH_bear_hunt1820_NE <- DH_bear_hunt1820[grepl("NE", row.names(DH_bear_hunt1820)),]
+  DH_bear_hunt1820_OK <- DH_bear_hunt1820[grepl("OK", row.names(DH_bear_hunt1820)),]
   
   ####  COUGARS  ####
   #'  Grazing season
@@ -389,6 +407,11 @@
   DH_coug_graze19 <- coug_graze19[[1]][126:242,1:13] 
   coug_graze20 <- DH(images_graze2020, "Cougar", "2020-07-01")
   DH_coug_graze20 <- coug_graze20[[1]][243:361,1:13] 
+  
+  DH_coug_graze1820 <- rbind(DH_coug_graze18, DH_coug_graze19, DH_coug_graze20)
+  DH_coug_graze1820_NE <- DH_coug_graze1820[grepl("NE", row.names(DH_coug_graze1820)),]
+  DH_coug_graze1820_OK <- DH_coug_graze1820[grepl("OK", row.names(DH_coug_graze1820)),]
+  
   #'  Hunting season
   coug_hunt18 <- DH(images_hunt2018, "Cougar", "2018-10-01")
   DH_coug_hunt18 <- coug_hunt18[[1]][1:125,1:8]  
@@ -396,6 +419,10 @@
   DH_coug_hunt19 <- coug_hunt19[[1]][126:242,1:8] 
   coug_hunt20 <- DH(images_hunt2020, "Cougar", "2020-10-01")
   DH_coug_hunt20 <- coug_hunt20[[1]][243:361,1:8]
+  
+  DH_coug_hunt1820 <- rbind(DH_coug_hunt18, DH_coug_hunt19, DH_coug_hunt20)
+  DH_coug_hunt1820_NE <- DH_coug_hunt1820[grepl("NE", row.names(DH_coug_hunt1820)),]
+  DH_coug_hunt1820_OK <- DH_coug_hunt1820[grepl("OK", row.names(DH_coug_hunt1820)),]
   
   ####  COYOTES  ####
   #'  Grazing season
@@ -405,6 +432,11 @@
   DH_coy_graze19 <- coy_graze19[[1]][126:242,1:13] 
   coy_graze20 <- DH(images_graze2020, "Coyote", "2020-07-01")
   DH_coy_graze20 <- coy_graze20[[1]][243:361,1:13] 
+  
+  DH_coy_graze1820 <- rbind(DH_coy_graze18, DH_coy_graze19, DH_coy_graze20)
+  DH_coy_graze1820_NE <- DH_coy_graze1820[grepl("NE", row.names(DH_coy_graze1820)),]
+  DH_coy_graze1820_OK <- DH_coy_graze1820[grepl("OK", row.names(DH_coy_graze1820)),]
+  
   #'  Hunting season
   coy_hunt18 <- DH(images_hunt2018, "Coyote", "2018-10-01")
   DH_coy_hunt18 <- coy_hunt18[[1]][1:125,1:8]  
@@ -412,6 +444,10 @@
   DH_coy_hunt19 <- coy_hunt19[[1]][126:242,1:8] 
   coy_hunt20 <- DH(images_hunt2020, "Coyote", "2020-10-01")
   DH_coy_hunt20 <- coy_hunt20[[1]][243:361,1:8]
+  
+  DH_coy_hunt1820 <- rbind(DH_coy_hunt18, DH_coy_hunt19, DH_coy_hunt20)
+  DH_coy_hunt1820_NE <- DH_coy_hunt1820[grepl("NE", row.names(DH_coy_hunt1820)),]
+  DH_coy_hunt1820_OK <- DH_coy_hunt1820[grepl("OK", row.names(DH_coy_hunt1820)),]
   
   ####  ELK  ####
   #'  Grazing season
@@ -421,6 +457,11 @@
   DH_elk_graze19 <- elk_graze19[[1]][126:242,1:13] 
   elk_graze20 <- DH(images_graze2020, "Elk", "2020-07-01")
   DH_elk_graze20 <- elk_graze20[[1]][243:361,1:13] 
+  
+  DH_elk_graze1820 <- rbind(DH_elk_graze18, DH_elk_graze19, DH_elk_graze20)
+  DH_elk_graze1820_NE <- DH_elk_graze1820[grepl("NE", row.names(DH_elk_graze1820)),]
+  DH_elk_graze1820_OK <- DH_elk_graze1820[grepl("OK", row.names(DH_elk_graze1820)),]
+  
   #'  Hunting season
   elk_hunt18 <- DH(images_hunt2018, "Elk", "2018-10-01")
   DH_elk_hunt18 <- elk_hunt18[[1]][1:125,1:8]  
@@ -428,6 +469,10 @@
   DH_elk_hunt19 <- elk_hunt19[[1]][126:242,1:8] 
   elk_hunt20 <- DH(images_hunt2020, "Elk", "2020-10-01")
   DH_elk_hunt20 <- elk_hunt20[[1]][243:361,1:8]
+  
+  DH_elk_hunt1820 <- rbind(DH_elk_hunt18, DH_elk_hunt19, DH_elk_hunt20)
+  DH_elk_hunt1820_NE <- DH_elk_hunt1820[grepl("NE", row.names(DH_elk_hunt1820)),]
+  DH_elk_hunt1820_OK <- DH_elk_hunt1820[grepl("OK", row.names(DH_elk_hunt1820)),]
   
   ####  MOOSE  ####
   #'  Grazing season
@@ -437,6 +482,11 @@
   DH_moose_graze19 <- moose_graze19[[1]][126:242,1:13] 
   moose_graze20 <- DH(images_graze2020, "Moose", "2020-07-01")
   DH_moose_graze20 <- moose_graze20[[1]][243:361,1:13] 
+  
+  DH_moose_graze1820 <- rbind(DH_moose_graze18, DH_moose_graze19, DH_moose_graze20)
+  DH_moose_graze1820_NE <- DH_moose_graze1820[grepl("NE", row.names(DH_moose_graze1820)),]
+  DH_moose_graze1820_OK <- DH_moose_graze1820[grepl("OK", row.names(DH_moose_graze1820)),]
+  
   #'  Hunting season
   moose_hunt18 <- DH(images_hunt2018, "Moose", "2018-10-01")
   DH_moose_hunt18 <- moose_hunt18[[1]][1:125,1:8]  
@@ -444,6 +494,10 @@
   DH_moose_hunt19 <- moose_hunt19[[1]][126:242,1:8] 
   moose_hunt20 <- DH(images_hunt2020, "Moose", "2020-10-01")
   DH_moose_hunt20 <- moose_hunt20[[1]][243:361,1:8]
+  
+  DH_moose_hunt1820 <- rbind(DH_moose_hunt18, DH_moose_hunt19, DH_moose_hunt20)
+  DH_moose_hunt1820_NE <- DH_moose_hunt1820[grepl("NE", row.names(DH_moose_hunt1820)),]
+  DH_moose_hunt1820_OK <- DH_moose_hunt1820[grepl("OK", row.names(DH_moose_hunt1820)),]
   
   ####  MULE DEER  ####
   #'  Grazing season
@@ -453,6 +507,11 @@
   DH_md_graze19 <- md_graze19[[1]][126:242,1:13] 
   md_graze20 <- DH(images_graze2020, "Mule Deer", "2020-07-01")
   DH_md_graze20 <- md_graze20[[1]][243:361,1:13] 
+  
+  DH_md_graze1820 <- rbind(DH_md_graze18, DH_md_graze19, DH_md_graze20)
+  DH_md_graze1820_NE <- DH_md_graze1820[grepl("NE", row.names(DH_md_graze1820)),]
+  DH_md_graze1820_OK <- DH_md_graze1820[grepl("OK", row.names(DH_md_graze1820)),]
+  
   #'  Hunting season
   md_hunt18 <- DH(images_hunt2018, "Mule Deer", "2018-10-01")
   DH_md_hunt18 <- md_hunt18[[1]][1:125,1:8]  
@@ -460,6 +519,10 @@
   DH_md_hunt19 <- md_hunt19[[1]][126:242,1:8] 
   md_hunt20 <- DH(images_hunt2020, "Mule Deer", "2020-10-01")
   DH_md_hunt20 <- md_hunt20[[1]][243:361,1:8]
+  
+  DH_md_hunt1820 <- rbind(DH_md_hunt18, DH_md_hunt19, DH_md_hunt20)
+  DH_md_hunt1820_NE <- DH_md_hunt1820[grepl("NE", row.names(DH_md_hunt1820)),]
+  DH_md_hunt1820_OK <- DH_md_hunt1820[grepl("OK", row.names(DH_md_hunt1820)),]
   
   ####  WHITE-TAILED DEER  ####
   #'  Grazing season
@@ -469,6 +532,11 @@
   DH_wtd_graze19 <- wtd_graze19[[1]][126:242,1:13] 
   wtd_graze20 <- DH(images_graze2020, "White-tailed Deer", "2020-07-01")
   DH_wtd_graze20 <- wtd_graze20[[1]][243:361,1:13] 
+  
+  DH_wtd_graze1820 <- rbind(DH_wtd_graze18, DH_wtd_graze19, DH_wtd_graze20)
+  DH_wtd_graze1820_NE <- DH_wtd_graze1820[grepl("NE", row.names(DH_wtd_graze1820)),]
+  DH_wtd_graze1820_OK <- DH_wtd_graze1820[grepl("OK", row.names(DH_wtd_graze1820)),]
+  
   #'  Hunting season
   wtd_hunt18 <- DH(images_hunt2018, "White-tailed Deer", "2018-10-01")
   DH_wtd_hunt18 <- wtd_hunt18[[1]][1:125,1:8]  
@@ -477,6 +545,10 @@
   wtd_hunt20 <- DH(images_hunt2020, "White-tailed Deer", "2020-10-01")
   DH_wtd_hunt20 <- wtd_hunt20[[1]][243:361,1:8]
   
+  DH_wtd_hunt1820 <- rbind(DH_wtd_hunt18, DH_wtd_hunt19, DH_wtd_hunt20)
+  DH_wtd_hunt1820_NE <- DH_wtd_hunt1820[grepl("NE", row.names(DH_wtd_hunt1820)),]
+  DH_wtd_hunt1820_OK <- DH_wtd_hunt1820[grepl("OK", row.names(DH_wtd_hunt1820)),]
+  
   ####  WOLVES  ####
   #'  Grazing season
   wolf_graze18 <- DH(images_graze2018, "Wolf", "2018-07-01")
@@ -484,7 +556,12 @@
   wolf_graze19 <- DH(images_graze2019, "Wolf", "2019-07-01")
   DH_wolf_graze19 <- wolf_graze19[[1]][126:242,1:13] 
   wolf_graze20 <- DH(images_graze2020, "Wolf", "2020-07-01")
-  DH_wolf_graze20 <- wolf_graze20[[1]][243:361,1:13] 
+  DH_wolf_graze20 <- wolf_graze20[[1]][243:361,1:13]
+  
+  DH_wolf_graze1820 <- rbind(DH_wolf_graze18, DH_wolf_graze19, DH_wolf_graze20)
+  DH_wolf_graze1820_NE <- DH_wolf_graze1820[grepl("NE", row.names(DH_wolf_graze1820)),]
+  DH_wolf_graze1820_OK <- DH_wolf_graze1820[grepl("OK", row.names(DH_wolf_graze1820)),]
+  
   #'  Hunting season
   wolf_hunt18 <- DH(images_hunt2018, "Wolf", "2018-10-01")
   DH_wolf_hunt18 <- wolf_hunt18[[1]][1:125,1:8]  
@@ -492,6 +569,10 @@
   DH_wolf_hunt19 <- wolf_hunt19[[1]][126:242,1:8] 
   wolf_hunt20 <- DH(images_hunt2020, "Wolf", "2020-10-01")
   DH_wolf_hunt20 <- wolf_hunt20[[1]][243:361,1:8]
+  
+  DH_wolf_hunt1820 <- rbind(DH_wolf_hunt18, DH_wolf_hunt19, DH_wolf_hunt20)
+  DH_wolf_hunt1820_NE <- DH_wolf_hunt1820[grepl("NE", row.names(DH_wolf_hunt1820)),]
+  DH_wolf_hunt1820_OK <- DH_wolf_hunt1820[grepl("OK", row.names(DH_wolf_hunt1820)),]
   
   ####  SAMPLING EFFORT  ####
   #'  -------------------
@@ -505,7 +586,12 @@
   Effort_hunt20 <- bob_hunt20[[2]][243:361,1:8]
   
   Effort_graze1820 <- rbind(Effort_graze18, Effort_graze19, Effort_graze20)
+  Effort_graze1820_NE <- Effort_graze1820[grepl("NE", row.names(Effort_graze1820)),]
+  Effort_graze1820_OK <- Effort_graze1820[grepl("OK", row.names(Effort_graze1820)),]
+  
   Effort_hunt1820 <- rbind(Effort_hunt18, Effort_hunt19, Effort_hunt20)
+  Effort_hunt1820_NE <- Effort_hunt1820[grepl("NE", row.names(Effort_hunt1820)),]
+  Effort_hunt1820_OK <- Effort_hunt1820[grepl("OK", row.names(Effort_hunt1820)),]
 
   #'  Summary stats on trap nights (active sites only)
   #'  Total number of trap nights (across camera sites)
