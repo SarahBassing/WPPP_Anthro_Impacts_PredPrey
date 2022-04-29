@@ -29,8 +29,8 @@
   #'  Parsons & Michael Havrda, UW SEFS.
   #'  ============================================
   
-  #'  Clean workspace & load libraries
-  rm(list = ls())
+  #' #'  Clean workspace & load libraries
+  #' rm(list = ls())
   
   library(camtrapR)
   library(chron)
@@ -55,7 +55,7 @@
   nNE_yr3 <- nrow(filter(cam_stationsYr3, grepl("NE", CameraLocation)))
   nOK_yr3 <- nrow(filter(cam_stationsYr3, grepl("OK", CameraLocation)))
    
-  megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-14.csv") %>% 
+  megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-27.csv") %>%  #2022-04-14
     dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation", 
                   "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle", 
                   "Species", "HumanActivity", "Count") %>%
@@ -69,7 +69,9 @@
     ) %>%
     #  Remove rows where no detection occurred but snuck into this data set somehow
     filter(!(Animal == "FALSE" & Human == "FALSE" & Vehicle == "FALSE") | (Animal == "false" & Human == "false" & Vehicle == "false")) %>%
+    #'  Remove observations of humans
     filter(!is.na(Species)) %>%
+    filter(Species != "Cattle") %>%
     mutate(
       DateTime = as.POSIXct(DateTime,
                             format="%Y-%m-%d %H:%M:%S",tz="America/Los_Angeles"),
@@ -77,19 +79,11 @@
       Time = chron(times = Time)
     )
   
-  #' #'  Number rows and add to data frame
-  #' ID <- as.data.frame(1:nrow(megadata))
-  #' colnames(ID) <- "ID"
-  #' megadata <- cbind(megadata, ID)
-  #' #'  Create unique name for each individual image file
-  #' megadata$Image <- str_c(megadata$CameraLocation, megadata$File, megadata$ID,  sep = "-")
-  #' megadata <- dplyr::select(megadata, -ID)
-  #' #'  Not sure this step was actually needed anymore but oh well
-  
   #'  Total number of images
   npix <- nrow(megadata)
   
-  #'  Extract independent detections
+
+  ####  Extract independent detections for wildlife species  ####
   #'  Create a column identifying whether each image is an "independent" event
   #'  If camera site is diff from previous row then give unique value. If not then...
   #'  If species detected is diff from previous row at same site then give unique value. If not then...
@@ -115,7 +109,8 @@
     group_by(caps) %>%
     slice(1L) %>%
     ungroup()
-  #'  Keep in mind the 30 minute gap doesn't make sense for human & vehicle detections
+  #'  Keep in mind the 30 minute gap too large for cattle & human detections
+  #'  Use Cattle_Hunter_Detections.R to generate DH for these
   
   
   #'  Pick date ranges for livestock-focused analyses & hunter-focused analyses
@@ -207,7 +202,7 @@
     filter(Date < "2019-11-26") %>%
     dplyr::select("File", "CameraLocation", "DateTime", "Date", "Time", "Species")  
   #'  Subset by study area
-  NE_hunt19  <- filter(images_hunt2019, grepl("NE", CameraLocation))
+  NE_hunt19 <- filter(images_hunt2019, grepl("NE", CameraLocation))
   OK_hunt19 <- filter(images_hunt2019, grepl("OK", CameraLocation))
   #'  Grazing Season 2020: 07/01/2020 - 09/29/2020 (thirteen 7-day sampling periods)
   images_graze2020 <- detections %>%
@@ -215,15 +210,15 @@
     filter(Date < "2020-09-30") %>%
     dplyr::select("File", "CameraLocation", "DateTime", "Date", "Time", "Species")  
   #'  Subset by study area
-  NE_graze20 <- filter(images_graze2019, grepl("NE", CameraLocation))
-  OK_graze20 <- filter(images_graze2019, grepl("OK", CameraLocation))
+  NE_graze20 <- filter(images_graze2020, grepl("NE", CameraLocation))
+  OK_graze20 <- filter(images_graze2020, grepl("OK", CameraLocation))
   #'  Hunting Season 2020: 10/1/2020 - 11/25/2020 (eight 7-day sampling periods)
   images_hunt2020 <- detections %>%
     filter(Date > "2020-09-30") %>%
     filter(Date < "2020-11-26") %>%
     dplyr::select("File", "CameraLocation", "DateTime", "Date", "Time", "Species")  
   #'  Subset by study area
-  NE_hunt20  <- filter(images_hunt2020, grepl("NE", CameraLocation))
+  NE_hunt20 <- filter(images_hunt2020, grepl("NE", CameraLocation))
   OK_hunt20 <- filter(images_hunt2020, grepl("OK", CameraLocation))
   
   
@@ -328,8 +323,6 @@
   #'  Need to remove columns that extend beyond date range of interest!
   #'  Grazing: July 1 - Sept 29 = 13 weeks
   #'  Hunting: Oct 1 - Nov 26 = 8 weeks 
-  #'  Keep in mind detection data stops mid-sampling occasion of the 18th week
-  #'  Consider changing detection data date range to encompass full 18th week
   
   DH <- function(images, spp, start_date) {
     det_hist <- detectionHistory(recordTable = images,
@@ -500,7 +493,6 @@
   wolf_hunt20 <- DH(images_hunt2020, "Wolf", "2020-10-01")
   DH_wolf_hunt20 <- wolf_hunt20[[1]][243:361,1:8]
   
-  
   ####  SAMPLING EFFORT  ####
   #'  -------------------
   #'  Save sampling effort for each camera and season
@@ -573,7 +565,7 @@
     summarise(n = n()) %>%
     ungroup()
   summary_dets <- group_by(ndet, Season) %>% 
-    summarize(mu_locs = mean(Detections), sd = sd(Detections), se_locs = sd(Detections)/sqrt(n())) %>% 
+    summarize(mu_locs = mean(n), sd = sd(n), se_locs = sd(n)/sqrt(n())) %>% 
     ungroup()
   
   
