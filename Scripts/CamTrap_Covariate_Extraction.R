@@ -1,0 +1,392 @@
+  #'  ============================================
+  #'  Covariate extraction at Camera Trap Sites
+  #'  Washington Predator-Prey Project
+  #'  Sarah Bassing
+  #'  February 2021
+  #'  ============================================
+  #'  Extract prepared covariate data at each camera station. Pulls in rasters
+  #'  from various sources and extracts data at each camera site. Script also 
+  #'  uses DEM raster to create multiple rasters describing terrain features
+  #'  (slope, aspect, roughness, and terrain ruggedness index). Reads in covariate
+  #'  data collected during camera deployment as well. Finally, reads in covariate
+  #'  data calculated in other scripts (distance to nearest water & road). These
+  #'  data are generated in the following scripts:
+  #'  
+  #'  "Camera_Station_Covariates_DATE.csv" from Detections_by_Camera_Station.R 
+  #'  "dist2water.csv" & "dist2road.csv" from Covariate_Hydro_Density.R
+  #'  ============================================
+  
+  #'  Clean workspace & load libraries
+  rm(list = ls())
+  
+  #'  Load libraries
+  library(sf)
+  library(stars)
+  library(rgeos)
+  library(raster)
+  library(tidyverse)
+  
+  
+  #'  Read in camera locations
+  station_covs <- read.csv("./Outputs/Camera_Station18-21_Covariates_2022-04-27.csv")  #2022-04-14
+  CameraLocation <- station_covs$CameraLocation
+  Year <- station_covs$Year
+  
+  #'  Load cattle and hunting activity variables generated from Cattle_Hunter_Activity.R
+  #'  script after running correlation analyses in Cattle.R and Hunter.R to 
+  #'  determine which metrics are most correlated with actual count of individuals
+  load("./Outputs/anthro_covs.RData")
+  
+  #'  Define desired projections
+  sa_proj <- projection("+proj=lcc +lat_1=48.73333333333333 +lat_2=47.5 +lat_0=47 +lon_0=-120.8333333333333 +x_0=500000 +y_0=0 +ellps=GRS80 +units=m +no_defs ")
+  wgs84 <- projection("+proj=longlat +datum=WGS84 +no_defs")
+  
+  
+  #'  Make camera location data spatial
+  cams <- st_as_sf(station_covs[,6:8], coords = c("Longitude", "Latitude"), crs = wgs84)
+  #'  Reproject to match study area projection
+  cams_reproj <- st_transform(cams, crs = crs(sa_proj))
+  
+  
+  #'  Read in spatial data
+  #'  Study area boundaries
+  wppp_bound <- st_read("./Shapefiles/WPPP_CovariateBoundary", layer = "WPPP_CovariateBoundary") %>%
+    st_transform(crs = crs(sa_proj))
+  OK_SA <- st_read("./Shapefiles/fwdstudyareamaps", layer = "METHOW_SA") %>%
+    st_transform(crs = crs(sa_proj))
+  NE_SA <- st_read("./Shapefiles/fwdstudyareamaps", layer = "NE_SA") %>%
+    st_transform(crs = crs(sa_proj))
+  #'  Terrain variables (elevation, slope, aspect, terrain ruggedness & position indices)
+  dem <- raster("./Shapefiles/WA DEM rasters/WPPP_DEM_30m.tif")
+  slope <- raster("./Shapefiles/WA DEM rasters/WPPP_slope_aspect.tif", band = 1)
+  aspect <- raster("./Shapefiles/WA DEM rasters/WPPP_slope_aspect.tif", band = 2)
+  TRI <- raster("./Shapefiles/WA DEM rasters/WPPP_TRI.tif")
+  TPI <- raster("./Shapefiles/WA DEM rasters/WPPP_TPI.tif")
+  #'  Human density
+  human <- raster("./Shapefiles/Additional_WPPP_Layers/WPPP_pop.tif")
+  #'  Human modified landscape
+  HM <- raster("./Shapefiles/Additional_WPPP_Layers/WPPP_gHM.tif") 
+  #'  Road density and distance to nearest road
+  roadden <- raster("./Shapefiles/Cascadia_layers/roadsForTaylor/RoadDensity_1km.tif") 
+  dist2rd_minor <- raster("./Shapefiles/Cascadia_layers/roadsForTaylor/WPPP_dist_to_minor_rds_2855.tiff")
+  dist2rd_major <- raster("./Shapefiles/Cascadia_layers/roadsForTaylor/WPPP_dist_to_major_rds_2855.tiff")
+  #'  Cascadia Landcover Classes
+  landcover18 <- raster("./Shapefiles/Cascadia_layers/landcover_2018.tif")
+  landcover19 <- raster("./Shapefiles/Cascadia_layers/landcover_2019.tif")
+  landcover20 <- raster("./Shapefiles/Cascadia_layers/landcover_2020.tif")
+  #'  Percent Forest: Forest + Woody Wetland + Emergent Wetland (based on TRG habitat assessments)
+  forestprop18 <- raster("./Shapefiles/Cascadia_layers/forestprop_18_wgs84.tif")
+  forestprop19 <- raster("./Shapefiles/Cascadia_layers/forestprop_19_wgs84.tif")
+  forestprop20 <- raster("./Shapefiles/Cascadia_layers/forestprop_20_wgs84.tif")
+  #'  Percent Forest mix 2: Forest + Woody Wetland + Emergent Wetland + Mesic Shrub 
+  formix2prop18 <- raster("./Shapefiles/Cascadia_layers/forestmix2prop_18_wgs84.tif")
+  formix2prop19 <- raster("./Shapefiles/Cascadia_layers/forestmix2prop_19_wgs84.tif")
+  formix2prop20 <- raster("./Shapefiles/Cascadia_layers/forestmix2prop_20_wgs84.tif")
+  #'  Percent Xeric Grass
+  xgrassprop18 <- raster("./Shapefiles/Cascadia_layers/xgrassprop_18_wgs84.tif")
+  xgrassprop19 <- raster("./Shapefiles/Cascadia_layers/xgrassprop_19_wgs84.tif")
+  xgrassprop20 <- raster("./Shapefiles/Cascadia_layers/xgrassprop_20_wgs84.tif")
+  #'  Percent Xeric Shrub
+  xshrubprop18 <- raster("./Shapefiles/Cascadia_layers/xshrubprop_18_wgs84.tif")
+  xshrubprop19 <- raster("./Shapefiles/Cascadia_layers/xshrubprop_19_wgs84.tif")
+  xshrubprop20 <- raster("./Shapefiles/Cascadia_layers/xshrubprop_20_wgs84.tif")
+  #'  Distance to nearest edge
+  dist2forest18 <- raster("./Shapefiles/Cascadia_layers/Dist2ForestEdge18.tif")
+  dist2forest19 <- raster("./Shapefiles/Cascadia_layers/Dist2ForestEdge19.tif")
+  dist2forest20 <- raster("./Shapefiles/Cascadia_layers/Dist2ForestEdge20.tif")
+  dist2open18 <- raster("./Shapefiles/Cascadia_layers/Dist2OpenEdge18.tif")
+  dist2open19 <- raster("./Shapefiles/Cascadia_layers/Dist2OpenEdge19.tif")
+  dist2open20 <- raster("./Shapefiles/Cascadia_layers/Dist2OpenEdge20.tif")
+  #'  Percent openness
+  open18 <- raster("./Shapefiles/Cascadia_layers/OpenHabitat18.tif")
+  open19 <- raster("./Shapefiles/Cascadia_layers/OpenHabitat19.tif")
+  open20 <- raster("./Shapefiles/Cascadia_layers/OpenHabitat20.tif")
+  #'  Global forest change
+  treecov18 <- raster("./Shapefiles/Global_Forest_Change/treecov_2018.tif")
+  treecov19 <- raster("./Shapefiles/Global_Forest_Change/treecov_2019.tif")
+  treecov20 <- raster("./Shapefiles/Global_Forest_Change/treecov_2020.tif")
+  #'  Distance to nearest water
+  dist2water <- raster("./Shapefiles/WA_DeptEcology_HydroWA/WPPP_dist_to_water_2855.tif")
+  #' #'  USFS Ranger Districts (polygons)
+  #' Colville_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Colville_NF") %>%
+  #'   st_transform(crs = crs(wgs84))
+  #' Okanogan_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Okanogan_NF") %>%
+  #'   st_transform(crs = crs(wgs84))
+  #' #'  WA DNR parcels
+  #' NE_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Northeast_DNR") %>%
+  #'   st_transform(crs = crs(wgs84))
+  #' OK_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Okanogan_DNR") %>%
+  #'   st_transform(crs = crs(wgs84))
+ 
+  
+  #'  Identify projection, resolution, & spatial extent of relevant rasters
+  projection(wppp_bound)
+  projection(OK_SA)
+  projection(dem)
+  projection(human)
+  projection(HM)
+  projection(landcover18)
+  projection(xshrubprop18)
+  projection(roadden) 
+  projection(dist2rd_minor)
+  projection(treecov18)
+  projection(dist2water)
+  projection(Colville_NF)
+  projection(NE_DNR)
+  
+  res(dem)
+  res(human)
+  res(HM)
+  res(landcover18)
+  res(xshrubprop18)
+  res(roadden)
+  res(dist2rd_minor)
+  res(treecov18)
+  res(dist2water)
+  
+  extent(dem)
+  extent(HM)
+  extent(xshrubprop18)
+  extent(roadden)
+  extent(dist2rd_minor)
+  extent(treecov18)
+  extent(dist2water)
+  
+  
+  #'  Extract covariate values at each camera site from all rasters
+  #'  =============================================================
+  #'  Stack variables when possible (must have matching extent, resolution, & projection)
+  terra_stack <- stack(dem, slope, TRI, TPI)
+  dist2road <- stack(dist2rd_minor, dist2rd_major)
+  habitat_stack18 <- stack(landcover18, forestprop18, formix2prop18, xgrassprop18, xshrubprop18, open18)
+  habitat_stack19 <- stack(landcover19, forestprop19, formix2prop19, xgrassprop19, xshrubprop19, open19)
+  habitat_stack20 <- stack(landcover20, forestprop20, formix2prop20, xgrassprop20, xshrubprop20, open20)
+  dist2edge18 <- stack(dist2forest18, dist2open18)
+  dist2edge19 <- stack(dist2forest19, dist2open19)
+  dist2edge20 <- stack(dist2forest20, dist2open20)
+  
+  #'  Extract from rasters (WGS84)
+  terra_covs <- raster::extract(terra_stack, cams, df = TRUE)
+  modified <- raster::extract(HM, cams, df = TRUE)
+  human_density <- raster::extract(human, cams, df = TRUE)
+  habitat18 <- raster::extract(habitat_stack18, cams, df = TRUE)
+  habitat19 <- raster::extract(habitat_stack19, cams, df = TRUE)
+  habitat20 <- raster::extract(habitat_stack20, cams, df = TRUE)
+  # openness18 <- raster::extract(open18, cams, df = TRUE)
+  # openness19 <- raster::extract(open19, cams, df = TRUE)
+  # openness20 <- raster::extract(open20, cams, df = TRUE)
+  tree18 <- raster::extract(treecov18, cams, df = TRUE)
+  tree19 <- raster::extract(treecov19, cams, df = TRUE)
+  tree20 <- raster::extract(treecov20, cams, df = TRUE)
+  
+  #'  Extract from rasters (projected)
+  dist2rds <- raster::extract(dist2road, cams_reproj, df = TRUE)
+  road_den <- raster::extract(roadden, cams_reproj, df = TRUE)
+  water <- raster::extract(dist2water, cams_reproj, df = TRUE)
+  #'  Second super similar but different projection
+  cams_reproj2 <- st_transform(cams, crs = crs(dist2forest18))
+  edge18 <- raster::extract(dist2edge18, cams_reproj2, df = TRUE)
+  edge19 <- raster::extract(dist2edge19, cams_reproj2, df = TRUE)
+  edge20 <- raster::extract(dist2edge20, cams_reproj2, df = TRUE)
+  
+  #'  Format data into single data frame
+  #'  ==================================
+  #'  Find nearest road
+  NearestRd <- apply(dist2rds[,-1], 1, min)
+  NearestRd <- cbind(dist2rds[,1], NearestRd)
+  NearestRd <- as.data.frame(NearestRd)
+  colnames(NearestRd) <- c("ID", "NearestRd")
+  #'  Take a closer look at these
+  tst <- cbind(cams, dist2rds)
+  
+  #'  Find nearest distance to edge
+  Edge18 <- apply(edge18[,-1], 1, min, na.rm = TRUE)
+  Edge18 <- as.data.frame(cbind(edge18[,1], Edge18))
+  colnames(Edge18) <- c("ID", "Dist2Edge")
+  Edge19 <- apply(edge19[,-1], 1, min, na.rm = TRUE)
+  Edge19 <- as.data.frame(cbind(edge19[,1], Edge19))
+  colnames(Edge19) <- c("ID", "Dist2Edge")
+  Edge20 <- apply(edge20[,-1], 1, min, na.rm = TRUE)
+  Edge20 <- as.data.frame(cbind(edge20[,1], Edge20))
+  colnames(Edge20) <- c("ID", "Dist2Edge")
+  
+  #'  Start covariate data frame
+  cam_covs <- terra_covs %>%
+    full_join(NearestRd, by = "ID") %>%
+    full_join(road_den, by = "ID") %>%
+    full_join(modified, by = "ID") %>%
+    full_join(human_density, by = "ID") %>%
+    full_join(water, by = "ID") %>%
+    transmute(
+      obs = ID,
+      Elev = round(WPPP_DEM_30m, digits = 2), 
+      Slope = round(WPPP_slope_aspect, digits = 2), 
+      TRI = round(WPPP_TRI, digits = 2),
+      TPI = round(WPPP_TPI, digits = 2),
+      NearestRd = round(NearestRd, digits = 2),
+      RoadDen = round(RoadDensity_1km, digits = 2), 
+      HumanMod = round(WPPP_gHM, digits = 2),
+      HumanDen = round(WPPP_pop, digits = 2),
+      Dist2Water = round(WPPP_dist_to_water_2855, digit = 2)
+    ) %>%
+    #'  Need to change NA to 0 for road density (if NA it means there are no
+    #'  roads within that 1km pixel and raster pixel was empty)
+    mutate(
+      RoadDen = ifelse(is.na(RoadDen), 0, RoadDen),
+    )
+ 
+  #' #'  Extract percent landcover type using 250m moving window at each camera site
+  #' #'  Make sure camera data are in correct format
+  #' cams_reproj <- st_transform(cams, crs(crs(formix2prop18)))
+  # ID <- as.data.frame(as.numeric(seq(1:nrow(cams_reproj))))
+  # Cameras <- cbind(ID, CameraLocation)
+  # colnames(Cameras) <- c("ID", "CameraLocation")
+  #' #'  Create raster stacks of 2018 and 2019 landcover data
+  #' perc_stack18 <- stack(formix2prop18, xgrassprop18, xshrubprop18)
+  #' perc_stack19 <- stack(formix2prop19, xgrassprop19, xshrubprop19)
+  
+  #'  Organize annual data sets
+  ID <- as.data.frame(habitat18$ID)
+  Cameras <- cbind(ID, CameraLocation)
+  Cameras <- cbind(Cameras, Year)
+  colnames(Cameras) <- c("ID", "CameraLocation", "Year")
+  
+  perc_habitat18 <- full_join(Cameras, habitat18, by = "ID") %>%
+    full_join(tree18, by = "ID") %>%
+    full_join(Edge18, by = "ID") %>%
+    transmute(
+      obs = ID,
+      CameraLocation = CameraLocation,
+      Year = Year,
+      Landcover = landcover_2018,
+      PercForest = round(forestprop_18_wgs84, 2),
+      PercForestMix2 = round(forestmix2prop_18_wgs84, 2),
+      PercXericGrass = round(xgrassprop_18_wgs84, 2),
+      PercXericShrub = round(xshrubprop_18_wgs84, 2),
+      OpenHabitat = round(OpenHabitat18, 2),
+      TreeCover = round(treecov_2018, 2),
+      Dist2Edge = round(Dist2Edge, 2)
+    ) %>%
+    #'  Only retain observations from first year of sampling
+    filter(Year == "Year1")
+  
+  perc_habitat19 <- full_join(Cameras, habitat19, by = "ID") %>%
+    full_join(tree19, by = "ID") %>%
+    full_join(Edge19, by = "ID") %>%
+    transmute(
+      obs = ID,
+      CameraLocation = CameraLocation,
+      Year = Year,
+      Landcover = landcover_2019,
+      PercForest = round(forestprop_19_wgs84, 2),
+      PercForestMix2 = round(forestmix2prop_19_wgs84, 2),
+      PercXericGrass = round(xgrassprop_19_wgs84, 2),
+      PercXericShrub = round(xshrubprop_19_wgs84, 2),
+      OpenHabitat = round(OpenHabitat19, 2),
+      TreeCover = round(treecov_2019, 2),
+      Dist2Edge = round(Dist2Edge, 2)
+    ) %>%
+    #'  Only retain observations from first year of sampling
+    filter(Year == "Year2")
+  
+  perc_habitat20 <- full_join(Cameras, habitat20, by = "ID") %>%
+    full_join(tree20, by = "ID") %>%
+    full_join(Edge20, by = "ID") %>%
+    transmute(
+      obs = ID,
+      CameraLocation = CameraLocation,
+      Year = Year,
+      Landcover = landcover_2020,
+      PercForest = round(forestprop_20_wgs84, 2),
+      PercForestMix2 = round(forestmix2prop_20_wgs84, 2),
+      PercXericGrass = round(xgrassprop_20_wgs84, 2),
+      PercXericShrub = round(xshrubprop_20_wgs84, 2),
+      OpenHabitat = round(OpenHabitat20, 2),
+      TreeCover = round(treecov_2020, 2),
+      Dist2Edge = round(Dist2Edge, 2)
+    ) %>%
+    #'  Only retain observations from first year of sampling
+    filter(Year == "Year3")
+
+  habitat <- rbind(perc_habitat18, perc_habitat19, perc_habitat20) %>%
+    arrange(CameraLocation) %>%
+    mutate(
+      landcover_type = ifelse(Landcover == 101, "Water", Landcover),
+      landcover_type = ifelse(Landcover == 111, "Glacier", landcover_type),
+      landcover_type = ifelse(Landcover == 121, "Barren", landcover_type),
+      landcover_type = ifelse(Landcover == 201, "Wetland", landcover_type),
+      landcover_type = ifelse(Landcover == 201, "Wetland", landcover_type),
+      landcover_type = ifelse(Landcover == 202, "Woody Wetland", landcover_type),
+      landcover_type = ifelse(Landcover == 211, "Mesic Grass", landcover_type),
+      landcover_type = ifelse(Landcover == 212, "Xeric Grass", landcover_type),
+      landcover_type = ifelse(Landcover == 221, "Mesic Shrub", landcover_type),
+      landcover_type = ifelse(Landcover == 222, "Xeric Shrub", landcover_type),
+      landcover_type = ifelse(Landcover == 230, "Forest", landcover_type),
+      landcover_type = ifelse(Landcover == 310, "Agriculture", landcover_type),
+      landcover_type = ifelse(Landcover == 331, "Commercial", landcover_type), 
+      landcover_type = ifelse(Landcover == 332, "Developed", landcover_type)  
+    ) %>%
+    dplyr::select(-OpenHabitat)
+  
+
+  #'  Combine extracted covariates into a single data frame
+  #'  =====================================================
+  covs_df <- full_join(cam_covs, habitat, by = "obs") %>%
+    full_join(anthro_covs, by = "CameraLocation") %>%
+    full_join(station_covs, by = "CameraLocation") %>%
+    relocate(c(CameraLocation, Year.x, Study_Area), .before = obs) %>%
+    relocate(c(Latitude, Longitude), .after = last_col()) %>%
+    dplyr::select(-c(obs, Year.y, X, Cell_ID, Camera_ID)) 
+  colnames(covs_df)[colnames(covs_df) == "Year.x"] <- "Year"
+  
+  #'  Don't forget that you have daily precip & temp data but these need to be 
+  #'  filtered and summarized based on specific analyses, not here.
+  
+  #'  Save for occupancy analyses
+  # write.csv(covs_df, paste0('./Outputs/CameraLocation_Covariates18-21_', Sys.Date(), '.csv'))
+  
+  
+  
+  
+  
+  
+  #' #'  Extract values from polygons
+  #' #'  Change sf objects to sp objects
+  #' sp_cams <- as(cams, "Spatial")
+  #' sp_Colville <- as(Colville_NF, "Spatial")
+  #' sp_Okanogan <- as(Okanogan_NF, "Spatial")
+  #' sp_NE_DNR <- as(NE_DNR, "Spatial")
+  #' sp_OK_DNR <- as(OK_DNR, "Spatial")
+  #' 
+  #' #'  Use over function from sp to extract attribute data for each camera site
+  #' CONF_cams <- sp_cams %over% sp_Colville
+  #' OKNF_cams <- sp_cams %over% sp_Okanogan
+  #' NEDNR_cams <- sp_cams %over% sp_NE_DNR
+  #' OKDNR_cams <- sp_cams %over% sp_OK_DNR
+  #' 
+  #' #'  Simplify attribute data set
+  #' CONF_cams <- as.data.frame(CONF_cams$FORESTNAME) %>%
+  #'   mutate(`CONF_cams$FORESTNAME` = ifelse(`CONF_cams$FORESTNAME` == "Colville National Forest", "CONF", NA))
+  #' colnames(CONF_cams) <- "National Forest 1"
+  #' OKNF_cams <- as.data.frame(OKNF_cams$FORESTNAME) %>%
+  #'   mutate(`OKNF_cams$FORESTNAME` = ifelse(`OKNF_cams$FORESTNAME` == "Okanogan-Wenatchee National Forest", "OKNF", NA))
+  #' colnames(OKNF_cams) <- "National Forest 2"
+  #' NEDNR_cams <- as.data.frame(NEDNR_cams$PARCEL_TYP) %>%
+  #'   mutate(`NEDNR_cams$PARCEL_TYP` = ifelse(`NEDNR_cams$PARCEL_TYP` == 1, "NEDNR", NA))
+  #' colnames(NEDNR_cams) <- "State Forest 1"
+  #' OKDNR_cams <- as.data.frame(OKDNR_cams$PARCEL_TYP) %>%
+  #'   mutate(`OKDNR_cams$PARCEL_TYP` = ifelse(`OKDNR_cams$PARCEL_TYP` == 1, "OKDNR", NA))
+  #' colnames(OKDNR_cams) <- "State Forest 2"
+  #' 
+  #' #'  Merge 
+  #' NF_cams <- cbind(CONF_cams, OKNF_cams)
+  #' NF_cams$NationalForest <- apply(NF_cams, 1, function(i) ifelse(all(is.na(i)), NA, i[!is.na(i)]))
+  #' DNR_cams <- cbind(NEDNR_cams, OKDNR_cams)
+  #' DNR_cams$StateForest <- apply(DNR_cams, 1, function(i) ifelse(all(is.na(i)), NA, i[!is.na(i)]))
+  #' public_cams <- as.data.frame(cbind(NF_cams = NF_cams$NationalForest, DNR_cams = DNR_cams$StateForest))
+  #' public_cams$PublicLands <- apply(public_cams, 1, function(i) ifelse(all(is.na(i)), NA, i[!is.na(i)]))
+
+  
+  
+  
+  
