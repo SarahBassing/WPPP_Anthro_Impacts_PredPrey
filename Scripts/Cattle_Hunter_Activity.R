@@ -325,52 +325,73 @@
   
   #'  Sum number of trap nights per camera
   SEffort_graze1820 <- rbind(SEffort_graze18, SEffort_graze19, SEffort_graze20)
-  TrpNgts_graze1820 <- as.data.frame(rowSums(SEffort_graze1820))
+  TrpNgts_graze1820 <- as.data.frame(rowSums(SEffort_graze1820,  na.rm = TRUE))
   colnames(TrpNgts_graze1820) <- "Trap_Nights"
   TrpNgts_graze1820_NE <- TrpNgts_graze1820[grepl("NE", row.names(TrpNgts_graze1820)),]
   TrpNgts_graze1820_OK <- TrpNgts_graze1820[grepl("OK", row.names(TrpNgts_graze1820)),]
   
   SEffort_hunt1820 <- rbind(SEffort_hunt18, SEffort_hunt19, SEffort_hunt20)
-  TrpNgts_hunt1820 <- as.data.frame(rowSums(SEffort_hunt1820))
+  TrpNgts_hunt1820 <- as.data.frame(rowSums(SEffort_hunt1820,  na.rm = TRUE))
   colnames(TrpNgts_hunt1820) <- "Trap_Nights"
   TrpNgts_hunt1820_NE <- TrpNgts_hunt1820[grepl("NE", row.names(TrpNgts_hunt1820)),]
   TrpNgts_hunt1820_OK <- TrpNgts_hunt1820[grepl("OK", row.names(TrpNgts_hunt1820)),]
   
   
-  #'  Generate site-level measure of anthropgogenic activity for each camera,
+  ####  Site-Level Anthropogenic Covariates  ####
+  #'  ---------------------------------------
+  #'  Generate site-level measure of anthropogenic activity for each camera,
   #'  standardized by number of trap nights per site 
+
   #'  Total cattle detection events across entire study period
   sum_graze18 <- rowSums(DH_cattle_graze18, na.rm = TRUE)
   sum_graze19 <- rowSums(DH_cattle_graze19, na.rm = TRUE)
   sum_graze20 <- rowSums(DH_cattle_graze20, na.rm = TRUE)
-  
+  #'  Create data frame with counts of detections and sampling effort per site
   GrazingActivity <- as.data.frame(c(sum_graze18, sum_graze19, sum_graze20)) %>%
     cbind(row.names(.)) %>%
     cbind(TrpNgts_graze1820) 
-  colnames(GrazingActivity) <- c("GrazingActivity", "CameraLocation", "TrapNights")
+  colnames(GrazingActivity) <- c("CattleCounts", "CameraLocation", "TrapNights")
+  #'  Calculate detections/trap night so standardized by effort
   GrazingActivity <- GrazingActivity %>%
-    transmute(CameraLocation, GrazingActivity = GrazingActivity/TrapNights)
-  
+    transmute(CameraLocation = CameraLocation, 
+              GrazingActivity = CattleCounts/TrapNights) %>%
+    #'  0 detections/0 trap nights causes problems
+    mutate(GrazingActivity = ifelse(GrazingActivity == "NaN", 0, GrazingActivity),
+           GrazingActivity = round(GrazingActivity, 2))
   
   #'  Total hunter detection events across entire study period
   sum_hunt18 <- rowSums(DH_all_hunt18, na.rm = TRUE)
   sum_hunt19 <- rowSums(DH_all_hunt19, na.rm = TRUE)
   sum_hunt20 <- rowSums(DH_all_hunt20, na.rm = TRUE)
-  
+  #'  Create data frame with counts of detections and sampling effort per site
   HuntingActivity <- as.data.frame(c(sum_hunt18, sum_hunt19, sum_hunt20)) %>%
-    cbind(row.names(.))
-  colnames(HuntingActivity) <- c("HuntingActivity", "CameraLocation")
+    cbind(row.names(.)) %>%
+    cbind(TrpNgts_hunt1820)
+  colnames(HuntingActivity) <- c("HunterCounts", "CameraLocation", "TrapNights")
+  #'  Calculate detections/trap night so standardized by effort
+  HuntingActivity <- HuntingActivity %>%
+    transmute(CameraLocation = CameraLocation, 
+              HuntingActivity = HunterCounts/TrapNights) %>%
+    #'  0 detections/0 trap nights causes problems
+    mutate(HuntingActivity = ifelse(HuntingActivity == "NaN", 0, HuntingActivity),
+           HuntingActivity = round(HuntingActivity, 2))
   
   #'  Total vehicle detection events across entire study period
   sum_traffic18 <- rowSums(DH_vehicle18, na.rm = TRUE)
   sum_traffic19 <- rowSums(DH_vehicle19, na.rm = TRUE)
   sum_traffic20 <- rowSums(DH_vehicle20, na.rm = TRUE)
-  
+  #'  Create data frame with counts of detections and sampling effort per site
   VehicleActivity <- as.data.frame(c(sum_traffic18, sum_traffic19, sum_traffic20)) %>%
-    cbind(row.names(.))
-  colnames(VehicleActivity) <- c("VehicleActivity", "CameraLocation")
-  
-  
+    cbind(row.names(.)) %>%
+    cbind(TrpNgts_hunt1820)
+  colnames(VehicleActivity) <- c("VehicleCounts", "CameraLocation", "TrapNights")
+  #'  Calculate detections/trap night so standardized by effort
+  VehicleActivity <- VehicleActivity %>%
+    transmute(CameraLocation = CameraLocation, 
+              VehicleActivity = VehicleCounts/TrapNights) %>%
+    #'  0 detections/0 trap nights causes problems
+    mutate(VehicleActivity = ifelse(VehicleActivity == "NaN", 0, VehicleActivity),
+           VehicleActivity = round(VehicleActivity, 2))
   
   #'  Create single site-level df of anthropogenic activity to add to occupancy covs
   anthro_covs <- full_join(GrazingActivity, HuntingActivity, by = "CameraLocation") %>%
