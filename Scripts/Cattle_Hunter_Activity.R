@@ -281,6 +281,8 @@
   DH_cattle_graze20 <- cattle_graze20[[1]][243:361,1:13] 
   
   DH_cattle_graze1820 <- rbind(DH_cattle_graze18, DH_cattle_graze19, DH_cattle_graze20)
+  #'  Remove rows missing detection data for ALL occasions (12 cameras completely inoperable)
+  DH_cattle_graze1820 <- DH_cattle_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_cattle_graze1820_NE <- DH_cattle_graze1820[grepl("NE", row.names(DH_cattle_graze1820)),]
   DH_cattle_graze1820_OK <- DH_cattle_graze1820[grepl("OK", row.names(DH_cattle_graze1820)),]
   
@@ -295,6 +297,8 @@
   DH_all_hunt20 <- all_hunt20[[1]][243:361,1:8]
   
   DH_all_hunt1820 <- rbind(DH_all_hunt18, DH_all_hunt19, DH_all_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (19 cameras completely inoperable)
+  DH_all_hunt1820 <- DH_all_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_all_hunt1820_NE <- DH_all_hunt1820[grepl("NE", row.names(DH_all_hunt1820)),]
   DH_all_hunt1820_OK <- DH_all_hunt1820[grepl("OK", row.names(DH_all_hunt1820)),]
   
@@ -309,6 +313,8 @@
   DH_vehicle20 <- vehicle20[[1]][243:361,1:8]
   
   DH_vehicle1820 <- rbind(DH_vehicle18, DH_vehicle19, DH_vehicle20)
+  #'  Remove rows missing detection data for ALL occasions (19 cameras completely inoperable)
+  DH_vehicle1820 <- DH_vehicle1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_vehicle1820_NE <- DH_vehicle1820[grepl("NE", row.names(DH_vehicle1820)),]
   DH_vehicle1820_OK <- DH_vehicle1820[grepl("OK", row.names(DH_vehicle1820)),]
   
@@ -325,12 +331,16 @@
   
   #'  Sum number of trap nights per camera
   SEffort_graze1820 <- rbind(SEffort_graze18, SEffort_graze19, SEffort_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  SEffort_graze1820 <- SEffort_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   TrpNgts_graze1820 <- as.data.frame(rowSums(SEffort_graze1820,  na.rm = TRUE))
   colnames(TrpNgts_graze1820) <- "Trap_Nights"
   TrpNgts_graze1820_NE <- TrpNgts_graze1820[grepl("NE", row.names(TrpNgts_graze1820)),]
   TrpNgts_graze1820_OK <- TrpNgts_graze1820[grepl("OK", row.names(TrpNgts_graze1820)),]
   
   SEffort_hunt1820 <- rbind(SEffort_hunt18, SEffort_hunt19, SEffort_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  SEffort_hunt1820 <- SEffort_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   TrpNgts_hunt1820 <- as.data.frame(rowSums(SEffort_hunt1820,  na.rm = TRUE))
   colnames(TrpNgts_hunt1820) <- "Trap_Nights"
   TrpNgts_hunt1820_NE <- TrpNgts_hunt1820[grepl("NE", row.names(TrpNgts_hunt1820)),]
@@ -341,15 +351,20 @@
   #'  ---------------------------------------
   #'  Generate site-level measure of anthropogenic activity for each camera,
   #'  standardized by number of trap nights per site 
+  #'  DON'T remove rows with all missing observations yet- save for full covariate 
+  #'  data frame in Occupancy_Models.R script
 
   #'  Total cattle detection events across entire study period
   sum_graze18 <- rowSums(DH_cattle_graze18, na.rm = TRUE)
   sum_graze19 <- rowSums(DH_cattle_graze19, na.rm = TRUE)
   sum_graze20 <- rowSums(DH_cattle_graze20, na.rm = TRUE)
+  #'  Sum number of trap nights per camera (including inoperable cams)
+  SEffort_graze <- rbind(SEffort_graze18, SEffort_graze19, SEffort_graze20)
+  TrpNgts_graze <- as.data.frame(rowSums(SEffort_graze,  na.rm = TRUE))
   #'  Create data frame with counts of detections and sampling effort per site
   GrazingActivity <- as.data.frame(c(sum_graze18, sum_graze19, sum_graze20)) %>%
     cbind(row.names(.)) %>%
-    cbind(TrpNgts_graze1820) 
+    cbind(TrpNgts_graze) 
   colnames(GrazingActivity) <- c("CattleCounts", "CameraLocation", "TrapNights")
   #'  Calculate detections/trap night so standardized by effort
   GrazingActivity <- GrazingActivity %>%
@@ -358,15 +373,19 @@
     #'  0 detections/0 trap nights causes problems
     mutate(GrazingActivity = ifelse(GrazingActivity == "NaN", 0, GrazingActivity),
            GrazingActivity = round(GrazingActivity, 2))
+
   
   #'  Total hunter detection events across entire study period
   sum_hunt18 <- rowSums(DH_all_hunt18, na.rm = TRUE)
   sum_hunt19 <- rowSums(DH_all_hunt19, na.rm = TRUE)
   sum_hunt20 <- rowSums(DH_all_hunt20, na.rm = TRUE)
+  #'  Sum number of trap nights per camera (including inoperable cams)
+  SEffort_hunt <- rbind(SEffort_hunt18, SEffort_hunt19, SEffort_hunt20)
+  TrpNgts_hunt <- as.data.frame(rowSums(SEffort_hunt,  na.rm = TRUE))
   #'  Create data frame with counts of detections and sampling effort per site
   HuntingActivity <- as.data.frame(c(sum_hunt18, sum_hunt19, sum_hunt20)) %>%
     cbind(row.names(.)) %>%
-    cbind(TrpNgts_hunt1820)
+    cbind(TrpNgts_hunt)
   colnames(HuntingActivity) <- c("HunterCounts", "CameraLocation", "TrapNights")
   #'  Calculate detections/trap night so standardized by effort
   HuntingActivity <- HuntingActivity %>%
@@ -383,7 +402,7 @@
   #'  Create data frame with counts of detections and sampling effort per site
   VehicleActivity <- as.data.frame(c(sum_traffic18, sum_traffic19, sum_traffic20)) %>%
     cbind(row.names(.)) %>%
-    cbind(TrpNgts_hunt1820)
+    cbind(TrpNgts_hunt)
   colnames(VehicleActivity) <- c("VehicleCounts", "CameraLocation", "TrapNights")
   #'  Calculate detections/trap night so standardized by effort
   VehicleActivity <- VehicleActivity %>%
