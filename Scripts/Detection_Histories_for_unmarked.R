@@ -359,6 +359,9 @@
   DH_bob_graze20 <- bob_graze20[[1]][243:361,1:13] 
   
   DH_bob_graze1820 <- rbind(DH_bob_graze18, DH_bob_graze19, DH_bob_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  #'  All detections are missing at sites: 10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336
+  DH_bob_graze1820 <- DH_bob_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_bob_graze1820_NE <- DH_bob_graze1820[grepl("NE", row.names(DH_bob_graze1820)),]
   DH_bob_graze1820_OK <- DH_bob_graze1820[grepl("OK", row.names(DH_bob_graze1820)),]
   
@@ -371,6 +374,10 @@
   DH_bob_hunt20 <- bob_hunt20[[1]][243:361,1:8]
   
   DH_bob_hunt1820 <- rbind(DH_bob_hunt18, DH_bob_hunt19, DH_bob_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  #'  All detections are missing at sites: 16, 23, 25, 27, 29, 38, 85, 111, 119, 
+  #'  128, 129, 144, 146, 156, 162, 216, 274, 282, 283
+  DH_bob_hunt1820 <- DH_bob_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_bob_hunt1820_NE <- DH_bob_hunt1820[grepl("NE", row.names(DH_bob_hunt1820)),]
   DH_bob_hunt1820_OK <- DH_bob_hunt1820[grepl("OK", row.names(DH_bob_hunt1820)),]
   
@@ -384,6 +391,8 @@
   DH_bear_graze20 <- bear_graze20[[1]][243:361,1:13] 
   
   DH_bear_graze1820 <- rbind(DH_bear_graze18, DH_bear_graze19, DH_bear_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_bear_graze1820 <- DH_bear_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_bear_graze1820_NE <- DH_bear_graze1820[grepl("NE", row.names(DH_bear_graze1820)),]
   DH_bear_graze1820_OK <- DH_bear_graze1820[grepl("OK", row.names(DH_bear_graze1820)),]
   
@@ -396,6 +405,8 @@
   DH_bear_hunt20 <- bear_hunt20[[1]][243:361,1:8]
   
   DH_bear_hunt1820 <- rbind(DH_bear_hunt18, DH_bear_hunt19, DH_bear_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_bear_hunt1820 <- DH_bear_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_bear_hunt1820_NE <- DH_bear_hunt1820[grepl("NE", row.names(DH_bear_hunt1820)),]
   DH_bear_hunt1820_OK <- DH_bear_hunt1820[grepl("OK", row.names(DH_bear_hunt1820)),]
   
@@ -409,6 +420,8 @@
   DH_coug_graze20 <- coug_graze20[[1]][243:361,1:13] 
   
   DH_coug_graze1820 <- rbind(DH_coug_graze18, DH_coug_graze19, DH_coug_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_coug_graze1820 <- DH_coug_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_coug_graze1820_NE <- DH_coug_graze1820[grepl("NE", row.names(DH_coug_graze1820)),]
   DH_coug_graze1820_OK <- DH_coug_graze1820[grepl("OK", row.names(DH_coug_graze1820)),]
   
@@ -421,6 +434,8 @@
   DH_coug_hunt20 <- coug_hunt20[[1]][243:361,1:8]
   
   DH_coug_hunt1820 <- rbind(DH_coug_hunt18, DH_coug_hunt19, DH_coug_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_coug_hunt1820 <- DH_coug_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_coug_hunt1820_NE <- DH_coug_hunt1820[grepl("NE", row.names(DH_coug_hunt1820)),]
   DH_coug_hunt1820_OK <- DH_coug_hunt1820[grepl("OK", row.names(DH_coug_hunt1820)),]
   
@@ -434,6 +449,8 @@
   DH_coy_graze20 <- coy_graze20[[1]][243:361,1:13] 
   
   DH_coy_graze1820 <- rbind(DH_coy_graze18, DH_coy_graze19, DH_coy_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_coy_graze1820 <- DH_coy_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_coy_graze1820_NE <- DH_coy_graze1820[grepl("NE", row.names(DH_coy_graze1820)),]
   DH_coy_graze1820_OK <- DH_coy_graze1820[grepl("OK", row.names(DH_coy_graze1820)),]
   
@@ -446,6 +463,8 @@
   DH_coy_hunt20 <- coy_hunt20[[1]][243:361,1:8]
   
   DH_coy_hunt1820 <- rbind(DH_coy_hunt18, DH_coy_hunt19, DH_coy_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_coy_hunt1820 <- DH_coy_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_coy_hunt1820_NE <- DH_coy_hunt1820[grepl("NE", row.names(DH_coy_hunt1820)),]
   DH_coy_hunt1820_OK <- DH_coy_hunt1820[grepl("OK", row.names(DH_coy_hunt1820)),]
   
@@ -459,6 +478,8 @@
   DH_elk_graze20 <- elk_graze20[[1]][243:361,1:13] 
   
   DH_elk_graze1820 <- rbind(DH_elk_graze18, DH_elk_graze19, DH_elk_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_elk_graze1820 <- DH_elk_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_elk_graze1820_NE <- DH_elk_graze1820[grepl("NE", row.names(DH_elk_graze1820)),]
   DH_elk_graze1820_OK <- DH_elk_graze1820[grepl("OK", row.names(DH_elk_graze1820)),]
   
@@ -471,6 +492,8 @@
   DH_elk_hunt20 <- elk_hunt20[[1]][243:361,1:8]
   
   DH_elk_hunt1820 <- rbind(DH_elk_hunt18, DH_elk_hunt19, DH_elk_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_elk_hunt1820 <- DH_elk_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_elk_hunt1820_NE <- DH_elk_hunt1820[grepl("NE", row.names(DH_elk_hunt1820)),]
   DH_elk_hunt1820_OK <- DH_elk_hunt1820[grepl("OK", row.names(DH_elk_hunt1820)),]
   
@@ -484,6 +507,8 @@
   DH_moose_graze20 <- moose_graze20[[1]][243:361,1:13] 
   
   DH_moose_graze1820 <- rbind(DH_moose_graze18, DH_moose_graze19, DH_moose_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_moose_graze1820 <- DH_moose_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_moose_graze1820_NE <- DH_moose_graze1820[grepl("NE", row.names(DH_moose_graze1820)),]
   DH_moose_graze1820_OK <- DH_moose_graze1820[grepl("OK", row.names(DH_moose_graze1820)),]
   
@@ -496,6 +521,8 @@
   DH_moose_hunt20 <- moose_hunt20[[1]][243:361,1:8]
   
   DH_moose_hunt1820 <- rbind(DH_moose_hunt18, DH_moose_hunt19, DH_moose_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_moose_hunt1820 <- DH_moose_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_moose_hunt1820_NE <- DH_moose_hunt1820[grepl("NE", row.names(DH_moose_hunt1820)),]
   DH_moose_hunt1820_OK <- DH_moose_hunt1820[grepl("OK", row.names(DH_moose_hunt1820)),]
   
@@ -509,6 +536,8 @@
   DH_md_graze20 <- md_graze20[[1]][243:361,1:13] 
   
   DH_md_graze1820 <- rbind(DH_md_graze18, DH_md_graze19, DH_md_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_md_graze1820 <- DH_md_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_md_graze1820_NE <- DH_md_graze1820[grepl("NE", row.names(DH_md_graze1820)),]
   DH_md_graze1820_OK <- DH_md_graze1820[grepl("OK", row.names(DH_md_graze1820)),]
   
@@ -521,6 +550,8 @@
   DH_md_hunt20 <- md_hunt20[[1]][243:361,1:8]
   
   DH_md_hunt1820 <- rbind(DH_md_hunt18, DH_md_hunt19, DH_md_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_md_hunt1820 <- DH_md_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_md_hunt1820_NE <- DH_md_hunt1820[grepl("NE", row.names(DH_md_hunt1820)),]
   DH_md_hunt1820_OK <- DH_md_hunt1820[grepl("OK", row.names(DH_md_hunt1820)),]
   
@@ -534,6 +565,8 @@
   DH_wtd_graze20 <- wtd_graze20[[1]][243:361,1:13] 
   
   DH_wtd_graze1820 <- rbind(DH_wtd_graze18, DH_wtd_graze19, DH_wtd_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_wtd_graze1820 <- DH_wtd_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_wtd_graze1820_NE <- DH_wtd_graze1820[grepl("NE", row.names(DH_wtd_graze1820)),]
   DH_wtd_graze1820_OK <- DH_wtd_graze1820[grepl("OK", row.names(DH_wtd_graze1820)),]
   
@@ -546,6 +579,8 @@
   DH_wtd_hunt20 <- wtd_hunt20[[1]][243:361,1:8]
   
   DH_wtd_hunt1820 <- rbind(DH_wtd_hunt18, DH_wtd_hunt19, DH_wtd_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_wtd_hunt1820 <- DH_wtd_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_wtd_hunt1820_NE <- DH_wtd_hunt1820[grepl("NE", row.names(DH_wtd_hunt1820)),]
   DH_wtd_hunt1820_OK <- DH_wtd_hunt1820[grepl("OK", row.names(DH_wtd_hunt1820)),]
   
@@ -559,6 +594,8 @@
   DH_wolf_graze20 <- wolf_graze20[[1]][243:361,1:13]
   
   DH_wolf_graze1820 <- rbind(DH_wolf_graze18, DH_wolf_graze19, DH_wolf_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_wolf_graze1820 <- DH_wolf_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   DH_wolf_graze1820_NE <- DH_wolf_graze1820[grepl("NE", row.names(DH_wolf_graze1820)),]
   DH_wolf_graze1820_OK <- DH_wolf_graze1820[grepl("OK", row.names(DH_wolf_graze1820)),]
   
@@ -571,6 +608,8 @@
   DH_wolf_hunt20 <- wolf_hunt20[[1]][243:361,1:8]
   
   DH_wolf_hunt1820 <- rbind(DH_wolf_hunt18, DH_wolf_hunt19, DH_wolf_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_wolf_hunt1820 <- DH_wolf_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   DH_wolf_hunt1820_NE <- DH_wolf_hunt1820[grepl("NE", row.names(DH_wolf_hunt1820)),]
   DH_wolf_hunt1820_OK <- DH_wolf_hunt1820[grepl("OK", row.names(DH_wolf_hunt1820)),]
   
@@ -586,10 +625,14 @@
   Effort_hunt20 <- bob_hunt20[[2]][243:361,1:8]
   
   Effort_graze1820 <- rbind(Effort_graze18, Effort_graze19, Effort_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  Effort_graze1820 <- Effort_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
   Effort_graze1820_NE <- Effort_graze1820[grepl("NE", row.names(Effort_graze1820)),]
   Effort_graze1820_OK <- Effort_graze1820[grepl("OK", row.names(Effort_graze1820)),]
   
   Effort_hunt1820 <- rbind(Effort_hunt18, Effort_hunt19, Effort_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  Effort_hunt1820 <- Effort_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   Effort_hunt1820_NE <- Effort_hunt1820[grepl("NE", row.names(Effort_hunt1820)),]
   Effort_hunt1820_OK <- Effort_hunt1820[grepl("OK", row.names(Effort_hunt1820)),]
 
