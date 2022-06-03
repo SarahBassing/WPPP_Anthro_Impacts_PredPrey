@@ -420,7 +420,59 @@
   # save(anthro_covs, file = "./Outputs/anthro_covs.RData")
   
   
+  ####  Binary Detection Histories  ####
+  #'  Create classic detection history (binary) using detections of livestock & 
+  #'  hunters- to be used as additional species in multi-species occupancy models
+  DH <- function(images, spp, start_date) {
+    det_hist <- detectionHistory(recordTable = images,
+                                 camOp = camop_problem,
+                                 stationCol = "CameraLocation",
+                                 speciesCol = "Activity",
+                                 recordDateTimeCol = "DateTime",
+                                 recordDateTimeFormat = "%Y-%m-%d %H:%M:%S",
+                                 species = spp,
+                                 occasionLength = 7,
+                                 day1 = start_date, 
+                                 # datesAsOccasionNames = TRUE,
+                                 # occasionStartTime = 12, # starts at noon
+                                 timeZone = "America/Los_Angeles",
+                                 output = "binary",
+                                 includeEffort = TRUE,
+                                 scaleEffort = FALSE,
+                                 # writecsv = TRUE,
+                                 outDir = "./Data/Detection_Histories")
+    
+    return(det_hist)
+  }
+  ####  LIVESTOCK  ####
+  #'  Grazing season only
+  livestock_graze18 <- DH(cattle2018, "Grazing", "2018-07-01")
+  DH_livestock_graze18 <- livestock_graze18[[1]][1:125,1:13]   
+  livestock_graze19 <- DH(cattle2019, "Grazing", "2019-07-01")
+  DH_livestock_graze19 <- livestock_graze19[[1]][126:242,1:13] 
+  livestock_graze20 <- DH(cattle2020, "Grazing", "2020-07-01")
+  DH_livestock_graze20 <- livestock_graze20[[1]][243:361,1:13]
   
+  DH_livestock_graze1820 <- rbind(DH_livestock_graze18, DH_livestock_graze19, DH_livestock_graze20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_livestock_graze1820 <- DH_livestock_graze1820[-c(10, 13, 17, 27, 30, 61, 62, 110, 216, 274, 283, 336),]
+  DH_livestock_graze1820_NE <- DH_livestock_graze1820[grepl("NE", row.names(DH_livestock_graze1820)),]
+  DH_livestock_graze1820_OK <- DH_livestock_graze1820[grepl("OK", row.names(DH_livestock_graze1820)),]
+  
+  ####  HUNTERS  ####
+  #'  Hunting season only
+  hunters_hunt18 <- DH(hunters2018, "Bow_Rifle_Hunting", "2018-10-01")
+  DH_hunters_hunt18 <- hunters_hunt18[[1]][1:125,1:8]  
+  hunters_hunt19 <- DH(hunters2019, "Bow_Rifle_Hunting", "2019-10-01")
+  DH_hunters_hunt19 <- hunters_hunt19[[1]][126:242,1:8] 
+  hunters_hunt20 <- DH(hunters2020, "Bow_Rifle_Hunting", "2020-10-01")
+  DH_hunters_hunt20 <- hunters_hunt20[[1]][243:361,1:8]
+  
+  DH_hunters_hunt1820 <- rbind(DH_hunters_hunt18, DH_hunters_hunt19, DH_hunters_hunt20)
+  #'  Remove rows missing detection data for ALL occasions (camera completely inoperable)
+  DH_hunters_hunt1820 <- DH_hunters_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
+  DH_hunters_hunt1820_NE <- DH_hunters_hunt1820[grepl("NE", row.names(DH_hunters_hunt1820)),]
+  DH_hunters_hunt1820_OK <- DH_hunters_hunt1820[grepl("OK", row.names(DH_hunters_hunt1820)),]
   
   
   ####  Summary Stats  ####
