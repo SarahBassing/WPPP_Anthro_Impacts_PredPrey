@@ -1,19 +1,23 @@
   #'  ============================================
-  #'  Occupancy Models (cam vs collar analysis)
+  #'  Multi-Species Co-Occurance Occupancy Models
   #'  Washington Predator-Prey Project
   #'  Sarah Bassing
-  #'  Februray 2021
+  #'  April 2022
   #'  ============================================
-  #'  Script to create unmarked data frames and run single-species, single-season
-  #'  occupancy models for deer, elk, cougars, wolves, coyotes, and bobcats for
-  #'  summer 2018 (7/1/18 - 9/29/18) and winter 2018-2019 (12/1/18 - 3/1/19),
-  #'  respectively. Each single-season occupancy model includes 13 7-day sampling 
-  #'  occasions comprising the warmest months in summer and coldest months in 
-  #'  winter with the most consistent snow.
+  #'  Script to create unmarked data frames and run multi-species, single-season
+  #'  occupancy models for deer, elk, moose, black bears, cougars, wolves, coyotes, 
+  #'  and bobcats during the grazing season 2018-2020 (July - Sept) and hunting
+  #'  season 2018-2020 (Oct - Nov), respectively. Grazing season co-occurrence 
+  #'  models include 13 7-day sampling occasions comprising the peak of livestock
+  #'  activity detected on camera. Hunting season co-occurrence models include
+  #'  8 7-day sampling occasions comprising the two general rifle hunting seasons
+  #'  in eastern Washington. Co-occurrence models test whether predator-prey 
+  #'  co-occurrence is not independent and whether their occurrence, co-occurrence,
+  #'  and detection are influenced by livestock and hunting activity at camera sites.
   #'  
-  #'  Encounter histories are generated with the CameratTrap_DetectionHistories.R
-  #'  script. Covariate data included in occupancy models were collected at each
-  #'  camera site or extracted from remotely sensed data.
+  #'  Encounter histories are generated with the CameratTrap_DetectionHistories_for_unmarked.R
+  #'  and Cattle_Hunter_Activity.R scripts. Covariate data included in occupancy 
+  #'  models were collected at each camera site or extracted from remotely sensed data.
   #'  ============================================
 
   #'  Clean workspace & load libraries
