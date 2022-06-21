@@ -40,6 +40,10 @@
   #'  per sampling occasion
   source("./Scripts/Cattle_Hunter_Activity.R")
   
+  #'  Formats covariate data and detection histories for multi-species occupancy 
+  #'  models in unmarked with TWO-SPECIES interactions
+  source("./Scripts/Data_Formatting_2SppX_OccMods.R")
+  
   
   ####  Multi-Species Occupancy models  ####
   #'  ==================================
@@ -346,6 +350,7 @@
   #' Model selection
   modSel(gs_bearwtd_fl)
   summary(gs_bearwtd_graze0)
+  summary(gs_bearwtd_graze1) # f12 not significant
   
   
   ####  Bear-Moose Grazing Season  ####
