@@ -117,7 +117,7 @@
       arrange(Year, CameraLocation) #NECESSARY TO MATCH DH's CAMERALOCATION ORDER
     
     #'  Adjust reference category for Trail factors
-    order_trail <- c("Trail", "Dirt road", "Decommissioned road")
+    order_trail <- c("Trail", "Dirt road") 
     formatted <- formatted %>%
       mutate(
         Trail = fct_relevel(Trail, order_trail)
