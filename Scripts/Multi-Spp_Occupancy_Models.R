@@ -108,6 +108,12 @@
                         "~GrazingActivity + Public", "~1", "~1",
                         "~0")
 
+  occFormulas_grz_wolfmd <- c("~Elev + I(Elev^2) + PercForest",
+                              "~Study_Area + Elev + I(Elev^2) + PercForest",
+                              "~Study_Area + Elev + I(Elev^2) + PercForest",
+                              "~GrazingActivity", "~1", "~1",
+                              "~0")
+  
   
   ####  Cougar-Mule Deer-Cattle Grazing Season  ####
   (coug.md.cow_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_md_cattle_grazing_UMF, silent = TRUE))
@@ -212,12 +218,13 @@
   (wolf.md.cow_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_md_cattle_grazing_UMF, silent = TRUE))
   (wolf.md.cow_grz <- occuMulti(detFormulas_trail, occFormulas_grz, wolf_md_cattle_grazing_UMF, silent = TRUE))
   (wolf.md.cow_pub <- occuMulti(detFormulas_trail, occFormulas_pub, wolf_md_cattle_grazing_UMF, silent = TRUE)) # FAIL
-  (wolf.md.cow_grzpub <- occuMulti(detFormulas_trail, occFormulas_grzpub, wolf_md_cattle_grazing_UMF, silent = TRUE)) 
-  wolf.md.cow_fl <- fitList(wolf.md.cow_hab0, wolf.md.cow_hab1, wolf.md.cow_grz, wolf.md.cow_grzpub)
+  (wolf.md.cow_grzpub <- occuMulti(detFormulas_trail, occFormulas_grzpub, wolf_md_cattle_grazing_UMF, silent = TRUE)) # FAIL
+  (wolf.md.cow_grz_wolfmd <- occuMulti(detFormulas_trail, occFormulas_grz_wolfmd, wolf_md_cattle_grazing_UMF, silent = TRUE))
+  wolf.md.cow_fl <- fitList(wolf.md.cow_hab0, wolf.md.cow_hab1, wolf.md.cow_grz, wolf.md.cow_grz_wolfmd)
   #' Model selection
   modSel(wolf.md.cow_fl)
   summary(wolf.md.cow_grz)
-  summary(wolf.md.cow_grzpub)
+  summary(wolf.md.cow_wolfmd)
   
   
   ####  Wolf-Elk-Cattle Grazing Season  ####
