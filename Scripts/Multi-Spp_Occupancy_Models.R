@@ -224,7 +224,7 @@
   #' Model selection
   modSel(wolf.md.cow_fl)
   summary(wolf.md.cow_grz)
-  summary(wolf.md.cow_wolfmd)
+  summary(wolf.md.cow_grz_wolfmd)
   
   
   ####  Wolf-Elk-Cattle Grazing Season  ####
@@ -536,6 +536,11 @@
                               "~Study_Area + Elev + I(Elev^2) + PercForest + Public",
                               "~1", "~1", "~1",
                               "~0")
+  occFormulas_habpubish2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
+                              "~Study_Area + Elev + I(Elev^2) + PercForest + Public",
+                              "~Study_Area + Elev + I(Elev^2) + PercForest + Public",
+                              "~Public", "~1", "~1",
+                              "~0")
   occFormulas_huntpubish1 <- c("~Study_Area + Elev + I(Elev^2) + PercForest",
                                "~Study_Area + Elev + I(Elev^2) + PercForest + Public",
                                "~Study_Area + Elev + I(Elev^2) + PercForest + Public",
@@ -561,10 +566,11 @@
   (coug.md.hunt_null2 <- occuMulti(detFormulas_pub, occFormulas_null2, coug_md_hunter_hunting_UMF, silent = TRUE)) # FAIL 
   (coug.md.hunt_habpub0 <- occuMulti(detFormulas_pub, occFormulas_habpubish0, coug_md_hunter_hunting_UMF, silent = TRUE)) 
   (coug.md.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_md_hunter_hunting_UMF, silent = TRUE)) 
+  (coug.md.hunt_habpub2 <- occuMulti(detFormulas_pub, occFormulas_habpubish2, coug_md_hunter_hunting_UMF, silent = TRUE))
   (coug.md.hunt_huntpub1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, coug_md_hunter_hunting_UMF, silent = TRUE)) 
   (coug.md.hunt_huntpub2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, coug_md_hunter_hunting_UMF, silent = TRUE)) 
   #' List of fitted models
-  coug.md.hunt_fl <- fitList(coug.md.hunt_habpub0, coug.md.hunt_habpub1, coug.md.hunt_huntpub1, coug.md.hunt_huntpub2) 
+  coug.md.hunt_fl <- fitList(coug.md.hunt_habpub0, coug.md.hunt_habpub1, coug.md.hunt_habpub2, coug.md.hunt_huntpub1, coug.md.hunt_huntpub2) 
   #' Model selection
   modSel(coug.md.hunt_fl)
   summary(coug.md.hunt_huntpub1)
@@ -584,6 +590,7 @@
   (coug.elk.hunt_null2 <- occuMulti(detFormulas_pub, occFormulas_null2, coug_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL 
   (coug.elk.hunt_habpub0 <- occuMulti(detFormulas_pub, occFormulas_habpubish0, coug_elk_hunter_hunting_UMF, silent = TRUE)) 
   (coug.elk.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
+  (coug.elk.hunt_habpub2 <- occuMulti(detFormulas_pub, occFormulas_habpubish2, coug_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (coug.elk.hunt_huntpub1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, coug_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL Error in optim(starts, nll, method = method, hessian = se, ...) : non-finite finite-difference value [19]
   (coug.elk.hunt_huntpub2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, coug_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
@@ -607,14 +614,17 @@
   (coug.wtd.hunt_null1 <- occuMulti(detFormulas_pub, occFormulas_null1, coug_wtd_hunter_hunting_UMF, silent = TRUE))
   (coug.wtd.hunt_null2 <- occuMulti(detFormulas_pub, occFormulas_null2, coug_wtd_hunter_hunting_UMF, silent = TRUE))  
   (coug.wtd.hunt_habpub0 <- occuMulti(detFormulas_pub, occFormulas_habpubish0, coug_wtd_hunter_hunting_UMF, silent = TRUE)) 
-  (coug.wtd.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_wtd_hunter_hunting_UMF, silent = TRUE)) 
+  (coug.wtd.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_wtd_hunter_hunting_UMF, silent = TRUE))
+  (coug.wtd.hunt_habpub2 <- occuMulti(detFormulas_pub, occFormulas_habpubish2, coug_wtd_hunter_hunting_UMF, silent = TRUE))
   (coug.wtd.hunt_huntpub1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, coug_wtd_hunter_hunting_UMF, silent = TRUE)) 
   (coug.wtd.hunt_huntpub2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, coug_wtd_hunter_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  coug.wtd.hunt_fl <- fitList(coug.wtd.hunt_habpub0, coug.wtd.hunt_habpub1, coug.wtd.hunt_huntpub1, coug.wtd.hunt_huntpub2) 
+  coug.wtd.hunt_fl <- fitList(coug.wtd.hunt_habpub0, coug.wtd.hunt_habpub1, coug.wtd.hunt_habpub2, coug.wtd.hunt_huntpub1, coug.wtd.hunt_huntpub2) 
   #' Model selection
-  modSel(coug.elk.hunt_fl)
-  summary(coug.wtd.hunt_habpub0)
+  modSel(coug.wtd.hunt_fl)
+  summary(coug.wtd.hunt_habpub1)
+  summary(coug.wtd.hunt_huntpub1)
+  summary(coug.wtd.hunt_habpub2)
   
   ####  Cougar-Moose-Hunter Hunting Season  ####
   (coug.moose.hunt_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_moose_hunter_hunting_UMF, silent = TRUE))
@@ -629,11 +639,12 @@
   (coug.moose.hunt_null1 <- occuMulti(detFormulas_pub, occFormulas_null1, coug_moose_hunter_hunting_UMF, silent = TRUE))
   (coug.moose.hunt_null2 <- occuMulti(detFormulas_pub, occFormulas_null2, coug_moose_hunter_hunting_UMF, silent = TRUE))  
   (coug.moose.hunt_habpub0 <- occuMulti(detFormulas_pub, occFormulas_habpubish0, coug_moose_hunter_hunting_UMF, silent = TRUE)) 
-  (coug.moose.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_moose_hunter_hunting_UMF, silent = TRUE)) 
+  (coug.moose.hunt_habpub1 <- occuMulti(detFormulas_pub, occFormulas_habpubish1, coug_moose_hunter_hunting_UMF, silent = TRUE))
+  (coug.moose.hunt_habpub2 <- occuMulti(detFormulas_pub, occFormulas_habpubish2, coug_moose_hunter_hunting_UMF, silent = TRUE))
   (coug.moose.hunt_huntpub1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, coug_moose_hunter_hunting_UMF, silent = TRUE))
   (coug.moose.hunt_huntpub2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, coug_moose_hunter_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  coug.moose.hunt_fl <- fitList(coug.moose.hunt_habpub0, coug.moose.hunt_habpub1, coug.moose.hunt_huntpub1, coug.moose.hunt_huntpub2) 
+  coug.moose.hunt_fl <- fitList(coug.moose.hunt_habpub0, coug.moose.hunt_habpub1, coug.moose.hunt_habpub2, coug.moose.hunt_huntpub1, coug.moose.hunt_huntpub2) 
   #' Model selection
   modSel(coug.moose.hunt_fl)
   summary(coug.moose.hunt_huntpub1)
@@ -655,6 +666,7 @@
   (wolf.md.hunt_null2 <- occuMulti(detFormulas_pubish, occFormulas_null2, wolf_md_hunter_hunting_UMF, silent = TRUE)) 
   (wolf.md.hunt_habpub0 <- occuMulti(detFormulas_pubish, occFormulas_habpubish0, wolf_md_hunter_hunting_UMF, silent = TRUE)) 
   (wolf.md.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_md_hunter_hunting_UMF, silent = TRUE)) 
+  (wolf.md.hunt_habpub2 <- occuMulti(detFormulas_pubish, occFormulas_habpubish2, wolf_md_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (wolf.md.hunt_huntpub1 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish1, wolf_md_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (wolf.md.hunt_huntpub2 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish2, wolf_md_hunter_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
@@ -679,6 +691,7 @@
   (wolf.elk.hunt_null2 <- occuMulti(detFormulas_pubish, occFormulas_null2, wolf_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL 
   (wolf.elk.hunt_habpub0 <- occuMulti(detFormulas_pubish, occFormulas_habpubish0, wolf_elk_hunter_hunting_UMF, silent = TRUE)) 
   (wolf.elk.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
+  (wolf.elk.hunt_habpub2 <- occuMulti(detFormulas_pubish, occFormulas_habpubish2, wolf_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (wolf.elk.hunt_huntpub1 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish1, wolf_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL Error in optim(starts, nll, method = method, hessian = se, ...) : non-finite finite-difference value [19]
   (wolf.elk.hunt_huntpub2 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish2, wolf_elk_hunter_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
@@ -702,7 +715,8 @@
   (wolf.wtd.hunt_null1 <- occuMulti(detFormulas_pubish, occFormulas_null1, wolf_wtd_hunter_hunting_UMF, silent = TRUE))
   (wolf.wtd.hunt_null2 <- occuMulti(detFormulas_pubish, occFormulas_null2, wolf_wtd_hunter_hunting_UMF, silent = TRUE))  
   (wolf.wtd.hunt_habpub0 <- occuMulti(detFormulas_pubish, occFormulas_habpubish0, wolf_wtd_hunter_hunting_UMF, silent = TRUE)) 
-  (wolf.wtd.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_wtd_hunter_hunting_UMF, silent = TRUE)) 
+  (wolf.wtd.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_wtd_hunter_hunting_UMF, silent = TRUE))
+  (wolf.wtd.hunt_habpub2 <- occuMulti(detFormulas_pubish, occFormulas_habpubish2, wolf_wtd_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (wolf.wtd.hunt_huntpub1 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish1, wolf_wtd_hunter_hunting_UMF, silent = TRUE))
   (wolf.wtd.hunt_huntpub2 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish2, wolf_wtd_hunter_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
@@ -725,7 +739,8 @@
   (wolf.moose.hunt_null1 <- occuMulti(detFormulas_pubish, occFormulas_null1, wolf_moose_hunter_hunting_UMF, silent = TRUE))
   (wolf.moose.hunt_null2 <- occuMulti(detFormulas_pubish, occFormulas_null2, wolf_moose_hunter_hunting_UMF, silent = TRUE))  
   (wolf.moose.hunt_habpub0 <- occuMulti(detFormulas_pubish, occFormulas_habpubish0, wolf_moose_hunter_hunting_UMF, silent = TRUE)) 
-  (wolf.moose.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_moose_hunter_hunting_UMF, silent = TRUE)) 
+  (wolf.moose.hunt_habpub1 <- occuMulti(detFormulas_pubish, occFormulas_habpubish1, wolf_moose_hunter_hunting_UMF, silent = TRUE))
+  (wolf.moose.hunt_habpub2 <- occuMulti(detFormulas_pubish, occFormulas_habpubish2, wolf_moose_hunter_hunting_UMF, silent = TRUE)) # FAIL
   (wolf.moose.hunt_huntpub1 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish1, wolf_moose_hunter_hunting_UMF, silent = TRUE)) # FAIL Error in optim(starts, nll, method = method, hessian = se, ...) : non-finite finite-difference value [19]
   (wolf.moose.hunt_huntpub2 <- occuMulti(detFormulas_pubish, occFormulas_huntpubish2, wolf_moose_hunter_hunting_UMF, silent = TRUE))
   #' List of fitted models
@@ -990,7 +1005,7 @@
   #'  Hunting season models
   occ_coug.md.hunt <- occ_out(coug.md.hunt_huntpub1, "Cougar", "Mule Deer", "Hunter", "Hunting")
   occ_coug.elk.hunt <- occ_out(coug.elk.hunt_habpub0, "Cougar", "Elk", "Hunter", "Hunting")
-  occ_coug.wtd.hunt <- occ_out(coug.wtd.hunt_habpub0, "Cougar", "White-tailed Deer", "Hunter", "Hunting")
+  occ_coug.wtd.hunt <- occ_out(coug.wtd.hunt_habpub1, "Cougar", "White-tailed Deer", "Hunter", "Hunting")
   occ_coug.moose.hunt <- occ_out(coug.moose.hunt_huntpub1, "Cougar", "Moose", "Hunter", "Hunting")
   occ_wolf.md.hunt <- occ_out(wolf.md.hunt_habpub1, "Wolf", "Mule Deer", "Hunter", "Hunting")
   occ_wolf.elk.hunt <- occ_out(wolf.elk.hunt_habpub0, "Wolf", "Elk", "Hunter", "Hunting")
@@ -1103,7 +1118,7 @@
     relocate("[Species 1:Species 2] HuntingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
     # relocate("[Species 1:Species 2] Public1", .after = "[Species 1:Species 2] HuntingActivity") %>%
     relocate("[Species 1:Species 3] (Intercept)", .after = "[Species 1:Species 2] HuntingActivity") %>%
-    relocate("[Species 2:Species 3] (Intercept)", .after = "[Species 1:Species 2] HuntingActivity") %>%
+    relocate("[Species 2:Species 3] (Intercept)", .after = "[Species 1:Species 3] (Intercept)") %>%
     relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
     relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
     relocate("[Species 3] I(Elev^2)", .after = "[Species 3] Elev") %>%
@@ -1184,7 +1199,7 @@
   #'  Hunting season models
   det_coug.md.hunt <- det_out(coug.md.hunt_huntpub1, "Cougar", "Mule Deer", "Hunter", "Hunting")
   det_coug.elk.hunt <- det_out(coug.elk.hunt_habpub0, "Cougar", "Elk", "Hunter", "Hunting")
-  det_coug.wtd.hunt <- det_out(coug.wtd.hunt_habpub0, "Cougar", "White-tailed Deer", "Hunter", "Hunting")
+  det_coug.wtd.hunt <- det_out(coug.wtd.hunt_habpub1, "Cougar", "White-tailed Deer", "Hunter", "Hunting")
   det_coug.moose.hunt <- det_out(coug.moose.hunt_huntpub1, "Cougar", "Moose", "Hunter", "Hunting")
   det_wolf.md.hunt <- det_out(wolf.md.hunt_habpub1, "Wolf", "Mule Deer", "Hunter", "Hunting")
   det_wolf.elk.hunt <- det_out(wolf.elk.hunt_habpub0, "Wolf", "Elk", "Hunter", "Hunting")
