@@ -338,10 +338,10 @@
   bear.elk.cow_fl <- fitList(bear.elk.cow_hab0, bear.elk.cow_hab1, bear.elk.cow_grz, bear.elk.cow_pub, bear.elk.cow_grzpub)
   #' Model selection
   modSel(bear.elk.cow_fl)
-  summary(bear.elk.cow_pub) # but none of the interactions are significant
-  summary(bear.elk.cow_hab1) # but none of the interactions are significant
+  # summary(bear.elk.cow_pub) # but none of the interactions are significant
+  # summary(bear.elk.cow_hab1) # but none of the interactions are significant
   summary(bear.elk.cow_hab0)
-  summary(bear.elk.cow_grzpub) # but none of the interactions are significant
+  # summary(bear.elk.cow_grzpub) # but none of the interactions are significant
 
   
   ####  Bear-White-tailed Deer-Cattle Grazing Season  ####
@@ -952,7 +952,7 @@
   
   
   #' Save model outputs in one giant R image
-  save.image(file = "./Outputs/MultiSpp_CoOcc_Models.RData")
+  save.image(file = "./Outputs/MultiSpp_CoOcc_Models_3spp.RData")
   
   
   ####  Summary tables  ####
