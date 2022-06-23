@@ -139,7 +139,7 @@
   #' Model selection
   modSel(gs_cougelk_fl)
   summary(gs_cougelk_hab0)
-  summary(gs_cougelk_hab1) # f12 not significant
+  # summary(gs_cougelk_hab1) # f12 not significant
   
   ####  Cougar-White-tailed Deer Grazing Season  ####
   (gs_cougwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_wtd_grazing_UMF, silent = TRUE))
@@ -162,7 +162,7 @@
   modSel(gs_cougwtd_fl)
   #summary(gs_cougwtd_graze2) # f12 not significant
   summary(gs_cougwtd_graze0)
-  summary(gs_cougwtd_graze1) # f12 not significant
+  # summary(gs_cougwtd_graze1) # f12 not significant
   
   ####  Cougar-Moose Grazing Season  ####
   (gs_cougmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_moose_grazing_UMF, silent = TRUE))
@@ -184,7 +184,7 @@
   #' Model selection
   modSel(gs_cougmoose_fl)
   summary(gs_cougmoose_hab0)
-  summary(gs_cougmoose_hab1) # f12 not significant
+  # summary(gs_cougmoose_hab1) # f12 not significant
   summary(gs_cougmoose_graze0)
   
   
@@ -208,7 +208,7 @@
   #' Model selection
   modSel(gs_wolfmd_fl)
   summary(gs_wolfmd_hab0)
-  summary(gs_wolfmd_hab1) # f12 not significant
+  # summary(gs_wolfmd_hab1) # f12 not significant
   
   
   ####  Wolf-Elk Grazing Season  ####
@@ -254,7 +254,7 @@
   #' Model selection
   modSel(gs_wolfwtd_fl)
   summary(gs_wolfwtd_graze0)
-  summary(gs_wolfwtd_graze1) # f12 not significant
+  # summary(gs_wolfwtd_graze1) # f12 not significant
   
   ####  Wolf-Moose Grazing Season  ####
   (gs_wolfmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_moose_grazing_UMF, silent = TRUE))
@@ -277,7 +277,7 @@
   modSel(gs_wolfmoose_fl)
   summary(gs_wolfmoose_graze0)
   summary(gs_wolfmoose_hab0)
-  summary(gs_wolfmoose_graze1) # f12 not significant
+  # summary(gs_wolfmoose_graze1) # f12 not significant
   
   
   
@@ -300,10 +300,10 @@
   gs_bearmd_fl <- fitList(gs_bearmd_null0, gs_bearmd_null1, gs_bearmd_hab0, gs_bearmd_hab1, gs_bearmd_graze0, gs_bearmd_graze1, gs_bearmd_graze2)
   #' Model selection
   modSel(gs_bearmd_fl)
-  summary(gs_bearmd_graze1) # f12 not significant
-  summary(gs_bearmd_graze0) # grazing not actually significant
-  summary(gs_bearmd_graze2) # f12 and grazing not significant
-  summary(gs_bearmd_hab1) # f12 not significant
+  # summary(gs_bearmd_graze1) # f12 not significant
+  # summary(gs_bearmd_graze0) # grazing not actually significant
+  # summary(gs_bearmd_graze2) # f12 and grazing not significant
+  # summary(gs_bearmd_hab1) # f12 not significant
   summary(gs_bearmd_hab0)
   
   ####  Bear-Elk Grazing Season  ####
@@ -325,9 +325,9 @@
   gs_bearelk_fl <- fitList(gs_bearelk_null0, gs_bearelk_null1, gs_bearelk_hab0, gs_bearelk_hab1, gs_bearelk_graze0, gs_bearelk_graze1)
   #' Model selection
   modSel(gs_bearelk_fl)
-  summary(gs_bearelk_graze1) # f12 not significant
-  summary(gs_bearelk_graze0) # grazing not significant
-  summary(gs_bearelk_hab1) # f12 not signigicant
+  # summary(gs_bearelk_graze1) # f12 not significant
+  # summary(gs_bearelk_graze0) # grazing not significant
+  # summary(gs_bearelk_hab1) # f12 not signigicant
   summary(gs_bearelk_hab0)
   
   ####  Bear-White-tailed Deer Grazing Season  ####
@@ -350,7 +350,7 @@
   #' Model selection
   modSel(gs_bearwtd_fl)
   summary(gs_bearwtd_graze0)
-  summary(gs_bearwtd_graze1) # f12 not significant
+  # summary(gs_bearwtd_graze1) # f12 not significant
   
   
   ####  Bear-Moose Grazing Season  ####
@@ -373,8 +373,8 @@
   #' Model selection
   modSel(gs_bearmoose_fl)
   summary(gs_bearmoose_graze0)
-  summary(gs_bearmoose_graze2) # f12 not significant
-  summary(gs_bearmoose_graze1) # f12 not significant
+  # summary(gs_bearmoose_graze2) # f12 not significant
+  # summary(gs_bearmoose_graze1) # f12 not significant
   
   
   
@@ -443,8 +443,8 @@
   #' Model selection
   modSel(gs_bobmd_fl)
   summary(gs_bobmd_graze0)
-  summary(gs_bobmd_graze2) # f12 not significant
-  summary(gs_bobmd_graze1) # f12 not significant
+  # summary(gs_bobmd_graze2) # f12 not significant
+  # summary(gs_bobmd_graze1) # f12 not significant
   
   ####  Bobcat-White-tailed Deer Grazing Season  ####
   (gs_bobwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bob_wtd_grazing_UMF, silent = TRUE))
@@ -465,9 +465,9 @@
   gs_bobwtd_fl <- fitList(gs_bobwtd_null0, gs_bobwtd_null1, gs_bobwtd_hab0, gs_bobwtd_hab1, gs_bobwtd_graze0, gs_bobwtd_graze1, gs_bobwtd_graze2)
   #' Model selection
   modSel(gs_bobwtd_fl)
-  summary(gs_bobwtd_graze2) # f12 and grazing not actually significant
+  # summary(gs_bobwtd_graze2) # f12 and grazing not actually significant
   summary(gs_bobwtd_graze0)
-  summary(gs_bobwtd_graze1) # f12 not significant
+  # summary(gs_bobwtd_graze1) # f12 not significant
 
   
   
@@ -476,7 +476,6 @@
   #'  Question 1: Does hunting activity affect detection?
   detFormulas_trail <- c("~Trail", "~Trail")
   detFormulas_hunt <- c("~Trail + WeeklyHunting", "~Trail + WeeklyHunting")
-  # detFormulas_veh <- c("~Trail + WeeklyVehicles", "~Trail + WeeklyVehicles")
   detFormulas_pub <- c("~Trail + Public", "~Trail + Public")
   detFormulas_pubhunt <- c("~Trail + Public + WeeklyHunting", "~Trail + Public + WeeklyHunting")
   #'  Remove Public vs Private covariate from predator sub-model
@@ -511,15 +510,7 @@
   occFormulas_pub2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + Public", 
                         "~Study_Area + Elev + I(Elev^2) + PercForest + Public", 
                         "~Public")
-  # occFormulas_huntpub0 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~0")
-  # occFormulas_huntpub1 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~1")
-  # occFormulas_huntpub2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                              "~HuntingActivity + Public")
+  
   #'  Remove Public vs Private covariate from predator sub-model
   occFormulas_pubish0 <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
                         "~Study_Area + Elev + I(Elev^2) + PercForest + Public", 
@@ -530,15 +521,6 @@
   occFormulas_pubish2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
                            "~Study_Area + Elev + I(Elev^2) + PercForest + Public", 
                            "~Public")
-  # occFormulas_huntpubish0 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
-  #                          "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                          "~0")
-  # occFormulas_huntpubish1 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
-  #                          "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                          "~1")
-  # occFormulas_huntpubish2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
-  #                          "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
-  #                          "~HuntingActivity + Public")
   
   
   ####  Cougar-Mule Deer Hunting Season  ####
@@ -918,9 +900,6 @@
   (hs_coywtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, coy_wtd_hunting_UMF, silent = TRUE)) 
   (hs_coywtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, coy_wtd_hunting_UMF, silent = TRUE))
   (hs_coywtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_wtd_hunting_UMF, silent = TRUE))
-  # (hs_coywtd_pubhunt0 <- occuMulti(detFormulas_pub, occFormulas_huntpubish0, coy_wtd_hunting_UMF, silent = TRUE)) 
-  # (hs_coywtd_pubhunt1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, coy_wtd_hunting_UMF, silent = TRUE))
-  # (hs_coywtd_pubhunt2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, coy_wtd_hunting_UMF, silent = TRUE)) #FAIL
   #' List of fitted models
   hs_coywtd_fl <- fitList(hs_coywtd_null0, hs_coywtd_null1, hs_coywtd_hab0, hs_coywtd_hab1, hs_coywtd_hunt0, hs_coywtd_hunt1, hs_coywtd_pub0, hs_coywtd_pub1, hs_coywtd_pub2)
   #' Model selection
@@ -948,9 +927,6 @@
   (hs_bobmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_md_hunting_UMF, silent = TRUE)) 
   (hs_bobmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_md_hunting_UMF, silent = TRUE))
   (hs_bobmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_md_hunting_UMF, silent = TRUE))
-  # (hs_bobmd_pubhunt0 <- occuMulti(detFormulas_pub, occFormulas_huntpubish0, bob_md_hunting_UMF, silent = TRUE)) 
-  # (hs_bobmd_pubhunt1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, bob_md_hunting_UMF, silent = TRUE))
-  # (hs_bobmd_pubhunt2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, bob_md_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_bobmd_fl <- fitList(hs_bobmd_null0, hs_bobmd_null1, hs_bobmd_hab0, hs_bobmd_hab1, hs_bobmd_hunt0, hs_bobmd_hunt1, hs_bobmd_hunt2, hs_bobmd_pub0, hs_bobmd_pub1, hs_bobmd_pub2)
   #' Model selection
@@ -980,9 +956,6 @@
   (hs_bobwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_wtd_hunting_UMF, silent = TRUE)) 
   (hs_bobwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_wtd_hunting_UMF, silent = TRUE))
   (hs_bobwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_wtd_hunting_UMF, silent = TRUE))
-  # (hs_bobwtd_pubhunt0 <- occuMulti(detFormulas_pub, occFormulas_huntpubish0, bob_wtd_hunting_UMF, silent = TRUE)) 
-  # (hs_bobwtd_pubhunt1 <- occuMulti(detFormulas_pub, occFormulas_huntpubish1, bob_wtd_hunting_UMF, silent = TRUE)) #FAIL?
-  # (hs_bobwtd_pubhunt2 <- occuMulti(detFormulas_pub, occFormulas_huntpubish2, bob_wtd_hunting_UMF, silent = TRUE)) #FAIL
   #' List of fitted models
   hs_bobwtd_fl <- fitList(hs_bobwtd_null0, hs_bobwtd_null1, hs_bobwtd_hab0, hs_bobwtd_hab1, hs_bobwtd_hunt0, hs_bobwtd_hunt1, hs_bobwtd_pub0, hs_bobwtd_pub1, hs_bobwtd_pub2)
   #' Model selection
@@ -992,7 +965,7 @@
   
   
   #' Save model outputs in one giant R image
-  save.image(file = "./Outputs/MultiSpp_CoOcc_Models.RData")
+  save.image(file = "./Outputs/MultiSpp_CoOcc_Models_2spp.RData")
   
   
   ####  Summary tables  ####
