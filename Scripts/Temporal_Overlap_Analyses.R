@@ -138,6 +138,8 @@
   hist(cattle_det$Date, breaks = "days")
   
   
+  ####  Overlap analyses for predator-prey activity ####
+  #'  ----------------------------------------------
   #'  Function to estimate temporal overlap between predators (spp1) and prey (spp2)
   #'  at camera sites where cattle/humans (spp3) are present (detected) vs absent (not detected).
   pred_prey_overlap <- function(spp1, spp2, spp3, name1, name2, name3, nboot, dhat) { #i
@@ -172,8 +174,12 @@
     #'  Review sample size per species- smaller sample will determine which coefficient
     #'  of overlap estimator to use (delta1 for small samples [<50 detection events], 
     #'  delta4 for larger samples [>75 detection events])
-    print(nrow(spp1_spp3.present)); print(nrow(spp2_spp3.present))
-    print(nrow(spp1_spp3.absent)); print(nrow(spp2_spp3.absent))
+    ndet_spp1_spp3.present <- nrow(spp1_spp3.present)
+    ndet_spp2_spp3.present <- nrow(spp2_spp3.present)
+    ndet_spp1_spp3.absent <- nrow(spp1_spp3.absent)
+    ndet_spp2_spp3.absent <- nrow(spp2_spp3.absent)
+    print(ndet_spp1_spp3.present); print(ndet_spp2_spp3.present)
+    print(ndet_spp1_spp3.absent); print(ndet_spp2_spp3.absent)
     
     #'  Visualize general temporal activity with density plots
     densityPlot(spp1$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name1, " Daily Activity"))
@@ -244,9 +250,12 @@
     #'  Save as a giant list
     overlap_list <- list(dhats_spp1.spp2.spp3, dhats_spp1.spp2.NOspp3,
                          spp12.spp3.boot, spp12.NOspp3.boot,
-                         spp3.present_CI, spp3.absent_CI)
+                         spp3.present_CI, spp3.absent_CI, ndet_spp1_spp3.present, 
+                         ndet_spp2_spp3.present, ndet_spp1_spp3.absent, ndet_spp2_spp3.absent)
     names(overlap_list) <- c("dhat_spp3.present", "dhat_spp3.absent", "dhat_spp3.present_boot",
-                             "dhat_spp3.absent_boot", "spp3.present_CI", "spp3.absent_CI")
+                             "dhat_spp3.absent_boot", "spp3.present_CI", "spp3.absent_CI",
+                             "ndet_spp1_spp3.present", "ndet_spp2_spp3.present", 
+                             "ndet_spp1_spp3.absent", "ndet_spp2_spp3.absent")
     
     return(overlap_list)
   }
@@ -258,7 +267,7 @@
                                          spp2 = filter(grazing_first, Species == "Mule Deer"), 
                                          spp3 = filter(grazing_first, Species == "Cattle"), 
                                          name1 = "Cougar", name2 = "Mule Deer", 
-                                         name3 = "Cattle", nboot = 10000, dhat = "Dhat1") #i = 1
+                                         name3 = "Cattle", nboot = 100, dhat = "Dhat1") #i = 1
   coug_elk_graze_over <- pred_prey_overlap(spp1 = filter(grazing_first, Species == "Cougar"), 
                                           spp2 = filter(grazing_first, Species == "Elk"), 
                                           spp3 = filter(grazing_first, Species == "Cattle"), 
@@ -448,7 +457,10 @@
     Dhat <- c(dhat_spp3.present, dhat_spp3.absent)
     l95 <- c(spp3.present_lci, spp3.absent_lci)
     u95 <- c(spp3.present_uci, spp3.absent_uci)
-    df <- as.data.frame(cbind(spp, predator, prey, activity, Dhat, l95, u95))
+    ndet_predator <- c(overlap_out[[7]], overlap_out[[9]])
+    ndet_prey <- c(overlap_out[[8]], overlap_out[[10]])
+    df <- as.data.frame(cbind(spp, predator, prey, activity, Dhat, l95, u95, 
+                              ndet_predator, ndet_prey))
     rownames(df) <- NULL
     names(df)[names(df) == "spp"] <- "Species.pair"
     names(df)[names(df) == "activity"] <- paste0(spp3, ".activity")
@@ -495,13 +507,13 @@
                               wolf_md_graze_out, wolf_wtd_graze_out, wolf_moose_graze_out, #wolf_elk_graze_out, 
                               bear_md_graze_out, bear_elk_graze_out, bear_wtd_graze_out, bear_moose_graze_out,
                               bob_md_graze_out, bob_wtd_graze_out, coy_md_graze_out, coy_wtd_graze_out)
-  # write.csv(cattle_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_graze_overlap_", Sys.Date(), ".csv"))
+  write.csv(cattle_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_graze_overlap_", Sys.Date(), ".csv"))
   
   hunter_overlap_tbl <- rbind(coug_md_hunt_out, coug_elk_hunt_out, coug_wtd_hunt_out, coug_moose_hunt_out,
                               wolf_md_hunt_out, wolf_wtd_hunt_out, wolf_moose_hunt_out, #wolf_elk_hunt_out, 
                               bear_md_hunt_out, bear_elk_hunt_out, bear_wtd_hunt_out, bear_moose_hunt_out,
                               bob_md_hunt_out, bob_wtd_hunt_out, coy_md_hunt_out, coy_wtd_hunt_out)
-  # write.csv(hunter_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_hunt_overlap_", Sys.Date(), ".csv"))
+  write.csv(hunter_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_hunt_overlap_", Sys.Date(), ".csv"))
 
   
   ####  Figures for visualization  ####
@@ -568,9 +580,7 @@
   ggsave(overlap_hunting_effect, filename = "./Outputs/Temporal Overlap/Overlap_Hunter_Effect_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   
-  
-  
-  
+
   
   ####  THINGS TO THINK ABOUT: Do I include vehicles in "hunter presence"? otherwise not that many cameras will have hunting activity
   
@@ -580,7 +590,7 @@
   #'  -----------------------------------
   #'  Function to estimate differences in temporal activity for a species at camera  
   #'  sites where cattle/humans are present (detected) vs absent (not detected).
-  pred_prey_overlap <- function(spp1, spp2, name1, name2, nboot, dhat) { #i
+  spp_overlap <- function(spp1, spp2, name1, name2, nboot, dhat) { #, i
     #'  Create logical vectors (T/F) indicating which cameras spp1 was detected 
     #'  at with and without spp2
     both.present <- spp1$CameraLocation %in% spp2$CameraLocation
@@ -592,7 +602,9 @@
     #'  Review sample size per species- smaller sample will determine which coefficient
     #'  of overlap estimator to use (delta1 for small samples [<50 detection events], 
     #'  delta4 for larger samples [>75 detection events])
-    print(nrow(spp1_spp2.present)); print(nrow(spp1_spp2.absent))
+    ndet_spp2.present <- nrow(spp1_spp2.present)
+    ndet_spp2.absent <- nrow(spp1_spp2.absent)
+    print(ndet_spp2.present); print(ndet_spp2.absent)
     
     #'  Visualize general temporal activity with density plots
     densityPlot(spp1$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name1, " Daily Activity"))
@@ -629,7 +641,7 @@
     #'  Using bootCIlogit instead of bootCI so that bias corrections are done on
     #'  the logit scale, then backtransformed. Without this, 95% CIs can fall
     #'  outside (0, 1) interval. See Overlap vignette for more details.
-    CI <- bootCIlogit(dhats_spp1.spp2, spp1.spp2.boot) #[i]
+    CI <- bootCIlogit(dhats_spp1.spp2, spp1.spp2.boot) #dhats_spp1.spp2[i]
     
     #'  Print results
     #'  Effect of spp2 being present
@@ -638,21 +650,145 @@
     print("Bootstrap 95% CI"); print(CI)
     
     #'  Save as a giant list
-    overlap_list <- list(dhats_spp1.spp2, spp1.spp2.boot, CI)
-    names(overlap_list) <- c("dhats_spp1.spp2", "spp1.spp2.boot", "CI")
+    overlap_list <- list(dhats_spp1.spp2, spp1.spp2.boot, CI, ndet_spp2.present, ndet_spp2.absent)
+    names(overlap_list) <- c("dhats_spp1.spp2", "spp1.spp2.boot", "CI", "ndet_spp2.present", "ndet_spp2.absent")
     
     return(overlap_list)
   }
-  #'  Estimate temporal overlap between predators and prey when cattle are/aren't detected
+  #'  Estimate temporal overlap for a species when cattle are/aren't detected
   #'  THINK ABOUT focusing on only OK study area since big difference in number of
   #'  cameras with cattle in NE vs OK, pooling across study areas could be confounding
   #'  any apparent temporal patterns
-  coug_md_graze_over <- pred_prey_overlap(spp1 = filter(grazing_first, Species == "Cougar"), 
-                                          spp2 = filter(grazing_first, Species == "Mule Deer"), 
-                                          spp3 = filter(grazing_first, Species == "Cattle"), 
-                                          name1 = "Cougar", name2 = "Mule Deer", 
-                                          name3 = "Cattle", nboot = 10000, dhat = "Dhat1") #i = 1
+  coug_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Cougar"),
+                                 spp2 = filter(grazing_first, Species == "Cattle"), 
+                                 name1 = "Cougar", name2 = "Cattle", nboot = 10000, dhat = "Dhat1") #i = 1
+  wolf_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Wolf"), 
+                                 spp2 = filter(grazing_first, Species == "Cattle"), 
+                                 name1 = "Wolf", name2 = "Cattle", nboot = 10000, dhat = "Dhat1")
+  bear_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Black Bear"), 
+                                 spp2 = filter(grazing_first, Species == "Cattle"), 
+                                 name1 = "Black bear", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  bob_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Bobcat"), 
+                                 spp2 = filter(grazing_first, Species == "Cattle"), 
+                                 name1 = "Bobcat", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  coy_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Coyote"), 
+                                 spp2 = filter(grazing_first, Species == "Cattle"), 
+                                 name1 = "Coyote", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  md_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Mule Deer"), 
+                                spp2 = filter(grazing_first, Species == "Cattle"), 
+                                name1 = "Mule deer", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  elk_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Elk"), 
+                                spp2 = filter(grazing_first, Species == "Cattle"), 
+                                name1 = "Elk", name2 = "Cattle", nboot = 10000, dhat = "Dhat1")
+  wtd_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "White-tailed Deer"), 
+                                spp2 = filter(grazing_first, Species == "Cattle"), 
+                                name1 = "White-tailed deer", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  moose_graze_over <- spp_overlap(spp1 = filter(grazing_first, Species == "Moose"), 
+                                spp2 = filter(grazing_first, Species == "Cattle"), 
+                                name1 = "Moose", name2 = "Cattle", nboot = 10000, dhat = "Dhat4")
+  #'  Estimate temporal overlap for a species when hunters are/are not present
+  coug_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Cougar"),
+                                 spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                 name1 = "Cougar", name2 = "Hunters", nboot = 10000, dhat = "Dhat4") #i = 1
+  wolf_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Wolf"), 
+                                 spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                 name1 = "Wolf", name2 = "Hunters", nboot = 10000, dhat = "Dhat1")
+  bear_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Black Bear"), 
+                                 spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                 name1 = "Black bear", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  bob_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Bobcat"), 
+                                spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                name1 = "Bobcat", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  coy_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Coyote"), 
+                                spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                name1 = "Coyote", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  md_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Mule Deer"), 
+                               spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                               name1 = "Mule deer", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  elk_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Elk"), 
+                                spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                name1 = "Elk", name2 = "Hunters", nboot = 10000, dhat = "Dhat1")
+  wtd_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "White-tailed Deer"), 
+                                spp2 = filter(hunting_first, HumanActivity == "Hunter"), 
+                                name1 = "White-tailed deer", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  moose_hunt_over <- spp_overlap(spp1 = filter(hunting_first, Species == "Moose"), 
+                                  spp2 = filter(hunting_first,HumanActivity == "Hunter"), 
+                                  name1 = "Moose", name2 = "Hunters", nboot = 10000, dhat = "Dhat4")
+  
+  graze_overlap <- list(coug_graze_over, wolf_graze_over, bear_graze_over, bob_graze_over, 
+                        coy_graze_over, md_graze_over, elk_graze_over, wtd_graze_over, moose_graze_over)
+  save(graze_overlap, file = paste0("./Outputs/Temporal Overlap/grazing_effect_overlap_", Sys.Date(), ".RData"))
+  
+  hunt_overlap <- list(coug_hunt_over, wolf_hunt_over, bear_hunt_over, bob_hunt_over, 
+                                 coy_hunt_over, md_hunt_over, elk_hunt_over, wtd_hunt_over, moose_hunt_over)
+  save(hunt_overlap, file = paste0("./Outputs/Temporal Overlap/hunter_effect_overlap_", Sys.Date(), ".RData"))
   
   
+  load("./Outputs/Temporal Overlap/grazing_effect_overlap_2022-06-30.RData")
+  load("./Outputs/Temporal Overlap/hunter_effect_overlap_2022-06-30.RData")
+  
+  
+  #'  Create results tables from overlap estimates
+  results_table <- function(overlap_out, spp1) {
+    Dhat <- round(overlap_out[[1]], 2)
+    l95 <- round(overlap_out[[3]][2,1], 2)
+    u95 <- round(overlap_out[[3]][2,2], 2)
+    Species <- spp1
+    ndet_present <- overlap_out[[4]]
+    ndet_absent <- overlap_out[[5]]
+    df <- as.data.frame(cbind(Species, Dhat, l95, u95, ndet_present, ndet_absent))
+    rownames(df) <- NULL
+    df <- mutate(df, Dhat = as.numeric(Dhat),
+                 l95 = as.numeric(l95),
+                 u95 = as.numeric(u95))
+    return(df)
+  }
+  #'  Coefficient of overlap for each species when grazing is and is not detected
+  coug_graze_out <- results_table(graze_overlap[[1]], spp1 = "Cougar")
+  wolf_graze_out <- results_table(graze_overlap[[2]], spp1 = "Wolf")
+  bear_graze_out <- results_table(graze_overlap[[3]], spp1 = "Black bear")
+  bob_graze_out <- results_table(graze_overlap[[4]], spp1 = "Bobcat")
+  coy_graze_out <- results_table(graze_overlap[[5]], spp1 = "Coyote")
+  md_graze_out <- results_table(graze_overlap[[6]], spp1 = "Mule deer")
+  elk_graze_out <- results_table(graze_overlap[[7]], spp1 = "Elk")
+  wtd_graze_out <- results_table(graze_overlap[[8]], spp1 = "White-tailed deer")
+  moose_graze_out <- results_table(graze_overlap[[9]], spp1 = "Moose")
+  #'  Coefficient of overlap for each species when hunters are and are not detected
+  coug_hunt_out <- results_table(hunt_overlap[[1]], spp1 = "Cougar")
+  wolf_hunt_out <- results_table(hunt_overlap[[2]], spp1 = "Wolf")
+  bear_hunt_out <- results_table(hunt_overlap[[3]], spp1 = "Black bear")
+  bob_hunt_out <- results_table(hunt_overlap[[4]], spp1 = "Bobcat")
+  coy_hunt_out <- results_table(hunt_overlap[[5]], spp1 = "Coyote")
+  md_hunt_out <- results_table(hunt_overlap[[6]], spp1 = "Mule deer")
+  elk_hunt_out <- results_table(hunt_overlap[[7]], spp1 = "Elk")
+  wtd_hunt_out <- results_table(hunt_overlap[[8]], spp1 = "White-tailed deer")
+  moose_hunt_out <- results_table(hunt_overlap[[9]], spp1 = "Moose")
+  
+  grazing_effects <- rbind(coug_graze_out, wolf_graze_out, bear_graze_out, bob_graze_out,
+                           coy_graze_out, md_graze_out, elk_graze_out, wtd_graze_out, moose_graze_out)
+  write.csv(grazing_effects, file = paste0("./Outputs/Temporal Overlap/graze_effect_overlap_tbl_", Sys.Date(), ".csv"))
+  hunter_effects <- rbind(coug_hunt_out, wolf_hunt_out, bear_hunt_out, bob_hunt_out,
+                           coy_hunt_out, md_hunt_out, elk_hunt_out, wtd_hunt_out, moose_hunt_out)
+  write.csv(hunter_effects, file = paste0("./Outputs/Temporal Overlap/hunter_effect_overlap_tbl_", Sys.Date(), ".csv"))
+  
+  
+  ####  Plot coefficient of overlap estimates for all species  ####
+  #'  ---------------------------------------------------------
+  #'  Plot coefficient of overlap estimates for each species
+  spp_overlap_grazing_plot <- ggplot(grazing_effects, aes(x = Species, y = Dhat)) +  
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.2) +
+    geom_point(stat = 'identity', aes(col = Species), size = 3.5) + 
+    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
+    guides(color = guide_legend(title = "Species")) + 
+    ggtitle("Coefficient of overlap when grazing is and is not detected")
+  ggsave(spp_overlap_grazing_plot, filename = "./Outputs/Temporal Overlap/Overlap_Grazing_Effect_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  
+  spp_overlap_hunter_plot <- ggplot(hunter_effects, aes(x = Species, y = Dhat)) +  
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.2) +
+    geom_point(stat = 'identity', aes(col = Species), size = 3.5) + 
+    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
+    guides(color = guide_legend(title = "Species")) + 
+    ggtitle("Coefficient of overlap when hunters are and are not detected")
+  ggsave(spp_overlap_hunter_plot, filename = "./Outputs/Temporal Overlap/Overlap_Hunter_Effect_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   
