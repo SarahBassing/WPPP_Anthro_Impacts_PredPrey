@@ -267,7 +267,7 @@
                                          spp2 = filter(grazing_first, Species == "Mule Deer"), 
                                          spp3 = filter(grazing_first, Species == "Cattle"), 
                                          name1 = "Cougar", name2 = "Mule Deer", 
-                                         name3 = "Cattle", nboot = 100, dhat = "Dhat1") #i = 1
+                                         name3 = "Cattle", nboot = 10000, dhat = "Dhat1") #i = 1
   coug_elk_graze_over <- pred_prey_overlap(spp1 = filter(grazing_first, Species == "Cougar"), 
                                           spp2 = filter(grazing_first, Species == "Elk"), 
                                           spp3 = filter(grazing_first, Species == "Cattle"), 
@@ -438,8 +438,8 @@
   save(pred_prey_hunt_overlap, file = paste0("./Outputs/Temporal Overlap/pred_prey_hunt_overlap_", Sys.Date(), ".RData"))
   # save.image(file = "./Temporal Overlap/temporal_overlap_analyses_workspace.RData")    
   
-  load("./Outputs/Temporal Overlap/pred_prey_graze_overlap_2022-06-29.RData")
-  load("./Outputs/Temporal Overlap/pred_prey_hunt_overlap_2022-06-29.RData")
+  load("./Outputs/Temporal Overlap/pred_prey_graze_overlap_2022-07-01.RData")
+  load("./Outputs/Temporal Overlap/pred_prey_hunt_overlap_2022-07-01.RData")
   
   #'  Create results tables from overlap estimates
   results_table <- function(overlap_out, spp1, spp2, spp3) {
@@ -724,8 +724,8 @@
   save(hunt_overlap, file = paste0("./Outputs/Temporal Overlap/hunter_effect_overlap_", Sys.Date(), ".RData"))
   
   
-  load("./Outputs/Temporal Overlap/grazing_effect_overlap_2022-06-30.RData")
-  load("./Outputs/Temporal Overlap/hunter_effect_overlap_2022-06-30.RData")
+  load("./Outputs/Temporal Overlap/grazing_effect_overlap_2022-07-01.RData")
+  load("./Outputs/Temporal Overlap/hunter_effect_overlap_2022-07-01.RData")
   
   
   #'  Create results tables from overlap estimates
