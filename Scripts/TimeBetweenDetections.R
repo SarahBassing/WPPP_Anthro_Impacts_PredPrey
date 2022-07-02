@@ -1,9 +1,9 @@
-  #'  ================================
-  #'  Time between detections analysis
+  #'  =======================================
+  #'  Time-between-detections analysis
   #'  Washington Predator-Prey Project
-  #'  Sarah Bassing
+  #'  Sarah Bassing, Cameron Ho, Hunter Hicks
   #'  July 2022
-  #'  ================================
+  #'  =======================================
   #'  Calculate times-between-detections of predators and prey at sites where 
   #'  cattle/hunters are and are not detected. Also calculate times-between-
   #'  detections of wildlife and cattle/hunters. Analyzed whether times-between-
