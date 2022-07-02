@@ -26,16 +26,16 @@ source("./Scripts/Covariate Functions.R")
 
 
 #'  pulling first image in unique detections from prey species
-first_wtd <- first_uniq(data[data$Species == "White-tailed Deer",])
-first_mule <- first_uniq(data[data$Species == "Mule Deer",])
-first_elk <- first_uniq(data[data$Species == "Elk",])
-first_moose <- first_uniq(data[data$Species == "Moose",])
-first_hare <- first_uniq(data[data$Species == "Snowshoe Hare",])
-first_rabbitspp <- first_uniq(data[data$Species == "Rabbit Spp",])
-first_unkdeer <- first_uniq(data[data$Species == "Unknown Deer",])
+first_wtd <- first_uniq(data[data$Species == "White-tailed Deer",], m = 30)
+first_mule <- first_uniq(data[data$Species == "Mule Deer",], m = 30)
+first_elk <- first_uniq(data[data$Species == "Elk",], m = 30)
+first_moose <- first_uniq(data[data$Species == "Moose",], m = 30)
+first_hare <- first_uniq(data[data$Species == "Snowshoe Hare",], m = 30)
+first_rabbitspp <- first_uniq(data[data$Species == "Rabbit Spp",], m = 30)
+first_unkdeer <- first_uniq(data[data$Species == "Unknown Deer",], m = 30)
 
 #'  pulling last image in unique detections from cows
-last_cow <- last_uniq(data[data$Species == "Cattle",])
+last_cow <- last_uniq(data[data$Species == "Cattle",], m = 5)
 
 
 #'  combine dataframes from cow and prey
