@@ -268,9 +268,9 @@
       mean.pSpp2 ~ dunif(0, 1)
       mean.pSpp3 ~ dunif(0, 1)
       for(fo_rho in 2:nfirst_order_rho) {      # fo detection slopes
-        alphaSpp1[fo_rho] ~ dnorm(0, 0.01)
-        alphaSpp2[fo_rho] ~ dnorm(0, 0.01)
-        alphaSpp3[fo_rho] ~ dnorm(0, 0.01)
+        alphaSpp1[fo_rho] ~ dnorm(0, 0.1)
+        alphaSpp2[fo_rho] ~ dnorm(0, 0.1)
+        alphaSpp3[fo_rho] ~ dnorm(0, 0.1)
       }
       #'  Second order detection priors (rho)
       #'  none for now
@@ -292,28 +292,190 @@
         }
       }
       
-      #'  (2) Define latent state vector and observation matrices
+      #'  2. Define arrays containing cell probabilities for categorical distributions
+      for(i in 1:nstates) {
+        #'  Latent state probabilities in latent state vector (lsv)
+        #'  Probabilities for each state (z)
+        lsv[i, 1] <- 1                   # Unoccupied
+        lsv[i, 2] <- exp(psiSpp1[i])     # Pr(Spp1 present)
+        lsv[i, 3] <- exp(psiSpp2[i])     # Pr(Spp2 present)
+        lsv[i, 4] <- exp(psiSpp3[i])     # Pr(Spp3 present)
+        lsv[i, 5] <- exp(psiSpp12[i])    # Pr(Spp1 & Spp2 present)
+        lsv[i, 6] <- exp(psiSpp23[i])    # Pr(Spp2 & Spp3 present)
+        lsv[i, 7] <- exp(psiSpp13[i])    # Pr(Spp1 & Spp3 present)
+        lsv[i, 8] <- exp(psiSpp123[i])   # Pr(all spp present)
+          for(j in 1:nsurvey) {
+            #'  Detection matrix (OS = observed state, TS = true state)
+            #'  rdm = rho detection matrix. Each row sums to 1. Model assumes NO 
+            #'  false positives- 0's when OS/TS not possible under this assumption.
+            #'  Mmmk don't freak out over this section!
+            #'  True state = unoccupied (z = 1)
+            rdm[i, j, 1, 1] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 1] <- 0 # ------------------------------------ OS = Spp1 present
+            rdm[i, j, 3, 1] <- 0 # ------------------------------------ OS = Spp2 present
+            rdm[i, j, 4, 1] <- 0 # ------------------------------------ OS = Spp3 present
+            rdm[i, j, 5, 1] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 1] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 1] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 1] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp1 present (z = 2)
+            rdm[i, j, 1, 2] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 2] <- exp(rhoSpp1[i, j]) # ------------------- OS = Spp1 present
+            rdm[i, j, 3, 2] <- 0 # ------------------------------------ OS = Spp2 present
+            rdm[i, j, 4, 2] <- 0 # ------------------------------------ OS = Spp3 present
+            rdm[i, j, 5, 2] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 2] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 2] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 2] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp2 present (z = 3)
+            rdm[i, j, 1, 3] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 3] <- 0 # ------------------------------------ OS = Spp1 present
+            rdm[i, j, 3, 3] <- exp(rhoSpp2[i, j]) # ------------------- OS = Spp2 present
+            rdm[i, j, 4, 3] <- 0 # ------------------------------------ OS = Spp3 present
+            rdm[i, j, 5, 3] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 3] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 3] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 3] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp3 present (z = 4)
+            rdm[i, j, 1, 4] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 4] <- 0 # ------------------------------------ OS = Spp1 present
+            rdm[i, j, 3, 4] <- 0 # ------------------------------------ OS = Spp2 present
+            rdm[i, j, 4, 4] <- exp(rhoSpp3[i, j]) # ------------------- OS = Spp3 present
+            rdm[i, j, 5, 4] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 4] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 4] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 4] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp1 & Spp2 present (z = 5)
+            rdm[i, j, 1, 5] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 5] <- exp(rhoSpp12[i, j]) # ------------------ OS = Spp1 present
+            rdm[i, j, 3, 5] <- exp(rhoSpp21[i, j]) # ------------------ OS = Spp2 present
+            rdm[i, j, 4, 5] <- 0 # ------------------------------------ OS = Spp3 present
+            rdm[i, j, 5, 5] <- exp(rhoSpp12[i, j] + rhoSpp21[i, j]) # - OS = Spp12 present
+            rdm[i, j, 6, 5] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 5] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 5] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp2 & Spp3 present (z = 6)
+            rdm[i, j, 1, 6] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 6] <- 0 # ------------------------------------ OS = Spp1 present
+            rdm[i, j, 3, 6] <- exp(rhoSpp23[i, j]) # ------------------ OS = Spp2 present
+            rdm[i, j, 4, 6] <- exp(rhoSpp32[i, j]) # ------------------ OS = Spp3 present
+            rdm[i, j, 5, 6] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 6] <- exp(rhoSpp23[i, j] + rhoSpp32[i, j]) # - OS = Spp23 present
+            rdm[i, j, 7, 6] <- 0 # ------------------------------------ OS = Spp13 present
+            rdm[i, j, 8, 6] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = Spp1 & Spp3 present (z = 7)
+            rdm[i, j, 1, 7] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 7] <- exp(rhoSpp13[i, j]) # ------------------ OS = Spp1 present
+            rdm[i, j, 3, 7] <- 0 # ------------------------------------ OS = Spp2 present
+            rdm[i, j, 4, 7] <- exp(rhoSpp31[i, j]) # ------------------ OS = Spp3 present
+            rdm[i, j, 5, 7] <- 0 # ------------------------------------ OS = Spp12 present
+            rdm[i, j, 6, 7] <- 0 # ------------------------------------ OS = Spp23 present
+            rdm[i, j, 7, 7] <- exp(rhoSpp13[i, j] + rhoSpp13[i, j]) # - OS = Spp13 present
+            rdm[i, j, 8, 7] <- 0 # ------------------------------------ OS = all species present
+            #'  True state = All three species present (z = 8)
+            rdm[i, j, 1, 5] <- 1 # ------------------------------------ OS = unoccupied
+            rdm[i, j, 2, 5] <- exp(rhoSpp123[i, j]) # ----------------- OS = Spp1 present
+            rdm[i, j, 3, 5] <- exp(rhoSpp213[i, j]) # ----------------- OS = Spp2 present
+            rdm[i, j, 4, 5] <- exp(rhoSpp312[i, j]) # ----------------- OS = Spp3 present
+            rdm[i, j, 5, 5] <- exp(rhoSpp123[i, j] + rhoSpp213[i, j]) # OS = Spp12 present
+            rdm[i, j, 6, 5] <- exp(rhoSpp213[i, j] + rhoSpp312[i, j]) # OS = Spp23 present
+            rdm[i, j, 7, 5] <- exp(rhoSpp123[i, j] + rhoSpp312[i, j]) # OS = Spp13 present
+            rdm[i, j, 8, 5] <- exp(rhoSpp123[i, j] + rhoSpp213[i, j]) + rhoSpp312[i, j]) # OS = all species present
+          }
       
+        #'  3. Define linear models for each fundamental parameter that governs the cell probs
+        #'  Linear models for the occupancy parameters
+        #'  ...for states Spp1, Spp2, Spp3
+        psiSpp1[i] <- inprod(betaSpp1, psi_cov[i, ])
+        psiSpp2[i] <- inprod(betaSpp2, psi_cov[i, ])
+        psiSpp3[i] <- inprod(betaSpp3, psi_cov[i, ])
+        #'  ...for states Spp12, Spp23, Spp13 (in this specific order!)
+        psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + inprod(betaSpp12, psi_inxs_cov[i, ])
+        psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + inprod(betaSpp23, psi_inxs_cov[i, ])
+        psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + inprod(betaSpp13, psi_inxs_cov[i, ])
+        #'  ...for state Spp123
+        psiSpp123[i] <- psiSpp1[i] + psiSpp2[i] + psiSpp3[i] + inprod(betaSpp12, psi_inxs_cov[i, ]) +
+                        inprod(betaSpp23, psi_inxs_cov[i, ]) + inprod(betaSpp13, psi_inxs_cov[i, ])
       
-      
-      
-      
-      
-      #'  2. Define arrays containing cell probabilities for categorical distributions.
-      #'  3. Define linear models for each fundamental parameter that governs the cell probs.
-
+        #'  Linear models for the detection parameters
+        #'  (can specific interactions on detection here as well)
+          for(j in 1:nsurveys) {
+            #'  Baseline detection linear predictors
+            rhoSpp1[i, j] <- inprod(alphaSpp1, rho_cov[i, j, ])
+            rhoSpp2[i, j] <- inprod(alphaSpp2, rho_cov[i, j, ])
+            rhoSpp3[i, j] <- inprod(alphaSpp3, rho_cov[i, j, ])
+            #'  Asymetric interactirons between all 3 species
+            rhoSpp12[i, j] <- rhoSpp1[i, j]
+            rhoSpp13[i, j] <- rhoSpp1[i, j]
+            rhoSpp21[i, j] <- rhoSpp2[i, j]
+            rhoSpp23[i, j] <- rhoSpp2[i, j]
+            rhoSpp31[i, j] <- rhoSpp3[i, j]
+            rhoSpp32[i, j] <- rhoSpp3[i, j]
+            #'  Asymetric interactions when all three species are present
+            rhoSpp123[i, j] <- rhoSpp1[i, j]
+            rhoSpp213[i, j] <- rhoSpp2[i, j]
+            rhoSpp312[i, j] <- rhoSpp3[i, j]
+          }
+      }
       }")
   
-    
-
+  #'  Provide initial values for model
+  #'  Get maximum possible state across all 3 potential surveys at a site (site x spp matrix)
+  initial_z <- function(bundled_dat) {
+    zinit <- apply(bundled_dat, c(1,3), sum, na.rm = TRUE)
+    zinit[zinit > 1] <- 1
+    return(zinit)
+  }
+  #'  Run arrays of species-specific detection data through function
+  zinit_graze <- lapply(megaList_graze, initial_z)
+  zinit_hunt <- lapply(megaList_hunt, initial_z)
   
+  #'  Convert initial values to a category
+  initial_z_categories <- function(zlist) {
+    #'  Collapse species-specific detection histories into 8 categories
+    zcat <- apply(zlist, 1, paste, collapse = "")
+    zcat[zcat == "000"] <- 1
+    zcat[zcat == "100"] <- 2
+    zcat[zcat == "010"] <- 3
+    zcat[zcat == "001"] <- 4
+    zcat[zcat == "110"] <- 5
+    zcat[zcat == "011"] <- 6
+    zcat[zcat == "101"] <- 7
+    zcat[zcat == "111"] <- 8
+    #'  Make z numeric again
+    zcat <- as.numeric(zcat)
+    return(zcat)
+  }
+  #'  Run list of detection histories through function to create detection arrays
+  #'  for each model
+  zcat_graze <- lapply(zinit_graze, initial_z_categories)
+  names(zcat_graze) <- c("coug_md_cattle", "coug_elk_cattle", "coug_wtd_cattle", "coug_moose_cattle",
+                         "wolf_md_cattle", "wolf_elk_cattle", "wolf_wtd_cattle", "wolf_moose_cattle",
+                         "bear_md_cattle", "bear_elk_cattle", "bear_wtd_cattle", "bear_moose_cattle",
+                         "bob_md_cattle", "bob_wtd_cattle", "coy_md_cattle", "coy_wtd_cattle")
+  zcat_hunt <- lapply(zinit_hunt, initial_z_categories)
+  names(zcat_hunt) <- c("coug_md_hunter", "coug_elk_hunter", "coug_wtd_hunter", "coug_moose_hunter",
+                        "wolf_md_hunter", "wolf_elk_hunter", "wolf_wtd_hunter", "wolf_moose_hunter",
+                        "bear_md_hunter", "bear_elk_hunter", "bear_wtd_hunter", "bear_moose_hunter",
+                        "bob_md_hunter", "bob_wtd_hunter", "coy_md_hunter", "coy_wtd_hunter")
   
+  #'  Inits function
+  inits <- function() list(z = zcat_graze[[1]])
   
+  #'  Parameters monitored
+  params <- c("betaSpp1", "betaSpp2", "betaSpp3", "betaSpp12", "betaSpp23", "betaSpp13",
+              "alphaSpp1", "alphaSpp2", "alphaSpp3", "mean.psiSpp1", "mean.psiSpp2", "mean.psiSpp3",
+              "mean.pSpp1", "mean.pSpp2", "mean.pSpp3", "z")
   
+  #'  MCMC settings
+  na <- 10000; nc <- 3; ni <- 50000; nb <- 30000; nt <- 20
   
-  
-  
-  
+  #'  Call JAGS, check convergence and summarize posteriors
+  out1 <- jags(bundled_graze_list[[1]], inits, params, "multi-spp_OccMod.txt", n.chains = nc,
+               n.adapt = na, n.burn = nb, n.iter = ni, n.thin = nt, parallel = TRUE)
+  par(mfrow = c(3, 3)); traceplot(out1)
+  which(out1$summary[,8] > 1.1)
+  print(out1$summary[1:24, -c(4:6)], 3)
   
   
   
