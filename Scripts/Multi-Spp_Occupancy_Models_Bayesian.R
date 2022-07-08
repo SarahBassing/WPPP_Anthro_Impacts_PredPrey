@@ -5,9 +5,11 @@
   #'  July 2022
   #'  =====================================================
   #'  Script to source data formatting scripts & run multi-species, single-season
-  #'  occupancy models for deer, elk, moose, black bears, cougars, wolves, coyotes, 
-  #'  and bobcats during the grazing season 2018-2020 (July - Sept) and hunting
-  #'  season 2018-2020 (Oct - Nov), respectively. Grazing season co-occurrence 
+  #'  occupancy models within a Bayesian framework. Code adapted from Kery & Royle
+  #'  AHM2 book (Ch 8.2.3). Code runs 3-spp models using detection/non-detection
+  #'  data for deer, elk, moose, black bears, cougars, wolves, coyotes, & bobcats
+  #'  during the grazing season 2018-2020 (July - Sept) and hunting season 
+  #'  2018-2020 (Oct - Nov), respectively. Grazing season co-occurrence 
   #'  models include 13 7-day sampling occasions comprising the peak of livestock
   #'  activity detected on camera. Hunting season co-occurrence models include
   #'  8 7-day sampling occasions comprising the two general rifle hunting seasons
@@ -27,10 +29,6 @@
   library(abind)
   library(mcmcplots)
   library(tidyverse)
-  # library(unmarked)
-  # library(MuMIn)
-  # library(condformat)
-  
   
   #'  Source scripts that generates detection histories
   #'  Detection histories come trimmed to desired season length based on unique
