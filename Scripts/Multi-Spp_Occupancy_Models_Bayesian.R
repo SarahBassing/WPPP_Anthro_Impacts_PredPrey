@@ -30,7 +30,9 @@
   library(mcmcplots)
   library(tidyverse)
   
-  #'  Source scripts that generates detection histories
+  
+  ####  Source detection history & covariate scripts  ####
+  #'  ================================================
   #'  Detection histories come trimmed to desired season length based on unique
   #'  detection events requiring 30 min interval elapse between detections of 
   #'  same species at a given camera
@@ -42,10 +44,13 @@
   #'  per sampling occasion
   source("./Scripts/Cattle_Hunter_Activity.R")
   
-  #'  Formats covariate data and detection histories for multi-species occupancy 
-  #'  models in unmarked with THREE-SPECIES interactions
+  #'  Format covariate data and detection histories for multi-species occupancy 
+  #'  models with THREE-SPECIES interactions
   source("./Scripts/Data_Formatting_3SppX_OccMods.R")
   
+  
+  ####  Bundle detection histories  ####
+  #'  ==============================
   #'  Bundle species detections in an array (site x survey x species)
   #'  Grazing season data
   str(coug_md_cattle_graze_DH)
@@ -105,35 +110,24 @@
                         bear_md_hunter_hunt_dat, bear_elk_hunter_hunt_dat, bear_wtd_hunter_hunt_dat, bear_moose_hunter_hunt_dat,
                         bob_md_hunter_hunt_dat, bob_wtd_hunter_hunt_dat, coy_md_hunter_hunt_dat, coy_wtd_hunter_hunt_dat)
   
-  #'  Identify survey dimensions
+  
+  ####  Identify survey dimensions  ####
+  #'  ==============================
   nsites_graze <- dim(coug_md_cattle_graze_dat)[1]
-  nsurvey_graze <- dim(coug_md_cattle_graze_dat)[2]
+  nsurveys_graze <- dim(coug_md_cattle_graze_dat)[2]
   nspp_graze <- dim(coug_md_cattle_graze_dat)[3]
   #'  Number of possible community states (species interactions)
   ncat_graze <- 2^nspp_graze
   
   nsites_hunt <- dim(coug_md_hunter_hunt_dat)[1]
-  nsurvey_hunt <- dim(coug_md_hunter_hunt_dat)[2]
+  nsurveys_hunt <- dim(coug_md_hunter_hunt_dat)[2]
   nspp_hunt <- dim(coug_md_hunter_hunt_dat)[3]
   #'  Number of possible community states (species interactions)
   ncat_hunt <- 2^nspp_hunt
   
-  #'  Prepare site-level covariates for detection sub-models
-  #'  study area covariate: 0 = NE, 1 = OK
-  #'  trail covariate: 0 = trail, 1 = dirt road
-  #'  public covariate: 0 = private, 1 = public
-  stations_graze <- stations_graze %>%
-    mutate(Study_Area = ifelse(Study_Area == "NE", 0, 1),
-           Trail = ifelse(Trail == "Trail", 0, 1), 
-           Public = as.integer(as.character(Public)))
-  stations_hunt <- stations_hunt %>%
-    mutate(Study_Area = ifelse(Study_Area == "NE", 0, 1),
-           Trail = ifelse(Trail == "Trail", 0, 1), 
-           Public = as.integer(as.character(Public)))
-  table(gTrail <- stations_graze[,"Trail"])
-  table(hTrail <- stations_hunt[,"Trail"])
-  table(Public <- stations_hunt[,"Public"])
   
+  ####  Format detection histories for JAGS  ####
+  #'  =======================================
   #'  Function to convert species-specific detection histories to multi-species 
   #'  detection array to be site x survey
   detection_array <- function(DH_list) {
@@ -166,58 +160,87 @@
                               "bear_md_hunter", "bear_elk_hunter", "bear_wtd_hunter", "bear_moose_hunter",
                               "bob_md_hunter", "bob_wtd_hunter", "coy_md_hunter", "coy_wtd_hunter")
   
-  ####  Covariate matrices for different parts of model  ####
-  #'  ===================================================
+  
+  ####  Format covariates for JAGS  ####
+  #'  ==============================
+  #'  Prepare site-level covariates for detection sub-models
+  #'  study area covariate: 0 = NE, 1 = OK
+  #'  trail covariate: 0 = trail, 1 = dirt road
+  #'  public covariate: 0 = private, 1 = public
+  covs_graze <- stations_graze %>%
+    mutate(Study_Area = ifelse(Study_Area == "NE", 0, 1),
+           Trail = ifelse(Trail == "Trail", 0, 1), 
+           Public = as.integer(as.character(Public)))
+  covs_hunt <- stations_hunt %>%
+    mutate(Study_Area = ifelse(Study_Area == "NE", 0, 1),
+           Trail = ifelse(Trail == "Trail", 0, 1), 
+           Public = as.integer(as.character(Public)))
+  table(gTrail <- covs_graze[,"Trail"])
+  table(hTrail <- covs_hunt[,"Trail"])
+  table(Public <- covs_hunt[,"Public"])
+  
+  #'  Janky patch to fill NAs for weekly grazing/hunter activity --> MUST find a better solution for this
+  cattle_week_cov <- cattle_week_scaled
+  cattle_week_cov[is.na(cattle_week_cov)] <- -0.1546436 # fill NAs with scaled value that equals 0
+  hunter_week_cov <- hunter_week_scaled
+  hunter_week_cov[is.na(hunter_week_cov)] <- -0.1565421 # fill NAs with scaled value that equals 0
+  
   #'  Matrix for first order occupancy (psi): main effects
-  psi_cov_graze <- matrix(NA, ncol = 2, nrow = nsites_graze) #change to 5
+  psi_cov_graze <- matrix(NA, ncol = 5, nrow = nsites_graze)
   psi_cov_graze[,1] <- 1
-  psi_cov_graze[,2] <- stations_graze$Elev
-  # psi_cov_graze[,2] <- stations_graze$Study_Area
-  # psi_cov_graze[,3] <- stations_graze$Elev
-  # psi_cov_graze[,4] <- (stations_graze$Elev)^2
-  # psi_cov_graze[,5] <- stations_graze$PercForest
+  psi_cov_graze[,2] <- covs_graze$Study_Area
+  psi_cov_graze[,3] <- covs_graze$Elev
+  psi_cov_graze[,4] <- (covs_graze$Elev)^2
+  psi_cov_graze[,5] <- covs_graze$PercForest
+  head(psi_cov_graze)
   
   psi_cov_hunt <- matrix(NA, ncol = 5, nrow = nsites_hunt)
   psi_cov_hunt[,1] <- 1
-  psi_cov_hunt[,2] <- stations_hunt$Study_Area
-  psi_cov_hunt[,3] <- stations_hunt$Elev
-  psi_cov_hunt[,4] <- (stations_hunt$Elev)^2
-  psi_cov_hunt[,5] <- stations_hunt$PercForest
+  psi_cov_hunt[,2] <- covs_hunt$Study_Area
+  psi_cov_hunt[,3] <- covs_hunt$Elev
+  psi_cov_hunt[,4] <- (covs_hunt$Elev)^2
+  psi_cov_hunt[,5] <- covs_hunt$PercForest
+  head(psi_cov_hunt)
   
   #'  Matrix for second order occupancy (psi): 2-way interactions
-  psi_inxs_covs_graze <- matrix(NA, ncol = 2, nrow = nsites_graze)
-  psi_inxs_covs_graze[,1] <- 1
-  psi_inxs_covs_graze[,2] <- stations_graze$GrazingActivity
+  psi_inxs_cov_graze <- matrix(NA, ncol = 2, nrow = nsites_graze)
+  psi_inxs_cov_graze[,1] <- 1
+  psi_inxs_cov_graze[,2] <- covs_graze$GrazingActivity
+  head(psi_inxs_cov_graze)
   
-  psi_inxs_covs_hunt <- matrix(NA, ncol = 3, nrow = nsites_hunt) 
-  psi_inxs_covs_hunt[,1] <- 1
-  psi_inxs_covs_hunt[,2] <- stations_hunt$GrazingActivity
-  psi_inxs_covs_hunt[,3] <- stations_hunt$Public
+  psi_inxs_cov_hunt <- matrix(NA, ncol = 3, nrow = nsites_hunt) 
+  psi_inxs_cov_hunt[,1] <- 1
+  psi_inxs_cov_hunt[,2] <- covs_hunt$HuntingActivity
+  psi_inxs_cov_hunt[,3] <- covs_hunt$Public
+  head(psi_inxs_cov_hunt)
   
   #'  Matrix for first order detection (rho): main effects
-  rho_cov_graze <- array(NA, dim = c(nsites_graze, nsurvey_graze, 2)) # last digit = number of covariates change to 3
+  rho_cov_graze <- array(NA, dim = c(nsites_graze, nsurveys_graze, 3)) # last digit = number of covariates
   rho_cov_graze[,,1] <- 1
-  rho_cov_graze[,1:nsurvey_graze,2] <- gTrail   # repeat site-level covariate for each survey
-  #rho_cov_graze[,,3] <- cattle_week_scaled
+  rho_cov_graze[,1:nsurveys_graze,2] <- gTrail   # repeat site-level covariate for each survey
+  rho_cov_graze[,,3] <- cattle_week_cov
   head(rho_cov_graze)
   
-  rho_cov_hunt <- array(NA, dim = c(nsites_hunt, nsurvey_hunt, 4))
+  rho_cov_hunt <- array(NA, dim = c(nsites_hunt, nsurveys_hunt, 4)) # last digit = number of covariates
   rho_cov_hunt[,,1] <- 1
-  rho_cov_hunt[,1:nsurvey_hunt,2] <- hTrail    # repeat site-level covariate for each survey
-  rho_cov_hunt[,1:nsurvey_hunt,3] <- Public    # repeat site-level covariate for each survey
-  rho_cov_hunt[,,4] <- hunter_week_scaled
+  rho_cov_hunt[,1:nsurveys_hunt,2] <- hTrail    # repeat site-level covariate for each survey
+  rho_cov_hunt[,1:nsurveys_hunt,3] <- Public    # repeat site-level covariate for each survey
+  rho_cov_hunt[,,4] <- hunter_week_cov
   head(rho_cov_hunt)
   
   #'  Matrix for second order detection (rho): 2-way interactions
   rho_inxs_cov_graze <- rep(1, nsites_graze)
   rho_inxs_cov_hunt <- rep(1, nsites_hunt)
   
+  
+  ####  Bundle all data for JAGS  ####
+  #'  ============================
   #'  Function to bundle detection and covariate data
   bundle_data <- function(det_array, psi_covs, psi_inxs, rho_covs, rho_inxs, 
                           sites, surveys, psi_1order, psi_2order, rho_1order, 
                           rho_2order, ncats) {
     #'  list all pieces of data together
-    bundled <- list(y = det_array, psi_cov = psi_covs, psi_inxs_covs = psi_inxs,
+    bundled <- list(y = det_array, psi_cov = psi_covs, psi_inxs_cov = psi_inxs,
                  rho_cov = rho_covs, rho_inxs_cov = rho_inxs, nsites = sites,
                  nsurveys = surveys, nfirst_order_psi = ncol(psi_1order), 
                  nsecond_order_psi = ncol(psi_2order), 
@@ -230,33 +253,30 @@
   #'  Run giant list of detection arrays through function to bundle with covariate
   #'  data for each model
   bundled_graze_list <- lapply(det_array_graze, bundle_data, psi_covs = psi_cov_graze, 
-                               psi_inxs = psi_inxs_covs_graze, rho_covs = rho_cov_graze, 
+                               psi_inxs = psi_inxs_cov_graze, rho_covs = rho_cov_graze, 
                                rho_inxs = rho_inxs_cov_graze, sites = nsites_graze, 
-                               surveys = nsurvey_graze, psi_1order = psi_cov_graze, 
-                               psi_2order = psi_inxs_covs_graze, rho_1order = rho_cov_graze, 
+                               surveys = nsurveys_graze, psi_1order = psi_cov_graze, 
+                               psi_2order = psi_inxs_cov_graze, rho_1order = rho_cov_graze, 
                                rho_2order = 1, ncats = ncat_graze)
   bundled_hunt_list <- lapply(det_array_hunt, bundle_data, psi_covs = psi_cov_hunt, 
-                              psi_inxs = psi_inxs_covs_hunt, rho_covs = rho_cov_hunt, 
+                              psi_inxs = psi_inxs_cov_hunt, rho_covs = rho_cov_hunt, 
                               rho_inxs = rho_inxs_cov_hunt, sites = nsites_hunt, 
-                              surveys = nsurvey_hunt, psi_1order = psi_cov_hunt, 
-                              psi_2order = psi_inxs_covs_hunt, rho_1order = rho_cov_hunt, 
+                              surveys = nsurveys_hunt, psi_1order = psi_cov_hunt, 
+                              psi_2order = psi_inxs_cov_hunt, rho_1order = rho_cov_hunt, 
                               rho_2order = 1, ncats = ncat_hunt)
   
   
-  ####  Specify model  ####
-  #'  =================
-  #'  1. Define basic hierarchical model that separates latent and observed processes.
-  #'  Each process uses a Categorical distribution since this is essentially a 
-  #'  multi-state occupancy model.
-  
-  #'  Specify model in JAGS language
-  sink("./Outputs/JAGS_models/multi-spp_OccMod.txt")
-  cat("
+  ####  Specify model in JAGS language  ####
+  #'  ==================================
+  #sink("./Outputs/JAGS_models/multi-spp_OccMod.txt")
+  cat(file = 'multi-spp_OccMod.txt', "
   model{
   
     ##### Define Priors  ####
     #'  =================
-    
+    #'  Priors for parameters of interest 
+    #'  Intercepts and slopes for linear models associated with each natural parameter
+  
     betaSpp1[1] <- logit(mean.psiSpp1)          # fo occupancy intercepts
     betaSpp2[1] <- logit(mean.psiSpp2)
     betaSpp3[1] <- logit(mean.psiSpp3)
@@ -276,7 +296,7 @@
       betaSpp13[so_psi] ~ dnorm(0, 0.1)
       betaSpp23[so_psi] ~ dnorm(0, 0.1)
     }
-    
+
     #'  First order detection priors (rho)
     alphaSpp1[1] <- logit(mean.pSpp1)           # fo detection intercepts
     alphaSpp2[1] <- logit(mean.pSpp2)
@@ -290,7 +310,7 @@
       alphaSpp2[fo_rho] ~ dnorm(0, 0.1)
       alphaSpp3[fo_rho] ~ dnorm(0, 0.1)
     }
-    
+  
     #'  Second order detection priors (rho)
     #'  none for now
         
@@ -299,6 +319,8 @@
     #'  =====================
 
     #'  1. Set up basic hierarchical model
+    #'  Latent state and observation processes uses a Categorical distribution 
+    #'  since this is essentially a multi-state occupancy model.
 
     #'  Latent state model
     #'  ------------------
@@ -319,7 +341,7 @@
         y[i,j] ~ dcat(rdm[i, j, (1:ncat), z[i]])
       }
     }
-      
+  
     #'  2. Define arrays containing cell probabilities for categorical distributions
       
     for(i in 1:nsites) {
@@ -332,12 +354,12 @@
       lsv[i, 6] <- exp(psiSpp23[i])    # Pr(Spp2 & Spp3 present)
       lsv[i, 7] <- exp(psiSpp13[i])    # Pr(Spp1 & Spp3 present)
       lsv[i, 8] <- exp(psiSpp123[i])   # Pr(all spp present)
-        
+ 
       for(j in 1:nsurveys) {
         #'  Probabilities for each detection array, held in rho detection matrix (rdm) 
         #'  where OS = observed state, TS = true state and each row sums to 1. 
         #'  Exponentiating log odds so rdm holds estimates on probability scale.???
-        #'  Reminder - this model assumes NOfalse positives in the data so
+        #'  Reminder - this model assumes NO false positives in the data so
         #'  probability is 0 when OS x TS combinations are not possible.
         #'  Mmmk don't freak out over this section!
         #'  Example 1: when only Spp1 is observed and only Spp1 is truly 
@@ -415,30 +437,48 @@
         rdm[i, j, 5, 8] <- exp(rhoSpp123[i, j] + rhoSpp213[i, j]) # OS = Spp12 present
         rdm[i, j, 6, 8] <- exp(rhoSpp213[i, j] + rhoSpp312[i, j]) # OS = Spp23 present
         rdm[i, j, 7, 8] <- exp(rhoSpp123[i, j] + rhoSpp312[i, j]) # OS = Spp13 present
-        rdm[i, j, 8, 8] <- exp(rhoSpp123[i, j] + rhoSpp213[i, j]) + rhoSpp312[i, j]) # OS = all species present
+        rdm[i, j, 8, 8] <- exp(rhoSpp123[i, j] + rhoSpp213[i, j] + rhoSpp312[i, j]) # OS = all species present
       }
       
       #'  3. Define linear models for each fundamental parameter that governs the cell probs
+      #'  These are my natural parameters (f1, f2, f3, f12, f13, f23, f123)!
       #'  Linear models for the occupancy parameters on the logit scale
+      
       #'  ...for states Spp1, Spp2, Spp3
-      psiSpp1[i] <- inprod(betaSpp1, psi_cov[i, ])
-      psiSpp2[i] <- inprod(betaSpp2, psi_cov[i, ])
-      psiSpp3[i] <- inprod(betaSpp3, psi_cov[i, ])
+      # psiSpp1[i] <- inprod(betaSpp1, psi_cov[i, ])
+      # psiSpp2[i] <- inprod(betaSpp2, psi_cov[i, ])
+      # psiSpp3[i] <- inprod(betaSpp3, psi_cov[i, ])
+  
+      psiSpp1[i] <- betaSpp1[1] + betaSpp1[2]*psi_cov[i,2] + betaSpp1[3]*psi_cov[i,3] + betaSpp1[4]*psi_cov[i,4] + betaSpp1[5]*psi_cov[i,5]
+      psiSpp2[i] <- betaSpp2[1] + betaSpp2[2]*psi_cov[i,2] + betaSpp2[3]*psi_cov[i,3] + betaSpp2[4]*psi_cov[i,4] + betaSpp2[5]*psi_cov[i,5]
+      psiSpp3[i] <- betaSpp3[1] + betaSpp3[2]*psi_cov[i,2] + betaSpp3[3]*psi_cov[i,3] + betaSpp3[4]*psi_cov[i,4] + betaSpp3[5]*psi_cov[i,5]
+  
       #'  ...for states Spp12, Spp23, Spp13 (in this specific order!)
-      psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + inprod(betaSpp12, psi_inxs_cov[i, ])
-      psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + inprod(betaSpp23, psi_inxs_cov[i, ])
-      psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + inprod(betaSpp13, psi_inxs_cov[i, ])
+      # psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + inprod(betaSpp12, psi_inxs_cov[i, ])
+      # psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + inprod(betaSpp23, psi_inxs_cov[i, ])
+      # psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + inprod(betaSpp13, psi_inxs_cov[i, ])
+  
+      psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + betaSpp12[1] + betaSpp12[2]*psi_inxs_cov[i,2]
+      psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + betaSpp23[1] # beta2 on this interaction
+      psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + betaSpp13[1] # beta2 on this interaction
+  
       #'  ...for state Spp123
-      psiSpp123[i] <- psiSpp1[i] + psiSpp2[i] + psiSpp3[i] + inprod(betaSpp12, psi_inxs_cov[i, ]) +
-                      inprod(betaSpp23, psi_inxs_cov[i, ]) + inprod(betaSpp13, psi_inxs_cov[i, ])
+      # psiSpp123[i] <- psiSpp1[i] + psiSpp2[i] + psiSpp3[i] + inprod(betaSpp12, psi_inxs_cov[i, ]) +
+      #                 inprod(betaSpp23, psi_inxs_cov[i, ]) + inprod(betaSpp13, psi_inxs_cov[i, ])
+      psiSpp123[i] <- 0  # my attempt to set this natural parameter to 0
   
       #'  Linear models for the detection parameters on the logit scale
       #'  (can specific interactions on detection here as well)
       for(j in 1:nsurveys) {
         #'  Baseline detection linear predictors
-        rhoSpp1[i, j] <- inprod(alphaSpp1, rho_cov[i, j, ])
-        rhoSpp2[i, j] <- inprod(alphaSpp2, rho_cov[i, j, ])
-        rhoSpp3[i, j] <- inprod(alphaSpp3, rho_cov[i, j, ])
+        # rhoSpp1[i, j] <- inprod(alphaSpp1, rho_cov[i, j, ])
+        # rhoSpp2[i, j] <- inprod(alphaSpp2, rho_cov[i, j, ])
+        # rhoSpp3[i, j] <- inprod(alphaSpp3, rho_cov[i, j, ])
+  
+        rhoSpp1[i, j] <- alphaSpp1[1] + alphaSpp1[2]*rho_cov[i,j,2] + alphaSpp1[3]*rho_cov[i,j,3]
+        rhoSpp2[i, j] <- alphaSpp2[1] + alphaSpp2[2]*rho_cov[i,j,2] + alphaSpp2[3]*rho_cov[i,j,3]
+        rhoSpp3[i, j] <- alphaSpp3[1] + alphaSpp3[2]*rho_cov[i,j,2] # no anthro activity on this spp
+  
         #'  Asymetric interactirons between all 3 species
         #'  Currently forcing interactions to equal baseline detection probs above
         rhoSpp12[i, j] <- rhoSpp1[i, j]
@@ -447,6 +487,7 @@
         rhoSpp23[i, j] <- rhoSpp2[i, j]
         rhoSpp31[i, j] <- rhoSpp3[i, j]
         rhoSpp32[i, j] <- rhoSpp3[i, j]
+  
         #'  Asymetric interactions when all three species are present
         #'  Currently forcing interactions to equal baseline detection probs above
         rhoSpp123[i, j] <- rhoSpp1[i, j]
@@ -454,10 +495,11 @@
         rhoSpp312[i, j] <- rhoSpp3[i, j]
       }
     }
-  }")
+  }
+  ")
   
   #'  Provide initial values for model
-  #'  Get maximum possible state across all 3 potential surveys at a site (site x spp matrix)
+  #'  Get maximum possible state across all potential surveys at a site (site x spp matrix)
   initial_z <- function(bundled_dat) {
     zinit <- apply(bundled_dat, c(1,3), sum, na.rm = TRUE)
     zinit[zinit > 1] <- 1
@@ -503,22 +545,26 @@
   params <- c("betaSpp1", "betaSpp2", "betaSpp3", "betaSpp12", "betaSpp23", "betaSpp13",
               "alphaSpp1", "alphaSpp2", "alphaSpp3", "mean.psiSpp1", "mean.psiSpp2", "mean.psiSpp3",
               "mean.pSpp1", "mean.pSpp2", "mean.pSpp3", "z")
-  
+
   #'  MCMC settings
-  na <- 100; nc <- 3; ni <- 500; nb <- 300; nt <- 20
+  na <- 10000; nc <- 3; ni <- 50000; nb <- 30000; nt <- 20
   
   #'  Call JAGS, check convergence and summarize posteriors
-  out1 <- jags(bundled_graze_list[[1]], inits, params, "multi-spp_OccMod.txt", n.chains = nc,
-               n.adapt = na, n.burn = nb, n.iter = ni, n.thin = nt, parallel = TRUE)
-  par(mfrow = c(3, 3)); traceplot(out1)
+  out1 <- jags(bundled_graze_list[[1]], inits, params, 'multi-spp_OccMod.txt', n.chains = nc,
+               n.adapt = na, n.burnin = nb, n.iter = ni, n.thin = nt, parallel = TRUE)
+  
+  traceplot(out1)
   which(out1$summary[,8] > 1.1)
   print(out1$summary[1:24, -c(4:6)], 3)
+  save(list=ls(), file="Test_MultiSpp_Model.Rdata")
   
   
   
-  
-  
-  
+  # QUESTIONS/TO-DO List
+  # 1. did I correctly set the 3-way interaction parameter to 0 I don't estimate it?
+  # 2. how to functionalize this so I can run models with different covariate per species 
+  # and for multiple species without rewriting whole thing over and over
+  # 3. what to do about these missing survey-level covs
   
   
   
