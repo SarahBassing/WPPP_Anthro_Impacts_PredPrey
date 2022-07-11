@@ -5,7 +5,7 @@
   #'  April 2022
   #'  ============================================
   #'  Script to create detection histories for cattle and hunters to be used as
-  #'  survey and site-leve covariates in occupancy models. Key difference is using
+  #'  survey and site-level covariates in occupancy models. Key difference is using
   #'  COUNTS of detected cattle and hunters instead of binary detection/non-detection
   #'  data to represent grazing and hunting activity at each camera site over time.
   #'  
