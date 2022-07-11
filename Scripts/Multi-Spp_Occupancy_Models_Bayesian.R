@@ -25,7 +25,8 @@
   #'  Clean workspace & load libraries
   rm(list = ls())
   
-  library(jagsUI)
+  #library(jagsUI)
+  library(R2jags)
   library(abind)
   library(mcmcplots)
   library(tidyverse)
@@ -277,14 +278,14 @@
     #'  Priors for parameters of interest 
     #'  Intercepts and slopes for linear models associated with each natural parameter
   
-    betaSpp1[1] <- logit(mean.psiSpp1)          # fo occupancy intercepts
+    betaSpp1[1] <- logit(mean.psiSpp1)          # fo occupancy intercepts (logit scale)
     betaSpp2[1] <- logit(mean.psiSpp2)
     betaSpp3[1] <- logit(mean.psiSpp3)
-    mean.psiSpp1[1] ~ dunif(0, 1)
+    mean.psiSpp1[1] ~ dunif(0, 1)               # on the probability scale
     mean.psiSpp2[1] ~ dunif(0, 1)
     mean.psiSpp3[1] ~ dunif(0, 1)
     
-    for(fo_psi in 2:nfirst_order_psi){          # fo occupancy slopes
+    for(fo_psi in 2:nfirst_order_psi){          # fo occupancy slopes (logit scale)
       betaSpp1[fo_psi] ~ dnorm(0, 0.1)
       betaSpp2[fo_psi] ~ dnorm(0, 0.1)
       betaSpp3[fo_psi] ~ dnorm(0, 0.1)
@@ -298,14 +299,14 @@
     }
 
     #'  First order detection priors (rho)
-    alphaSpp1[1] <- logit(mean.pSpp1)           # fo detection intercepts
+    alphaSpp1[1] <- logit(mean.pSpp1)           # fo detection intercepts (logit scale)
     alphaSpp2[1] <- logit(mean.pSpp2)
     alphaSpp3[1] <- logit(mean.pSpp3)
-    mean.pSpp1 ~ dunif(0, 1)
+    mean.pSpp1 ~ dunif(0, 1)                    # on the probability scale
     mean.pSpp2 ~ dunif(0, 1)
     mean.pSpp3 ~ dunif(0, 1)
     
-    for(fo_rho in 2:nfirst_order_rho){          # fo detection slopes
+    for(fo_rho in 2:nfirst_order_rho){          # fo detection slopes (logit scale)
       alphaSpp1[fo_rho] ~ dnorm(0, 0.1)
       alphaSpp2[fo_rho] ~ dnorm(0, 0.1)
       alphaSpp3[fo_rho] ~ dnorm(0, 0.1)
@@ -448,19 +449,21 @@
       # psiSpp1[i] <- inprod(betaSpp1, psi_cov[i, ])
       # psiSpp2[i] <- inprod(betaSpp2, psi_cov[i, ])
       # psiSpp3[i] <- inprod(betaSpp3, psi_cov[i, ])
-  
-      psiSpp1[i] <- betaSpp1[1] + betaSpp1[2]*psi_cov[i,2] + betaSpp1[3]*psi_cov[i,3] + betaSpp1[4]*psi_cov[i,4] + betaSpp1[5]*psi_cov[i,5]
-      psiSpp2[i] <- betaSpp2[1] + betaSpp2[2]*psi_cov[i,2] + betaSpp2[3]*psi_cov[i,3] + betaSpp2[4]*psi_cov[i,4] + betaSpp2[5]*psi_cov[i,5]
-      psiSpp3[i] <- betaSpp3[1] + betaSpp3[2]*psi_cov[i,2] + betaSpp3[3]*psi_cov[i,3] + betaSpp3[4]*psi_cov[i,4] + betaSpp3[5]*psi_cov[i,5]
+    
+      #'  Covariate order: Intercept + Study_Area + Elevation + Elevation^2 + Forest
+      psiSpp1[i] <- betaSpp1[1]*psi_cov[i,1] + betaSpp1[2]*psi_cov[i,2] + betaSpp1[3]*psi_cov[i,3] + betaSpp1[4]*psi_cov[i,4] + betaSpp1[5]*psi_cov[i,5]
+      psiSpp2[i] <- betaSpp2[1]*psi_cov[i,1] + betaSpp2[2]*psi_cov[i,2] + betaSpp2[3]*psi_cov[i,3] + betaSpp2[4]*psi_cov[i,4] + betaSpp2[5]*psi_cov[i,5]
+      psiSpp3[i] <- betaSpp3[1]*psi_cov[i,1] + betaSpp3[2]*psi_cov[i,2] + betaSpp3[3]*psi_cov[i,3] + betaSpp3[4]*psi_cov[i,4] + betaSpp3[5]*psi_cov[i,5]
   
       #'  ...for states Spp12, Spp23, Spp13 (in this specific order!)
       # psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + inprod(betaSpp12, psi_inxs_cov[i, ])
       # psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + inprod(betaSpp23, psi_inxs_cov[i, ])
       # psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + inprod(betaSpp13, psi_inxs_cov[i, ])
   
-      psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + betaSpp12[1] + betaSpp12[2]*psi_inxs_cov[i,2]
-      psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + betaSpp23[1] # beta2 on this interaction
-      psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + betaSpp13[1] # beta2 on this interaction
+      #'  Covariate order: Intercept + Trail + GrazingActivity
+      psiSpp12[i] <- psiSpp1[i] + psiSpp2[i] + betaSpp12[1]*psi_inxs_cov[i,1] + betaSpp12[2]*psi_inxs_cov[i,2]
+      psiSpp23[i] <- psiSpp2[i] + psiSpp3[i] + betaSpp23[1]*psi_inxs_cov[i,1] # beta2 on this interaction
+      psiSpp13[i] <- psiSpp1[i] + psiSpp3[i] + betaSpp13[1]*psi_inxs_cov[i,1] # beta2 on this interaction
   
       #'  ...for state Spp123
       # psiSpp123[i] <- psiSpp1[i] + psiSpp2[i] + psiSpp3[i] + inprod(betaSpp12, psi_inxs_cov[i, ]) +
@@ -475,8 +478,8 @@
         # rhoSpp2[i, j] <- inprod(alphaSpp2, rho_cov[i, j, ])
         # rhoSpp3[i, j] <- inprod(alphaSpp3, rho_cov[i, j, ])
   
-        rhoSpp1[i, j] <- alphaSpp1[1] + alphaSpp1[2]*rho_cov[i,j,2] + alphaSpp1[3]*rho_cov[i,j,3]
-        rhoSpp2[i, j] <- alphaSpp2[1] + alphaSpp2[2]*rho_cov[i,j,2] + alphaSpp2[3]*rho_cov[i,j,3]
+        rhoSpp1[i, j] <- alphaSpp1[1] + alphaSpp1[2]*rho_cov[i,j,2] + alphaSpp1[3]*0 #rho_cov[i,j,3]
+        rhoSpp2[i, j] <- alphaSpp2[1] + alphaSpp2[2]*rho_cov[i,j,2] + alphaSpp2[3]*0 #rho_cov[i,j,3]
         rhoSpp3[i, j] <- alphaSpp3[1] + alphaSpp3[2]*rho_cov[i,j,2] # no anthro activity on this spp
   
         #'  Asymetric interactirons between all 3 species
@@ -549,14 +552,24 @@
   #'  MCMC settings
   na <- 10000; nc <- 3; ni <- 50000; nb <- 30000; nt <- 20
   
+  start.time <- Sys.time()
   #'  Call JAGS, check convergence and summarize posteriors
-  out1 <- jags(bundled_graze_list[[1]], inits, params, 'multi-spp_OccMod.txt', n.chains = nc,
-               n.adapt = na, n.burnin = nb, n.iter = ni, n.thin = nt, parallel = TRUE)
+  out1 <- jags.parallel(bundled_graze_list[[1]], inits, params, 'multi-spp_OccMod.txt', n.chains = nc,
+               n.burnin = nb, n.iter = ni, n.thin = nt, jags.module = c("glm","dic"), n.cluster= n.chains) #n.adapt = na, parallel = TRUE
+  end.time <- Sys.time()
+  (run.time <- end.time - start.time)
   
-  traceplot(out1)
-  which(out1$summary[,8] > 1.1)
-  print(out1$summary[1:24, -c(4:6)], 3)
-  save(list=ls(), file="Test_MultiSpp_Model.Rdata")
+  out2 <- out1
+  mcmcplot(out2)
+  jag.sum <- out1$BUGSoutput$summary
+  print(jag.sum[1:37,-c(4:6)], 3)
+  which(jag.sum[,"Rhat"] > 1.1)
+  write.table(x=jag.sum, file="Test_MultiSpp_Model.RData", sep="\t")
+  
+  # traceplot(jag.sum)
+  # which(out1$summary[,"Rhat"] > 1.1) #summary[,8]
+  # print(out1$summary[1:36, -c(4:6)], 3)
+  # save(list=ls(), file="Test_MultiSpp_Model.Rdata")
   
   
   
