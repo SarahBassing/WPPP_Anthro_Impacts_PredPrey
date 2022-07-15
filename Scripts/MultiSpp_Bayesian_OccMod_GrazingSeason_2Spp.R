@@ -50,40 +50,40 @@
   ####  Bundle detection histories  ####
   #'  ==============================
   #'  Bundle species detections in an array (site x survey x species)
-  str(coug_md_cattle_graze_DH)
-  coug_md_cattle_graze_dat <- abind(coug_md_cattle_graze_DH, along = 3)
-  coug_elk_cattle_graze_dat <- abind(coug_elk_cattle_graze_DH, along = 3)
-  coug_wtd_cattle_graze_dat <- abind(coug_wtd_cattle_graze_DH, along = 3) 
-  coug_moose_cattle_graze_dat <- abind(coug_moose_cattle_graze_DH, along = 3)
+  str(coug_md_graze_DH)
+  coug_md_graze_dat <- abind(coug_md_graze_DH, along = 3)
+  coug_elk_graze_dat <- abind(coug_elk_graze_DH, along = 3)
+  coug_wtd_graze_dat <- abind(coug_wtd_graze_DH, along = 3) 
+  coug_moose_graze_dat <- abind(coug_moose_graze_DH, along = 3)
   
-  wolf_md_cattle_graze_dat <- abind(wolf_md_cattle_graze_DH, along = 3)
-  wolf_elk_cattle_graze_dat <- abind(wolf_elk_cattle_graze_DH, along = 3)
-  wolf_wtd_cattle_graze_dat <- abind(wolf_wtd_cattle_graze_DH, along = 3)
-  wolf_moose_cattle_graze_dat <- abind(wolf_moose_cattle_graze_DH, along = 3) 
+  wolf_md_graze_dat <- abind(wolf_md_graze_DH, along = 3)
+  wolf_elk_graze_dat <- abind(wolf_elk_graze_DH, along = 3)
+  wolf_wtd_graze_dat <- abind(wolf_wtd_graze_DH, along = 3)
+  wolf_moose_graze_dat <- abind(wolf_moose_graze_DH, along = 3) 
   
-  bear_md_cattle_graze_dat <- abind(bear_md_cattle_graze_DH, along = 3) 
-  bear_elk_cattle_graze_dat <- abind(bear_elk_cattle_graze_DH, along = 3) 
-  bear_wtd_cattle_graze_dat <- abind(bear_wtd_cattle_graze_DH, along = 3) 
-  bear_moose_cattle_graze_dat <- abind(bear_moose_cattle_graze_DH, along = 3) 
+  bear_md_graze_dat <- abind(bear_md_graze_DH, along = 3) 
+  bear_elk_graze_dat <- abind(bear_elk_graze_DH, along = 3) 
+  bear_wtd_graze_dat <- abind(bear_wtd_graze_DH, along = 3) 
+  bear_moose_graze_dat <- abind(bear_moose_graze_DH, along = 3) 
   
-  bob_md_cattle_graze_dat <- abind(bob_md_cattle_graze_DH, along = 3)
-  bob_wtd_cattle_graze_dat <- abind(bob_wtd_cattle_graze_DH, along = 3)
+  bob_md_graze_dat <- abind(bob_md_graze_DH, along = 3)
+  bob_wtd_graze_dat <- abind(bob_wtd_graze_DH, along = 3)
   
-  coy_md_cattle_graze_dat <- abind(coy_md_cattle_graze_DH, along = 3)
-  coy_wtd_cattle_graze_dat <- abind(coy_wtd_cattle_graze_DH, along = 3)
+  coy_md_graze_dat <- abind(coy_md_graze_DH, along = 3)
+  coy_wtd_graze_dat <- abind(coy_wtd_graze_DH, along = 3)
   
   #'  List lists of detection histories for faster formatting in functions below
-  megaList_graze <- list(coug_md_cattle_graze_dat, coug_elk_cattle_graze_dat, coug_wtd_cattle_graze_dat, coug_moose_cattle_graze_dat,
-                         wolf_md_cattle_graze_dat, wolf_elk_cattle_graze_dat, wolf_wtd_cattle_graze_dat, wolf_moose_cattle_graze_dat,
-                         bear_md_cattle_graze_dat, bear_elk_cattle_graze_dat, bear_wtd_cattle_graze_dat, bear_moose_cattle_graze_dat,
-                         bob_md_cattle_graze_dat, bob_wtd_cattle_graze_dat, coy_md_cattle_graze_dat, coy_wtd_cattle_graze_dat)
+  megaList_graze <- list(coug_md_graze_dat, coug_elk_graze_dat, coug_wtd_graze_dat, coug_moose_graze_dat,
+                         wolf_md_graze_dat, wolf_elk_graze_dat, wolf_wtd_graze_dat, wolf_moose_graze_dat,
+                         bear_md_graze_dat, bear_elk_graze_dat, bear_wtd_graze_dat, bear_moose_graze_dat,
+                         bob_md_graze_dat, bob_wtd_graze_dat, coy_md_graze_dat, coy_wtd_graze_dat)
   
   
   ####  Identify survey dimensions  ####
   #'  ==============================
-  nsites_graze <- dim(coug_md_cattle_graze_dat)[1]
-  nsurveys_graze <- dim(coug_md_cattle_graze_dat)[2]
-  nspp_graze <- dim(coug_md_cattle_graze_dat)[3]
+  nsites_graze <- dim(coug_md_graze_dat)[1]
+  nsurveys_graze <- dim(coug_md_graze_dat)[2]
+  nspp_graze <- dim(coug_md_graze_dat)[3]
   #'  Number of possible community states (species interactions)
   ncat_graze <- 2^nspp_graze
   
@@ -94,15 +94,11 @@
   #'  detection array to be site x survey
   detection_array <- function(DH_list) {
     ycat <- apply(DH_list, c(1,2), paste, collapse = "")
-    ycat[ycat == "000"] <- 1        # Unoccupied (U)
-    ycat[ycat == "100"] <- 2        # Only predator (spp1) detected
-    ycat[ycat == "010"] <- 3        # Only prey (spp2) detected
-    ycat[ycat == "001"] <- 4        # Only anthropogenic acticity (spp3) detected
-    ycat[ycat == "110"] <- 5        # spp1 & spp2 detected
-    ycat[ycat == "011"] <- 6        # spp2 & spp3 detected
-    ycat[ycat == "101"] <- 7        # spp1 & spp3 detected
-    ycat[ycat == "111"] <- 8        # All three detected (all)
-    ycat[ycat == "NANANA"] <- NA    # Not sampled, no data
+    ycat[ycat == "00"] <- 1        # Unoccupied (U)
+    ycat[ycat == "10"] <- 2        # Only predator (spp1) detected
+    ycat[ycat == "01"] <- 3        # Only prey (spp2) detected
+    ycat[ycat == "11"] <- 4        # both detected (all)
+    ycat[ycat == "NANA"] <- NA     # Not sampled, no data
     #'  Make each column numeric so JAGS knows to handle it as a response variable
     ycat <- apply(ycat, 2, as.numeric)
     #' #'  Drop all row and column names generated by camTrapR
@@ -112,10 +108,10 @@
   #'  Run list of detection histories through function to create detection arrays
   #'  for each model
   det_array_graze <- lapply(megaList_graze, detection_array)
-  names(det_array_graze) <- c("coug_md_cattle", "coug_elk_cattle", "coug_wtd_cattle", "coug_moose_cattle",
-                              "wolf_md_cattle", "wolf_elk_cattle", "wolf_wtd_cattle", "wolf_moose_cattle",
-                              "bear_md_cattle", "bear_elk_cattle", "bear_wtd_cattle", "bear_moose_cattle",
-                              "bob_md_cattle", "bob_wtd_cattle", "coy_md_cattle", "coy_wtd_cattle")
+  names(det_array_graze) <- c("coug_md", "coug_elk", "coug_wtd", "coug_moose",
+                              "wolf_md", "wolf_elk", "wolf_wtd", "wolf_moose",
+                              "bear_md", "bear_elk", "bear_wtd", "bear_moose",
+                              "bob_md", "bob_wtd", "coy_md", "coy_wtd")
   
   
   ####  Format covariates for JAGS  ####
@@ -203,14 +199,10 @@
   initial_z_categories <- function(zlist) {
     #'  Collapse species-specific detection histories into 8 categories
     zcat <- apply(zlist, 1, paste, collapse = "")
-    zcat[zcat == "000"] <- 1
-    zcat[zcat == "100"] <- 2
-    zcat[zcat == "010"] <- 3
-    zcat[zcat == "001"] <- 4
-    zcat[zcat == "110"] <- 5
-    zcat[zcat == "011"] <- 6
-    zcat[zcat == "101"] <- 7
-    zcat[zcat == "111"] <- 8
+    zcat[zcat == "00"] <- 1
+    zcat[zcat == "10"] <- 2
+    zcat[zcat == "01"] <- 3
+    zcat[zcat == "11"] <- 4
     #'  Make z numeric again
     zcat <- as.numeric(zcat)
     return(zcat)
@@ -218,10 +210,10 @@
   #'  Run list of detection histories through function to create detection arrays
   #'  for each model
   zcat_graze <- lapply(zinit_graze, initial_z_categories)
-  names(zcat_graze) <- c("coug_md_cattle", "coug_elk_cattle", "coug_wtd_cattle", "coug_moose_cattle",
-                         "wolf_md_cattle", "wolf_elk_cattle", "wolf_wtd_cattle", "wolf_moose_cattle",
-                         "bear_md_cattle", "bear_elk_cattle", "bear_wtd_cattle", "bear_moose_cattle",
-                         "bob_md_cattle", "bob_wtd_cattle", "coy_md_cattle", "coy_wtd_cattle")
+  names(zcat_graze) <- c("coug_md", "coug_elk", "coug_wtd", "coug_moose",
+                         "wolf_md", "wolf_elk", "wolf_wtd", "wolf_moose",
+                         "bear_md", "bear_elk", "bear_wtd", "bear_moose",
+                         "bob_md", "bob_wtd", "coy_md", "coy_wtd")
   
   #'  Parameters monitored
   params <- c("betaSpp1", "betaSpp2", "betaSpp3", "betaSpp12", "betaSpp23", "betaSpp13",
@@ -229,9 +221,9 @@
               "mean.pSpp1", "mean.pSpp2", "mean.pSpp3", "z")
   
   #'  MCMC settings
-  # nc <- 3; ni <- 500; nb <- 300; nt <- 1; na <- 100
+  nc <- 3; ni <- 500; nb <- 300; nt <- 1; na <- 100
   #nc <- 3; ni <- 5000; nb <- 3000; nt <- 2; na <- 1000
-  nc <- 3; ni <- 50000; nb <- 30000; nt <- 4; na <- 10000
+  #nc <- 3; ni <- 50000; nb <- 30000; nt <- 4; na <- 10000
   
   
   #'  ===================
@@ -248,58 +240,72 @@
   #'  ---------------------------
   inits <- function(){list(z = zcat_graze[[1]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(.)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coug.md.cattle.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(.)_psi(.).txt',
+  coug.md.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.cattle.mod0$samples)
-  which(coug.md.cattle.mod0$summary[,"Rhat"] > 1.1) 
-  print(coug.md.cattle.mod0$summary[1:36, -c(4:6)], 3)
-  save(coug.md.cattle.mod0, file="./Outputs/JAGS_models/Grazing_p(.)_psi(.)_coug.md.cattle.Rdata")
+  mcmcplot(coug.md.mod0$samples)
+  which(coug.md.mod0$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod0$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coug.md.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coug.md.cattle.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail)_psi(habitat).txt',
+  coug.md.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.cattle.mod1$samples)
-  which(coug.md.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coug.md.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(coug.md.cattle.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.md.cattle.Rdata")
+  mcmcplot(coug.md.mod1$samples)
+  which(coug.md.mod1$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod1$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.md.Rdata")
   
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coug.md.cattle.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.md.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.cattle.mod2$samples)
-  which(coug.md.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coug.md.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(coug.md.cattle.mod2, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity)_coug.md.cattle.Rdata")
+  mcmcplot(coug.md.mod2$samples)
+  which(coug.md.mod2$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod2$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.md.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity)_inxpsi(.).R")
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
   start.time <- Sys.time()
-  coug.md.cattle.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity)_inxpsi(.).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.md.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.cattle.mod3$samples)
-  which(coug.md.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coug.md.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(coug.md.cattle.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat_cattleactivity)_inxpsi(.)_coug.md.cattle.Rdata")
+  mcmcplot(coug.md.mod3$samples)
+  which(coug.md.mod3$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod3$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.md.Rdata")
   
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
   start.time <- Sys.time()
-  coug.md.cattle.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.cattle.mod3$samples)
-  which(coug.md.cattle.mod4$summary[,"Rhat"] > 1.1) 
-  print(coug.md.cattle.mod4$summary[1:36, -c(4:6)], 3)
-  save(coug.md.cattle.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coug.md.cattle.Rdata")
+  mcmcplot(coug.md.mod4$samples)
+  which(coug.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.md.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coug.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.md.mod4$samples)
+  which(coug.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.md.Rdata")
+  
   
   ####  Cougar-Elk-Cattle  ####
   #'  ---------------------
