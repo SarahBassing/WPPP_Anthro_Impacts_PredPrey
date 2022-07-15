@@ -26,9 +26,9 @@
   
   #'  Read in data, format, and filter
   #'  Heads up: DON'T format the dates in the cam_stations file yet!
-  cam_stationsYr1 <- read.csv("G:/My Drive/1 Predator Prey Project/Field Work/Data Entry/All_Camera_Stations_18-19_updated_1.21.21.csv")
-  cam_stationsYr2 <- read.csv("G:/My Drive/1 Predator Prey Project/Field Work/Data Entry/All_Camera_Stations_19-20.csv")
-  cam_stationsYr3 <- read.csv("G:/My Drive/1 Predator Prey Project/Field Work/Data Entry/All_Camera_Stations_20-21.csv")
+  cam_stationsYr1 <- read.csv("./Data/All_Camera_Stations_18-19_updated_1.21.21.csv")
+  cam_stationsYr2 <- read.csv("./Data/All_Camera_Stations_19-20.csv")
+  cam_stationsYr3 <- read.csv("./Data/All_Camera_Stations_20-21.csv")
   cam_stations <- rbind(cam_stationsYr1, cam_stationsYr2, cam_stationsYr3)
   
   #'  Count number of camera stations per year and study area
@@ -42,7 +42,7 @@
   nNE_yr3 <- nrow(filter(cam_stationsYr3, grepl("NE", CameraLocation)))
   nOK_yr3 <- nrow(filter(cam_stationsYr3, grepl("OK", CameraLocation)))
   
-  megadata <- read.csv("G:/My Drive/1_Repositories/WPPP_CameraTrapping/Output/full_camdata18-21_2022-04-27.csv") %>%  #2022-04-14
+  megadata <- read.csv("./Data/full_camdata18-21_2022-04-27.csv") %>%  #2022-04-14
     dplyr::select("File", "DateTime", "Date", "Time", "CameraLocation", 
                   "Camera_Lat", "Camera_Long", "Animal", "Human", "Vehicle", 
                   "Species", "HumanActivity", "Count") %>%
