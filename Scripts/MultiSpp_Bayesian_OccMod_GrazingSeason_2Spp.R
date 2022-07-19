@@ -17,7 +17,7 @@
   #'  Encounter histories are generated with CameratTrap_DetectionHistories_for_unmarked.R
   #'  and Cattle_Hunter_Activity.R scripts. Covariate data formatted with the
   #'  Data_Formatting_3SppX_OccMod.R script.
-  #'  ===========================================================
+  #'  ==========================================================================
   
   #'  Clean workspace & load libraries
   rm(list = ls())
@@ -221,9 +221,9 @@
               "mean.pSpp1", "mean.pSpp2", "mean.pSpp3", "z")
   
   #'  MCMC settings
-  nc <- 3; ni <- 500; nb <- 300; nt <- 1; na <- 100
+  #nc <- 3; ni <- 500; nb <- 300; nt <- 1; na <- 100
   #nc <- 3; ni <- 5000; nb <- 3000; nt <- 2; na <- 1000
-  #nc <- 3; ni <- 50000; nb <- 30000; nt <- 4; na <- 10000
+  nc <- 3; ni <- 50000; nb <- 30000; nt <- 4; na <- 10000
   
   
   #'  ===================
@@ -260,7 +260,7 @@
   mcmcplot(coug.md.mod1$samples)
   which(coug.md.mod1$summary[,"Rhat"] > 1.1) 
   print(coug.md.mod1$summary[1:36, -c(4:6)], 3)
-  save(coug.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.md.Rdata")
+  save(coug.md.mod1, file="./Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_coug.md.Rdata")
   
   #'  Pairwise interaction with habitat on conditional occupancy
   source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
@@ -271,7 +271,7 @@
   mcmcplot(coug.md.mod2$samples)
   which(coug.md.mod2$summary[,"Rhat"] > 1.1) 
   print(coug.md.mod2$summary[1:36, -c(4:6)], 3)
-  save(coug.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.md.Rdata")
+  save(coug.md.mod2, file="./Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.md.Rdata")
   
   #'  Conditional occupancy model with cattle activity, no inxs
   source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
@@ -282,7 +282,7 @@
   mcmcplot(coug.md.mod3$samples)
   which(coug.md.mod3$summary[,"Rhat"] > 1.1) 
   print(coug.md.mod3$summary[1:36, -c(4:6)], 3)
-  save(coug.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.md.Rdata")
+  save(coug.md.mod3, file="./Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.md.Rdata")
   
   #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
   source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
@@ -293,588 +293,1099 @@
   mcmcplot(coug.md.mod4$samples)
   which(coug.md.mod4$summary[,"Rhat"] > 1.1) 
   print(coug.md.mod4$summary[1:36, -c(4:6)], 3)
-  save(coug.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.md.Rdata")
+  save(coug.md.mod4, file="./Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.md.Rdata")
   
   #'  Pairwise interaction with cattle activity
   source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
   start.time <- Sys.time()
-  coug.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+  coug.md.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.md.mod4$samples)
-  which(coug.md.mod4$summary[,"Rhat"] > 1.1) 
-  print(coug.md.mod4$summary[1:36, -c(4:6)], 3)
-  save(coug.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.md.Rdata")
+  mcmcplot(coug.md.mod5$samples)
+  which(coug.md.mod5$summary[,"Rhat"] > 1.1) 
+  print(coug.md.mod5$summary[1:36, -c(4:6)], 3)
+  save(coug.md.mod5, file="./Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.md.Rdata")
   
   
   ####  Cougar-Elk-Cattle  ####
   #'  ---------------------
   inits <- function(){list(z = zcat_graze[[2]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coug.elk.cattle.mod1 <- jags(bundled_graze_list[[2]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.elk.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.elk.cattle.mod1$samples)
-  which(coug.elk.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coug.elk.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(coug.elk.cattle.mod1, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_coug.elk.cattle.Rdata")
+  mcmcplot(coug.elk.mod0$samples)
+  which(coug.elk.mod0$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod0$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coug.elk.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coug.elk.cattle.mod2 <- jags(bundled_graze_list[[2]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.elk.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.elk.cattle.mod2$samples)
-  which(coug.elk.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coug.elk.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(coug.elk.cattle.mod2, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_coug.elk.cattle.Rdata")
+  mcmcplot(coug.elk.mod1$samples)
+  which(coug.elk.mod1$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod1$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.elk.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coug.elk.cattle.mod3 <- jags(bundled_graze_list[[2]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.elk.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coug.elk.cattle.mod3$samples)
-  which(coug.elk.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coug.elk.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(coug.elk.cattle.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coug.elk.cattle.Rdata")
+  mcmcplot(coug.elk.mod2$samples)
+  which(coug.elk.mod2$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod2$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.elk.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  coug.elk.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.elk.mod3$samples)
+  which(coug.elk.mod3$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod3$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.elk.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  coug.elk.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.elk.mod4$samples)
+  which(coug.elk.mod4$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod4$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.elk.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coug.elk.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.elk.mod5$samples)
+  which(coug.elk.mod5$summary[,"Rhat"] > 1.1) 
+  print(coug.elk.mod5$summary[1:36, -c(4:6)], 3)
+  save(coug.elk.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.elk.Rdata")  
   
   
   ####  Cougar-White-tailed Deer-Cattle  ####
   #'  -----------------------------------
   inits <- function(){list(z = zcat_graze[[3]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coug.wtd.cattle.mod1 <- jags(bundled_graze_list[[3]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.wtd.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.wtd.cattle.mod1)
-  which(coug.wtd.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coug.wtd.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_coug.wtd.cattle.Rdata")
+  mcmcplot(coug.wtd.mod0$samples)
+  which(coug.wtd.mod0$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod0$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coug.wtd.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coug.wtd.cattle.mod2 <- jags(bundled_graze_list[[3]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.wtd.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.wtd.cattle.mod2)
-  which(coug.wtd.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coug.wtd.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_coug.wtd.cattle.Rdata")
+  mcmcplot(coug.wtd.mod1$samples)
+  which(coug.wtd.mod1$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod1$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.wtd.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coug.wtd.cattle.mod3 <- jags(bundled_graze_list[[3]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.wtd.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.wtd.cattle.mod3)
-  which(coug.wtd.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coug.wtd.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coug.wtd.cattle.Rdata")
+  mcmcplot(coug.wtd.mod2$samples)
+  which(coug.wtd.mod2$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod2$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.wtd.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  coug.wtd.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.wtd.mod3$samples)
+  which(coug.wtd.mod3$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod3$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.wtd.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  coug.wtd.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.wtd.mod4$samples)
+  which(coug.wtd.mod4$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod4$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.wtd.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coug.wtd.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.wtd.mod5$samples)
+  which(coug.wtd.mod5$summary[,"Rhat"] > 1.1) 
+  print(coug.wtd.mod5$summary[1:36, -c(4:6)], 3)
+  save(coug.wtd.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.wtd.Rdata")
   
   
   ####  Cougar-Moose-Cattle  ####
-  #'  -----------------------
-  inits <- function(){list(z = zcat_graze[[4]])}
+  #'  -----------------------------------
+  inits <- function(){list(z = zcat_graze[[3]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coug.moose.cattle.mod1 <- jags(bundled_graze_list[[4]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.moose.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.moose.cattle.mod1)
-  which(coug.moose.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coug.moose.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_coug.moose.cattle.Rdata")
+  mcmcplot(coug.moose.mod0$samples)
+  which(coug.moose.mod0$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod0$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coug.moose.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coug.moose.cattle.mod2 <- jags(bundled_graze_list[[4]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.moose.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.moose.cattle.mod2)
-  which(coug.moose.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coug.moose.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_coug.moose.cattle.Rdata")
+  mcmcplot(coug.moose.mod1$samples)
+  which(coug.moose.mod1$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod1$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coug.moose.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coug.moose.cattle.mod3 <- jags(bundled_graze_list[[4]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coug.moose.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coug.moose.cattle.mod3)
-  which(coug.moose.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coug.moose.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coug.moose.cattle.Rdata")
+  mcmcplot(coug.moose.mod2$samples)
+  which(coug.moose.mod2$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod2$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coug.moose.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  coug.moose.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.moose.mod3$samples)
+  which(coug.moose.mod3$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod3$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coug.moose.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  coug.moose.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.moose.mod4$samples)
+  which(coug.moose.mod4$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod4$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coug.moose.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coug.moose.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coug.moose.mod5$samples)
+  which(coug.moose.mod5$summary[,"Rhat"] > 1.1) 
+  print(coug.moose.mod5$summary[1:36, -c(4:6)], 3)
+  save(coug.moose.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coug.moose.Rdata")
   
   
   ####  Wolf-Mule Deer-Cattle  ####
   #'  -------------------------
   inits <- function(){list(z = zcat_graze[[5]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  wolf.md.cattle.mod1 <- jags(bundled_graze_list[[5]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.md.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.md.cattle.mod1)
-  which(wolf.md.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(wolf.md.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_wolf.md.cattle.Rdata")
+  mcmcplot(wolf.md.mod0$samples)
+  which(wolf.md.mod0$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod0$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_wolf.md.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  wolf.md.cattle.mod2 <- jags(bundled_graze_list[[5]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.md.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.md.cattle.mod2)
-  which(wolf.md.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(wolf.md.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_wolf.md.cattle.Rdata")
+  mcmcplot(wolf.md.mod1$samples)
+  which(wolf.md.mod1$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod1$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_wolf.md.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  wolf.md.cattle.mod3 <- jags(bundled_graze_list[[5]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.md.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.md.cattle.mod3)
-  which(wolf.md.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(wolf.md.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_wolf.md.cattle.Rdata")
+  mcmcplot(wolf.md.mod2$samples)
+  which(wolf.md.mod2$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod2$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_wolf.md.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  wolf.md.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.md.mod3$samples)
+  which(wolf.md.mod3$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod3$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_wolf.md.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  wolf.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.md.mod4$samples)
+  which(wolf.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_wolf.md.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  wolf.md.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.md.mod5$samples)
+  which(wolf.md.mod5$summary[,"Rhat"] > 1.1) 
+  print(wolf.md.mod5$summary[1:36, -c(4:6)], 3)
+  save(wolf.md.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_wolf.md.Rdata")
   
   
   ####  Wolf-Elk-Cattle  ####
   #'  -------------------
   inits <- function(){list(z = zcat_graze[[6]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  wolf.elk.cattle.mod1 <- jags(bundled_graze_list[[6]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.elk.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.elk.cattle.mod1)
-  which(wolf.elk.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(wolf.elk.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_wolf.elk.cattle.Rdata")
+  mcmcplot(wolf.elk.mod0$samples)
+  which(wolf.elk.mod0$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod0$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_wolf.elk.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  wolf.elk.cattle.mod2 <- jags(bundled_graze_list[[6]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.elk.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.elk.cattle.mod2)
-  which(wolf.elk.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(wolf.elk.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_wolf.elk.cattle.Rdata")
+  mcmcplot(wolf.elk.mod1$samples)
+  which(wolf.elk.mod1$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod1$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_wolf.elk.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  wolf.elk.cattle.mod3 <- jags(bundled_graze_list[[6]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.elk.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.elk.cattle.mod3)
-  which(wolf.elk.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(wolf.elk.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_wolf.elk.cattle.Rdata")
+  mcmcplot(wolf.elk.mod2$samples)
+  which(wolf.elk.mod2$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod2$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_wolf.elk.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  wolf.elk.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.elk.mod3$samples)
+  which(wolf.elk.mod3$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod3$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_wolf.elk.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  wolf.elk.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.elk.mod4$samples)
+  which(wolf.elk.mod4$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod4$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_wolf.elk.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  wolf.elk.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.elk.mod5$samples)
+  which(wolf.elk.mod5$summary[,"Rhat"] > 1.1) 
+  print(wolf.elk.mod5$summary[1:36, -c(4:6)], 3)
+  save(wolf.elk.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_wolf.elk.Rdata")  
+  
   
   
   ####  Wolf-White-tailed Deer-Cattle  ####
   #'  ---------------------------------
   inits <- function(){list(z = zcat_graze[[7]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  wolf.wtd.cattle.mod1 <- jags(bundled_graze_list[[7]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.wtd.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.wtd.cattle.mod1)
-  which(wolf.wtd.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(wolf.wtd.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_wolf.wtd.cattle.Rdata")
+  mcmcplot(wolf.wtd.mod0$samples)
+  which(wolf.wtd.mod0$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod0$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_wolf.wtd.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  wolf.wtd.cattle.mod2 <- jags(bundled_graze_list[[7]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.wtd.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.wtd.cattle.mod2)
-  which(wolf.wtd.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(wolf.wtd.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_wolf.wtd.cattle.Rdata")
+  mcmcplot(wolf.wtd.mod1$samples)
+  which(wolf.wtd.mod1$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod1$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_wolf.wtd.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  wolf.wtd.cattle.mod3 <- jags(bundled_graze_list[[7]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.wtd.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.wtd.cattle.mod3)
-  which(wolf.wtd.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(wolf.wtd.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_wolf.wtd.cattle.Rdata")
+  mcmcplot(wolf.wtd.mod2$samples)
+  which(wolf.wtd.mod2$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod2$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_wolf.wtd.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  wolf.wtd.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.wtd.mod3$samples)
+  which(wolf.wtd.mod3$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod3$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_wolf.wtd.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  wolf.wtd.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.wtd.mod4$samples)
+  which(wolf.wtd.mod4$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod4$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_wolf.wtd.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  wolf.wtd.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.wtd.mod5$samples)
+  which(wolf.wtd.mod5$summary[,"Rhat"] > 1.1) 
+  print(wolf.wtd.mod5$summary[1:36, -c(4:6)], 3)
+  save(wolf.wtd.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_wolf.wtd.Rdata")
+  
+  
   
   
   ####  Wolf-Moose-Cattle  ####
   #'  ---------------------
   inits <- function(){list(z = zcat_graze[[8]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  wolf.moose.cattle.mod1 <- jags(bundled_graze_list[[8]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.moose.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                         n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.moose.cattle.mod1)
-  which(wolf.moose.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(wolf.moose.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_wolf.moose.cattle.Rdata")
+  mcmcplot(wolf.moose.mod0$samples)
+  which(wolf.moose.mod0$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod0$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_wolf.moose.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  wolf.moose.cattle.mod2 <- jags(bundled_graze_list[[8]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.moose.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.moose.cattle.mod2)
-  which(wolf.moose.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(wolf.moose.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_wolf.moose.cattle.Rdata")
+  mcmcplot(wolf.moose.mod1$samples)
+  which(wolf.moose.mod1$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod1$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_wolf.moose.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  wolf.moose.cattle.mod3 <- jags(bundled_graze_list[[8]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  wolf.moose.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(wolf.moose.cattle.mod3)
-  which(wolf.moose.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(wolf.moose.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_wolf.moose.cattle.Rdata")
+  mcmcplot(wolf.moose.mod2$samples)
+  which(wolf.moose.mod2$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod2$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_wolf.moose.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  wolf.moose.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.moose.mod3$samples)
+  which(wolf.moose.mod3$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod3$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_wolf.moose.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  wolf.moose.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.moose.mod4$samples)
+  which(wolf.moose.mod4$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod4$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_wolf.moose.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  wolf.moose.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(wolf.moose.mod5$samples)
+  which(wolf.moose.mod5$summary[,"Rhat"] > 1.1) 
+  print(wolf.moose.mod5$summary[1:36, -c(4:6)], 3)
+  save(wolf.moose.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_wolf.moose.Rdata")
+  
+  
   
   
   ####  Bear-Mule Deer-Cattle  ####
   #'  -------------------------
   inits <- function(){list(z = zcat_graze[[9]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bear.md.cattle.mod1 <- jags(bundled_graze_list[[9]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.md.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.md.cattle.mod1)
-  which(bear.md.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bear.md.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bear.md.cattle.Rdata")
+  mcmcplot(bear.md.mod0$samples)
+  which(bear.md.mod0$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod0$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bear.md.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bear.md.cattle.mod2 <- jags(bundled_graze_list[[9]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.md.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.md.cattle.mod2)
-  which(bear.md.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bear.md.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bear.md.cattle.Rdata")
+  mcmcplot(bear.md.mod1$samples)
+  which(bear.md.mod1$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod1$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bear.md.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bear.md.cattle.mod3 <- jags(bundled_graze_list[[9]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.md.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.md.cattle.mod3)
-  which(bear.md.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bear.md.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bear.md.cattle.Rdata")
+  mcmcplot(bear.md.mod2$samples)
+  which(bear.md.mod2$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod2$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bear.md.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bear.md.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.md.mod3$samples)
+  which(bear.md.mod3$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod3$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bear.md.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bear.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.md.mod4$samples)
+  which(bear.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bear.md.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bear.md.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.md.mod5$samples)
+  which(bear.md.mod5$summary[,"Rhat"] > 1.1) 
+  print(bear.md.mod5$summary[1:36, -c(4:6)], 3)
+  save(bear.md.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bear.md.Rdata")
+  
   
   
   ####  Bear-Elk-Cattle  ####
   #'  -------------------
   inits <- function(){list(z = zcat_graze[[10]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bear.elk.cattle.mod1 <- jags(bundled_graze_list[[10]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.elk.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.elk.cattle.mod1)
-  which(bear.elk.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bear.elk.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bear.elk.cattle.Rdata")
+  mcmcplot(bear.elk.mod0$samples)
+  which(bear.elk.mod0$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod0$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bear.elk.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bear.elk.cattle.mod2 <- jags(bundled_graze_list[[10]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.elk.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.elk.cattle.mod2)
-  which(bear.elk.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bear.elk.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bear.elk.cattle.Rdata")
+  mcmcplot(bear.elk.mod1$samples)
+  which(bear.elk.mod1$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod1$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bear.elk.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bear.elk.cattle.mod3 <- jags(bundled_graze_list[[10]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.elk.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.elk.cattle.mod3)
-  which(bear.elk.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bear.elk.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bear.elk.cattle.Rdata")
+  mcmcplot(bear.elk.mod2$samples)
+  which(bear.elk.mod2$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod2$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bear.elk.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bear.elk.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.elk.mod3$samples)
+  which(bear.elk.mod3$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod3$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bear.elk.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bear.elk.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.elk.mod4$samples)
+  which(bear.elk.mod4$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod4$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bear.elk.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bear.elk.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.elk.mod5$samples)
+  which(bear.elk.mod5$summary[,"Rhat"] > 1.1) 
+  print(bear.elk.mod5$summary[1:36, -c(4:6)], 3)
+  save(bear.elk.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bear.elk.Rdata")  
+  
+  
   
   
   ####  Bear-White-tailed Deer-Cattle  ####
   #'  ---------------------------------
   inits <- function(){list(z = zcat_graze[[11]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bear.wtd.cattle.mod1 <- jags(bundled_graze_list[[11]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.wtd.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.wtd.cattle.mod1)
-  which(bear.wtd.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bear.wtd.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bear.wtd.cattle.Rdata")
+  mcmcplot(bear.wtd.mod0$samples)
+  which(bear.wtd.mod0$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod0$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bear.wtd.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bear.wtd.cattle.mod2 <- jags(bundled_graze_list[[11]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.wtd.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.wtd.cattle.mod2)
-  which(bear.wtd.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bear.wtd.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bear.wtd.cattle.Rdata")
+  mcmcplot(bear.wtd.mod1$samples)
+  which(bear.wtd.mod1$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod1$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bear.wtd.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bear.wtd.cattle.mod3 <- jags(bundled_graze_list[[11]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.wtd.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.wtd.cattle.mod3)
-  which(bear.wtd.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bear.wtd.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bear.wtd.cattle.Rdata")
+  mcmcplot(bear.wtd.mod2$samples)
+  which(bear.wtd.mod2$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod2$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bear.wtd.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bear.wtd.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.wtd.mod3$samples)
+  which(bear.wtd.mod3$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod3$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bear.wtd.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bear.wtd.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.wtd.mod4$samples)
+  which(bear.wtd.mod4$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod4$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bear.wtd.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bear.wtd.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.wtd.mod5$samples)
+  which(bear.wtd.mod5$summary[,"Rhat"] > 1.1) 
+  print(bear.wtd.mod5$summary[1:36, -c(4:6)], 3)
+  save(bear.wtd.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bear.wtd.Rdata")
+  
+  
   
   
   ####  Bear-Moose-Cattle  ####
   #'  ---------------------
   inits <- function(){list(z = zcat_graze[[12]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bear.moose.cattle.mod1 <- jags(bundled_graze_list[[12]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.moose.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                         n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.moose.cattle.mod1)
-  which(bear.moose.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bear.moose.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bear.moose.cattle.Rdata")
+  mcmcplot(bear.moose.mod0$samples)
+  which(bear.moose.mod0$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod0$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bear.moose.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bear.moose.cattle.mod2 <- jags(bundled_graze_list[[12]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.moose.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.moose.cattle.mod2)
-  which(bear.moose.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bear.moose.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bear.moose.cattle.Rdata")
+  mcmcplot(bear.moose.mod1$samples)
+  which(bear.moose.mod1$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod1$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bear.moose.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bear.moose.cattle.mod3 <- jags(bundled_graze_list[[12]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                                 n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bear.moose.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bear.moose.cattle.mod3)
-  which(bear.moose.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bear.moose.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bear.moose.cattle.Rdata")
+  mcmcplot(bear.moose.mod2$samples)
+  which(bear.moose.mod2$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod2$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bear.moose.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bear.moose.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.moose.mod3$samples)
+  which(bear.moose.mod3$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod3$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bear.moose.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bear.moose.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.moose.mod4$samples)
+  which(bear.moose.mod4$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod4$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bear.moose.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bear.moose.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                          n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bear.moose.mod5$samples)
+  which(bear.moose.mod5$summary[,"Rhat"] > 1.1) 
+  print(bear.moose.mod5$summary[1:36, -c(4:6)], 3)
+  save(bear.moose.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bear.moose.Rdata")
+  
+  
   
   
   ####  Bobcat-Mule Deer-Cattle  ####
   #'  ---------------------------
   inits <- function(){list(z = zcat_graze[[13]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bob.md.cattle.mod1 <- jags(bundled_graze_list[[13]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.md.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.md.cattle.mod1)
-  which(bob.md.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bob.md.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bob.md.cattle.Rdata")
+  mcmcplot(bob.md.mod0$samples)
+  which(bob.md.mod0$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod0$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bob.md.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bob.md.cattle.mod2 <- jags(bundled_graze_list[[13]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.md.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.md.cattle.mod2)
-  which(bob.md.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bob.md.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bob.md.cattle.Rdata")
+  mcmcplot(bob.md.mod1$samples)
+  which(bob.md.mod1$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod1$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bob.md.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bob.md.cattle.mod3 <- jags(bundled_graze_list[[13]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.md.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.md.cattle.mod3)
-  which(bob.md.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bob.md.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bob.md.cattle.Rdata")
+  mcmcplot(bob.md.mod2$samples)
+  which(bob.md.mod2$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod2$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bob.md.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bob.md.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.md.mod3$samples)
+  which(bob.md.mod3$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod3$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bob.md.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bob.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.md.mod4$samples)
+  which(bob.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bob.md.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bob.md.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.md.mod5$samples)
+  which(bob.md.mod5$summary[,"Rhat"] > 1.1) 
+  print(bob.md.mod5$summary[1:36, -c(4:6)], 3)
+  save(bob.md.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bob.md.Rdata")
+  
   
   
   ####  Bobcat-White-tailed Deer-Cattle  ####
   #'  -----------------------------------
   inits <- function(){list(z = zcat_graze[[14]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  bob.wtd.cattle.mod1 <- jags(bundled_graze_list[[14]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.wtd.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.wtd.cattle.mod1)
-  which(bob.wtd.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(bob.wtd.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_bob.wtd.cattle.Rdata")
+  mcmcplot(bob.wtd.mod0$samples)
+  which(bob.wtd.mod0$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod0$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_bob.wtd.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  bob.wtd.cattle.mod2 <- jags(bundled_graze_list[[14]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.wtd.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.wtd.cattle.mod2)
-  which(bob.wtd.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(bob.wtd.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_bob.wtd.cattle.Rdata")
+  mcmcplot(bob.wtd.mod1$samples)
+  which(bob.wtd.mod1$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod1$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_bob.wtd.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  bob.wtd.cattle.mod3 <- jags(bundled_graze_list[[14]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  bob.wtd.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(bob.wtd.cattle.mod3)
-  which(bob.wtd.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(bob.wtd.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_bob.wtd.cattle.Rdata")
+  mcmcplot(bob.wtd.mod2$samples)
+  which(bob.wtd.mod2$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod2$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_bob.wtd.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  bob.wtd.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.wtd.mod3$samples)
+  which(bob.wtd.mod3$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod3$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_bob.wtd.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  bob.wtd.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.wtd.mod4$samples)
+  which(bob.wtd.mod4$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod4$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_bob.wtd.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  bob.wtd.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(bob.wtd.mod5$samples)
+  which(bob.wtd.mod5$summary[,"Rhat"] > 1.1) 
+  print(bob.wtd.mod5$summary[1:36, -c(4:6)], 3)
+  save(bob.wtd.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_bob.wtd.Rdata")
+  
+  
   
   
   ####  Coyote-Mule Deer-Cattle  ####
   #'  ---------------------------
   inits <- function(){list(z = zcat_graze[[15]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coy.md.cattle.mod1 <- jags(bundled_graze_list[[15]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.md.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coy.md.cattle.mod1)
-  which(coy.md.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coy.md.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_coy.md.cattle.Rdata")
+  mcmcplot(coy.md.mod0$samples)
+  which(coy.md.mod0$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod0$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coy.md.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coy.md.cattle.mod2 <- jags(bundled_graze_list[[15]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.md.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coy.md.cattle.mod2)
-  which(coy.md.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coy.md.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_coy.md.cattle.Rdata")
+  mcmcplot(coy.md.mod1$samples)
+  which(coy.md.mod1$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod1$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coy.md.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coy.md.cattle.mod3 <- jags(bundled_graze_list[[15]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                             n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.md.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  jagsUI::traceplot(coy.md.cattle.mod3)
-  which(coy.md.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coy.md.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coy.md.cattle.Rdata")
+  mcmcplot(coy.md.mod2$samples)
+  which(coy.md.mod2$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod2$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coy.md.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  coy.md.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.md.mod3$samples)
+  which(coy.md.mod3$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod3$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coy.md.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  coy.md.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.md.mod4$samples)
+  which(coy.md.mod4$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod4$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coy.md.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coy.md.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.md.mod5$samples)
+  which(coy.md.mod5$summary[,"Rhat"] > 1.1) 
+  print(coy.md.mod5$summary[1:36, -c(4:6)], 3)
+  save(coy.md.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coy.md.Rdata")
+  
   
   
   ####  Coyote-White-tailed Deer-Cattle  ####
   #'  -----------------------------------
   inits <- function(){list(z = zcat_graze[[16]])}
   
-  #'  Detection model, null psi
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).R")
+  #'  Null model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(.)_psi(.).R")
   start.time <- Sys.time()
-  coy.wtd.cattle.mod1 <- jags(bundled_graze_list[[16]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.wtd.mod0 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coy.wtd.cattle.mod1$samples)
-  which(coy.wtd.cattle.mod1$summary[,"Rhat"] > 1.1) 
-  print(coy.wtd.cattle.mod1$summary[1:36, -c(4:6)], 3)
-  save(coy.wtd.cattle.mod1, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(.)_coy.wtd.cattle.Rdata")
+  mcmcplot(coy.wtd.mod0$samples)
+  which(coy.wtd.mod0$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod0$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod0, file="./Outputs/JAGS_models_2spp/Grazing_p(.)_psi(.)_coy.wtd.Rdata")
   
-  #'  Conditional occupancy model, no inxs
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).R")
+  #'  Conditional occupancy model, no inxs - baseline habitat model
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).R")
   start.time <- Sys.time()
-  coy.wtd.cattle.mod2 <- jags(bundled_graze_list[[16]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.wtd.mod1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coy.wtd.cattle.mod2$samples)
-  which(coy.wtd.cattle.mod2$summary[,"Rhat"] > 1.1) 
-  print(coy.wtd.cattle.mod2$summary[1:36, -c(4:6)], 3)
-  save(coy.wtd.cattle.mod2, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_coy.wtd.cattle.Rdata")
+  mcmcplot(coy.wtd.mod1$samples)
+  which(coy.wtd.mod1$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod1$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod1, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_coy.wtd.Rdata")
   
-  #'  Pairwise interaction model
-  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  #'  Pairwise interaction with habitat on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).R")
   start.time <- Sys.time()
-  coy.wtd.cattle.mod3 <- jags(bundled_graze_list[[16]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
-                              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  coy.wtd.mod2 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail)_psi(habitat)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
   end.time <- Sys.time(); (run.time <- end.time - start.time)
-  mcmcplot(coy.wtd.cattle.mod3$samples)
-  which(coy.wtd.cattle.mod3$summary[,"Rhat"] > 1.1) 
-  print(coy.wtd.cattle.mod3$summary[1:36, -c(4:6)], 3)
-  save(coy.wtd.cattle.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity)_coy.wtd.cattle.Rdata")
+  mcmcplot(coy.wtd.mod2$samples)
+  which(coy.wtd.mod2$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod2$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod2, file="./Outputs/JAGS_models/Grazing_p(trail)_psi(habitat)_inxpsi(.)_coy.wtd.Rdata")
+  
+  #'  Conditional occupancy model with cattle activity, no inxs
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).R")
+  start.time <- Sys.time()
+  coy.wtd.mod3 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.wtd.mod3$samples)
+  which(coy.wtd.mod3$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod3$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod3, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_coy.wtd.Rdata")
+  
+  #'  Pairwise interaction with habitat and cattle activity on conditional occupancy
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).R")
+  start.time <- Sys.time()
+  coy.wtd.mod4 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.wtd.mod4$samples)
+  which(coy.wtd.mod4$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod4$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod4, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(.)_coy.wtd.Rdata")
+  
+  #'  Pairwise interaction with cattle activity
+  source("./Scripts/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).R")
+  start.time <- Sys.time()
+  coy.wtd.mod5 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models_2spp/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle).txt',
+                        n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, parallel = TRUE)
+  end.time <- Sys.time(); (run.time <- end.time - start.time)
+  mcmcplot(coy.wtd.mod5$samples)
+  which(coy.wtd.mod5$summary[,"Rhat"] > 1.1) 
+  print(coy.wtd.mod5$summary[1:36, -c(4:6)], 3)
+  save(coy.wtd.mod5, file="./Outputs/JAGS_models/Grazing_p(trail_cattle)_psi(habitat_cattle)_inxpsi(cattle)_coy.wtd.Rdata")
+  
+  
   
   
 
