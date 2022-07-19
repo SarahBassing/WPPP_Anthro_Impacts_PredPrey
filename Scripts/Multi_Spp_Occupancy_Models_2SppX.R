@@ -688,7 +688,7 @@
   detFormulas_null <- c("~1", "~1")
   detFormulas_trail <- c("~Trail", "~Trail")
   detFormulas_pub <- c("~Trail + Public", "~Trail + Public")
-  detFormulas_hunt <- c("~Trail + WeeklyHunting", "~Trail + WeeklyHunting")
+  detFormulas_hunt <- c("~Trail + WeeklyHunting", "~Trail + WeeklyHunting") #' not significant for any species
   #detFormulas_pubhunt <- c("~Trail + Public + WeeklyHunting", "~Trail + Public + WeeklyHunting")
   #'  Remove Public vs Private covariate from predator sub-model
   detFormulas_pubish <- c("~Trail", "~Trail + Public")
@@ -907,7 +907,7 @@
   #' modSel(hs_cougmoose_fl)
   #' summary(hs_cougmoose_hunt0)
   
-  
+
   ####  Wolf-Mule Deer Hunting Season  ####
   (hs_wolfmd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_md_hunting_UMF, silent = TRUE))
   (hs_wolfmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_md_hunting_UMF, silent = TRUE)) 
@@ -1250,7 +1250,7 @@
   #' modSel(hs_bearmoose_fl)
   #' summary(hs_bearmoose_hunt0)
   #' summary(hs_bearmoose_hab0)
-  
+
   
   ####  Coyote-Mule Deer Hunting Season  ####
   (hs_coymd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_md_hunting_UMF, silent = TRUE)) 
