@@ -29,7 +29,7 @@
   #'  Read in covariate data
   #'  Land mgnt, habitat, roads, sum anthro activity, etc. => site-level occupancy covs
   #'  Dist. to focal pt, height, monitoring, weekly anthro activity = > survey/site-level detection covs
-  stations <- read.csv("./Outputs/CameraLocation_Covariates18-21_2022-05-02.csv") %>% #2022-04-29
+  stations <- read.csv("./Outputs/CameraLocation_Covariates18-21_2022-07-20.csv") %>% #2022-05-02
     #'  Get rid of mysterious space after one of the NEs (ugh)
     mutate(
       Study_Area = ifelse(Study_Area == "NE ", "NE", as.character(Study_Area)),
@@ -65,6 +65,18 @@
     mutate(
       Public = ifelse(Land_Owner == "Private", 0, 1)
     ) %>%
+    #'  Identify grazing allotments/leases/permits on USFS, WA DNR, & WDFW lands
+    mutate(USFS_grazing = ifelse(Allot_Active == "ACTIVE" & Cattle_Allot == "YES", 1, 0),
+           USFS_grazing = ifelse(is.na(USFS_grazing), 0, USFS_grazing),
+           DNR_grazing = ifelse(Study_Area == "OK" & DNR_parcel == 1 & Land_Owner == "WA DNR", 1, 0),
+           #'  Had to do these by hand based on mapped grazing areas on DNR & WDFW websites
+           DNR_grazing = ifelse(CameraLocation == "NE6685_85" | CameraLocation == "NE5884_39" | 
+                                  CameraLocation == "NE4774_34", 1, DNR_grazing),
+           WDFW_grazing = ifelse(CameraLocation == "OK4945_93" |CameraLocation == "OK4561_86" | 
+                                   CameraLocation == "OK6316_62" | CameraLocation == "OK6317_73" | 
+                                   CameraLocation == "OK4306_78" | CameraLocation == "OK4499_E" | 
+                                   CameraLocation == "OK3733_14", 1, 0),
+           PublicGrazing = ifelse(USFS_grazing == 1 | DNR_grazing == 1 | WDFW_grazing == 1, 1, 0)) %>%
     arrange(Year, CameraLocation) #NECESSARY TO MATCH DH's CAMERALOCATION ORDER
   
   
@@ -95,6 +107,7 @@
                            Land_Mgnt = as.factor(Land_Mgnt),
                            Land_Owner = as.factor(Land_Owner),
                            Public = as.factor(Public),
+                           PublicGrazing = as.factor(PublicGrazing),
                            GrazingActivity = scale(GrazingActivity), # Summed over 13 week period
                            HuntingActivity = scale(HuntingActivity), # Summed over 8 week period
                            VehicleActivity = scale(VehicleActivity), # Summed over 8 week period
