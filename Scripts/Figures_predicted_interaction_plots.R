@@ -14,6 +14,7 @@
   
   #'  Read in models
   load(file = "./Outputs/MultiSpp_CoOcc_Models.RData")
+  load(file = "./Outputs/MultiSpp_CoOcc_Models_2spp.RData")
   
   scale_cov <- function(cov) {
     #'  Identify range of covariate of interest
