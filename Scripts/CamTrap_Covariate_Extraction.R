@@ -23,6 +23,7 @@
   library(sf)
   library(stars)
   library(rgeos)
+  library(rgdal)
   library(raster)
   library(tidyverse)
   
@@ -109,17 +110,24 @@
   treecov20 <- raster("./Shapefiles/Global_Forest_Change/treecov_2020.tif")
   #'  Distance to nearest water
   dist2water <- raster("./Shapefiles/WA_DeptEcology_HydroWA/WPPP_dist_to_water_2855.tif")
+  #'  USFS Grazing Allotments (polygons)
+  wppp_allots <- st_read("./Shapefiles/S_USA.Allotment", layer = "WPPP_USFS_Allotments") %>%
+    st_transform(crs = crs(wgs84))
   #' #'  USFS Ranger Districts (polygons)
   #' Colville_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Colville_NF") %>%
   #'   st_transform(crs = crs(wgs84))
   #' Okanogan_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Okanogan_NF") %>%
   #'   st_transform(crs = crs(wgs84))
-  #' #'  WA DNR parcels
-  #' NE_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Northeast_DNR") %>%
-  #'   st_transform(crs = crs(wgs84))
-  #' OK_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Okanogan_DNR") %>%
-  #'   st_transform(crs = crs(wgs84))
- 
+  #'  WA DNR parcels
+  DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "WA_DNR_Managed_Land_Parcels") %>%
+    st_transform(crs = crs(wgs84))
+  #'  Convert to SpatialPolygonDataFrame b/c funcky geometries when an sf object
+  dnr <- as(DNR, "Spatial")
+  # NE_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Northeast_DNR") %>%
+  #   st_transform(crs = crs(wgs84))
+  # OK_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Okanogan_DNR") %>%
+  #   st_transform(crs = crs(wgs84))
+  
   
   #'  Identify projection, resolution, & spatial extent of relevant rasters
   raster::projection(wppp_bound)
@@ -133,8 +141,9 @@
   raster::projection(dist2rd_minor)
   raster::projection(treecov18)
   raster::projection(dist2water)
+  raster::projection(wppp_allots)
   raster::projection(Colville_NF)
-  raster::projection(NE_DNR)
+  raster::projection(DNR)
   
   raster::res(dem)
   raster::res(human)
@@ -190,6 +199,22 @@
   edge18 <- raster::extract(dist2edge18, cams_reproj2, df = TRUE)
   edge19 <- raster::extract(dist2edge19, cams_reproj2, df = TRUE)
   edge20 <- raster::extract(dist2edge20, cams_reproj2, df = TRUE)
+  
+  #'  Extract attribute data from shapefiles
+  allots_cams <- st_intersection(cams, wppp_allots) %>%
+    as.data.frame() %>%
+    full_join(cams, by = "CameraLocation") %>%
+    dplyr::select(c("CameraLocation", "ALLOTMENT_", "ALLOTMEN_2", "CATTLE"))
+  colnames(allots_cams) <- c("CameraLocation", "Allot_Name", "Allot_Active", "Cattle_Allot")
+  #'  Convert camera locations to sp object to extract attribute data from sp object
+  cams_sp <- as(cams, "Spatial")
+  dnrcams <- over(cams_sp, dnr)
+  dnr_cams <- cbind(CameraLocation, dnrcams) %>%
+    mutate(DNR_parcel = ifelse(!is.na(OBJECTID), "1", "0")) %>% 
+    dplyr::select(c("CameraLocation", "DNR_parcel")) %>%
+    bind_cols(station_covs[,7:8])
+  dnr_cams_sf <- st_as_sf(dnr_cams, coords = c("Longitude", "Latitude"), crs = wgs84)
+  plot(dnr_cams_sf[3])
   
   #'  Format data into single data frame
   #'  ==================================
@@ -326,6 +351,8 @@
   covs_df <- full_join(cam_covs, habitat, by = "obs") %>%
     full_join(anthro_covs, by = "CameraLocation") %>%
     full_join(station_covs, by = "CameraLocation") %>%
+    full_join(allots_cams, by = "CameraLocation") %>%
+    full_join(dnr_cams, by = c("CameraLocation", "Longitude", "Latitude")) %>%
     relocate(c(CameraLocation, Year.x, Study_Area), .before = obs) %>%
     relocate(c(Latitude, Longitude), .after = last_col()) %>%
     dplyr::select(-c(obs, Year.y, X, Cell_ID, Camera_ID)) 
@@ -335,7 +362,7 @@
   #'  filtered and summarized based on specific analyses, not here.
   
   #'  Save for occupancy analyses
-  # write.csv(covs_df, paste0('./Outputs/CameraLocation_Covariates18-21_', Sys.Date(), '.csv'))
+  #write.csv(covs_df, paste0('./Outputs/CameraLocation_Covariates18-21_', Sys.Date(), '.csv'))
   
   
   
