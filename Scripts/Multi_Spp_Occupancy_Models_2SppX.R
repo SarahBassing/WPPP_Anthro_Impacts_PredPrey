@@ -1092,10 +1092,10 @@
   #' Model selection
   modSel(hs_bearmd_fl)
   summary(hs_bearmd_hunt0)
-  summary(hs_bearmd_hunt1)
-  summary(hs_bearmd_hunt2)
+  summary(hs_bearmd_hunt1) # f12 not significant
+  summary(hs_bearmd_hunt2) # f12 not significant
   summary(hs_bearmd_pub0)
-  summary(hs_bearmd_pub1)
+  summary(hs_bearmd_pub1) # f12 not significant
   
   #' (hs_bearmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
   #' (hs_bearmd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
@@ -1402,8 +1402,8 @@
   modSel(hs_bobwtd_fl)
   summary(hs_bobwtd_pub1) # f12 not significant
   summary(hs_bobwtd_pub0)
-  summary(hs_bobwtd_pub2)
-  summary(hs_bobwtd_hunt1)
+  summary(hs_bobwtd_pub2) # f12 not significant
+  summary(hs_bobwtd_hunt1) 
   
   
   #' (hs_bobwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bob_wtd_hunting_UMF, silent = TRUE))
