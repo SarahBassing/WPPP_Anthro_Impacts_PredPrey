@@ -37,7 +37,7 @@
     #'  Create data frame using the scaled covariate of interest while holding
     #'  all others at their mean (0 when scaled) or desired category (0 or 1)
     cov_df <- data.frame(Elev = elev, GrazingActivity = act, PercForest = forest,
-                         Public = pub, Study_Area = area)
+                         PublicGrazing = pub, Study_Area = area)
     #'  Predict marginal occupancy for each species of interest using top model
     marg_predator <- predict(mod, type = "state", species = spp1, newdata = cov_df,
                              se.fit = TRUE, nsims = 10^5) %>%
@@ -61,54 +61,54 @@
   #'  Predict marginal probabilities for different combinations of species
   #'  NOTE: BE SURE TO USE CORRECT TOP MODEL! 
   #'  Think through which covariates you predict across (scaled_cov, public, study area)
-  marg_coug_md_cattle <- marginal_occ_g(gs_cougmd_hab0, elev = scaled_elev[,2], act = 0, 
+  marg_coug_md_cattle <- marginal_occ_g(gs_cougmd_global, elev = scaled_elev[,2], act = 0, 
                                       forest = 0, pub = 1, area = 1, spp1 = "cougar", 
                                       spp2 = "muledeer", cov = scaled_elev[,1])
-  marg_coug_elk_cattle <- marginal_occ_g(gs_cougelk_hab0, elev = scaled_elev[,2], act = 0, 
+  marg_coug_elk_cattle <- marginal_occ_g(gs_cougelk_global, elev = scaled_elev[,2], act = 0, 
                                        forest = 0, pub = 1, area = 0, spp1 = "cougar", 
                                        spp2 = "elk", cov = scaled_elev[,1])
-  marg_coug_wtd_cattle <- marginal_occ_g(gs_cougwtd_allot0, elev = scaled_elev[,2], act = 0, 
+  marg_coug_wtd_cattle <- marginal_occ_g(gs_cougwtd_global, elev = scaled_elev[,2], act = 0, 
                                        forest = 0, pub = 1, area = 0, spp1 = "cougar", 
                                        spp2 = "wtd", cov = scaled_elev[,1])
-  marg_coug_moose_cattle <- marginal_occ_g(gs_cougmoose_allot0, elev = scaled_elev[,2], act = 0, 
+  marg_coug_moose_cattle <- marginal_occ_g(gs_cougmoose_global, elev = scaled_elev[,2], act = 0, 
                                          forest = 0, pub = 1, area = 0, spp1 = "cougar", 
                                          spp2 = "moose", cov = scaled_elev[,1])
-  marg_wolf_md_cattle <- marginal_occ_g(gs_wolfmd_hab0, elev = scaled_elev[,2], act = 0, 
+  marg_wolf_md_cattle <- marginal_occ_g(gs_wolfmd_global, elev = scaled_elev[,2], act = 0, 
                                       forest = 0, pub = 1, area = 1, spp1 = "wolf", 
                                       spp2 = "muledeer", cov = scaled_elev[,1])
-  marg_wolf_elk_cattle <- marginal_occ_g(gs_wolfelk_hab0, elev = scaled_elev[,2], act = 0, 
+  marg_wolf_elk_cattle <- marginal_occ_g(gs_wolfelk_global, elev = scaled_elev[,2], act = 0, 
                                        forest = 0, pub = 1, area = 0, spp1 = "wolf", 
                                        spp2 = "elk", cov = scaled_elev[,1])
-  marg_wolf_wtd_cattle <- marginal_occ_g(gs_wolfwtd_allot0, elev = scaled_elev[,2], act = 0, 
+  marg_wolf_wtd_cattle <- marginal_occ_g(gs_wolfwtd_global, elev = scaled_elev[,2], act = 0, 
                                        forest = 0, pub = 1, area = 0, spp1 = "wolf", 
                                        spp2 = "wtd", cov = scaled_elev[,1])
-  marg_wolf_moose_cattle <- marginal_occ_g(gs_wolfmoose_graze0, elev = scaled_elev[,2], act = 0, 
+  marg_wolf_moose_cattle <- marginal_occ_g(gs_wolfmoose_global, elev = scaled_elev[,2], act = 0, 
                                          forest = 0, pub = 1, area = 0, spp1 = "wolf", 
                                          spp2 = "moose", cov = scaled_elev[,1])
-  marg_bear_md_cattle <- marginal_occ_g(gs_bearmd_allot1, elev = scaled_elev[,2], act = 0, 
+  marg_bear_md_cattle <- marginal_occ_g(gs_bearmd_global, elev = scaled_elev[,2], act = 0, 
                                      forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
                                      spp2 = "muledeer", cov = scaled_elev[,1])
-  marg_bear_elk_cattle <- marginal_occ_g(gs_bearelk_allot1, elev = scaled_elev[,2], act = 0, 
+  marg_bear_elk_cattle <- marginal_occ_g(gs_bearelk_global, elev = scaled_elev[,2], act = 0, 
                                        forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
                                        spp2 = "elk", cov = scaled_elev[,1])
-  marg_bear_wtd_cattle <- marginal_occ_g(gs_bearwtd_allot1, elev = scaled_elev[,2], act = 0, 
+  marg_bear_wtd_cattle <- marginal_occ_g(gs_bearwtd_global, elev = scaled_elev[,2], act = 0, 
                                       forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
                                       spp2 = "wtd", cov = scaled_elev[,1])
-  marg_bear_moose_cattle <- marginal_occ_g(gs_bearmoose_allot0, elev = scaled_elev[,2], act = 0, 
+  marg_bear_moose_cattle <- marginal_occ_g(gs_bearmoose_global, elev = scaled_elev[,2], act = 0, 
                                          forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
                                          spp2 = "moose", cov = scaled_elev[,1])
-  marg_bob_md_cattle <- marginal_occ_g(gs_bobmd_allot0, elev = scaled_elev[,2], act = 0, 
+  marg_bob_md_cattle <- marginal_occ_g(gs_bobmd_global, elev = scaled_elev[,2], act = 0, 
                                       forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
                                       spp2 = "mule_deer", cov = scaled_elev[,1])
-  marg_bob_wtd_cattle <- marginal_occ_g(gs_bobwtd_allot1, elev = scaled_elev[,2], act = 0, 
+  marg_bob_wtd_cattle <- marginal_occ_g(gs_bobwtd_global, elev = scaled_elev[,2], act = 0, 
                                       forest = 0, pub = 1, area = 0, spp1 = "bobcat", 
                                       spp2 = "wtd", cov = scaled_elev[,1])
-  marg_coy_md_cattle <- marginal_occ_g(gs_coymd_graze2, elev = scaled_elev[,2], act = 0, 
+  marg_coy_md_cattle <- marginal_occ_g(gs_coymd_global, elev = 0, act = scaled_graze[,2], 
                                      forest = 0, pub = 1, area = 1, spp1 = "coyote", 
-                                     spp2 = "mule_deer", cov = scaled_elev[,1])
-  marg_coy_wtd_cattle <- marginal_occ_g(gs_coywtd_allot1, elev = scaled_elev[,2], act = 0, 
-                                      forest = 0, pub = 1, area = 0, spp1 = "coyote", 
-                                      spp2 = "wtd", cov = scaled_elev[,1])
+                                     spp2 = "mule_deer", cov = scaled_graze[,1])
+  marg_coy_wtd_cattle <- marginal_occ_g(gs_coywtd_global, elev = 0, act = scaled_graze[,2], 
+                                      forest = 0, pub = 1, area = 1, spp1 = "coyote", 
+                                      spp2 = "wtd", cov = scaled_graze[,1])
   
   
   
@@ -117,7 +117,7 @@
     geom_line(size = 1) +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Species), linetype = 0, alpha =0.5) +
     ylim(0, 1) +
-    xlab("Elevation (m)") + 
+    xlab("Cattle activity (mean weekly detections/day)") + 
     ylab("Marginal occupancy") +
     ggtitle("Marginal occupancy for coyotes, mule deer, and cattle \nas elevation changes")
   
@@ -125,7 +125,7 @@
     geom_line(size = 1) +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Species), linetype = 0, alpha =0.5) +
     ylim(0, 1) +
-    xlab("Elevation (m)") + 
+    xlab("Cattle activity (mean weekly detections/day)") + 
     ylab("Marginal occupancy") +
     ggtitle("Marginal occupancy for coyotes, white-tailed deer, and cattle \nas elevation changes")
   
@@ -165,7 +165,7 @@
     #'  Create data frame using the scaled covariate of interest while holding
     #'  all others at their mean (0 when scaled) or desired category (0 or 1)
     cov_df <- data.frame(Elev = elev, GrazingActivity = act, PercForest = forest,
-                         Public = pub, Study_Area = area)
+                         PublicGrazing = pub, Study_Area = area)
     #Public = factor(pub, levels = c(0, 1)), Study_Area = factor(area, levels = c(0, 1)))
     #'  Create characters for each species that include a "-", necessary for cond 
     #'  argument in predict when species is not present
@@ -212,53 +212,53 @@
   #'  For elk, study area = 0 (NE) because there were so few detections in OK
   #'  For md, wtd, and moose, study area = 1 (OK) b/c that is where the bulk of
   #'  cattle activity occurred and there were sufficient detections of these species
-  #'  "pub" variable not actually relevant in grazing season models so ignore
-  sppX_coug_md_cattle <- spp_interactions_g(gs_cougmd_hab0, elev = 0, act = scaled_graze[,2], 
+  #'  "pub" variable set to active grazing allotments (1)
+  sppX_coug_md_cattle <- spp_interactions_g(gs_cougmd_global, elev = 0, act = scaled_graze[,2], 
                                            forest = 0, pub = 1, area = 1, spp1 = "cougar", 
                                            spp2 = "muledeer", cov = scaled_graze[,1])
-  sppX_coug_elk_cattle <- spp_interactions_g(gs_cougelk_hab0, elev = 0, act = scaled_graze[,2], 
+  sppX_coug_elk_cattle <- spp_interactions_g(gs_cougelk_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 0, spp1 = "cougar", 
                                              spp2 = "elk", cov = scaled_graze[,1])
-  sppX_coug_wtd_cattle <- spp_interactions_g(gs_cougwtd_allot0, elev = 0, act = scaled_graze[,2], 
+  sppX_coug_wtd_cattle <- spp_interactions_g(gs_cougwtd_global, elev = 0, act = scaled_graze[,2], 
                                             forest = 0, pub = 1, area = 1, spp1 = "cougar", 
                                             spp2 = "wtd", cov = scaled_graze[,1])
-  sppX_coug_moose_cattle <- spp_interactions_g(gs_cougmoose_allot0, elev = 0, act = scaled_graze[,2], 
+  sppX_coug_moose_cattle <- spp_interactions_g(gs_cougmoose_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 1, spp1 = "cougar", 
                                              spp2 = "moose", cov = scaled_graze[,1])
-  sppX_wolf_md_cattle <- spp_interactions_g(gs_wolfmd_hab0, elev = 0, act = scaled_graze[,2], 
+  sppX_wolf_md_cattle <- spp_interactions_g(gs_wolfmd_global, elev = 0, act = scaled_graze[,2], 
                                             forest = 0, pub = 1, area = 1, spp1 = "wolf", 
                                             spp2 = "muledeer", cov = scaled_graze[,1])
-  sppX_wolf_elk_cattle <- spp_interactions_g(gs_wolfelk_hab0, elev = 0, act = scaled_graze[,2], 
+  sppX_wolf_elk_cattle <- spp_interactions_g(gs_wolfelk_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 0, spp1 = "wolf", 
                                              spp2 = "elk", cov = scaled_graze[,1])
-  sppX_wolf_wtd_cattle <- spp_interactions_g(gs_wolfwtd_allot0, elev = 0, act = scaled_graze[,2], 
+  sppX_wolf_wtd_cattle <- spp_interactions_g(gs_wolfwtd_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 1, spp1 = "wolf", 
                                              spp2 = "wtd", cov = scaled_graze[,1])
-  sppX_wolf_moose_cattle <- spp_interactions_g(gs_wolfmoose_graze0, elev = 0, act = scaled_graze[,2], 
+  sppX_wolf_moose_cattle <- spp_interactions_g(gs_wolfmoose_global, elev = 0, act = scaled_graze[,2], 
                                                forest = 0, pub = 1, area = 1, spp1 = "wolf", 
                                                spp2 = "moose", cov = scaled_graze[,1])
-  sppX_bear_md_cattle <- spp_interactions_g(gs_bearmd_allot1, elev = 0, act = scaled_graze[,2], 
+  sppX_bear_md_cattle <- spp_interactions_g(gs_bearmd_global, elev = 0, act = scaled_graze[,2], 
                                             forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
                                             spp2 = "muledeer", cov = scaled_graze[,1])
-  sppX_bear_elk_cattle <- spp_interactions_g(gs_bearelk_allot1, elev = 0, act = scaled_graze[,2], 
+  sppX_bear_elk_cattle <- spp_interactions_g(gs_bearelk_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
                                              spp2 = "elk", cov = scaled_graze[,1])
-  sppX_bear_wtd_cattle <- spp_interactions_g(gs_bearwtd_allot1, elev = 0, act = scaled_graze[,2], 
+  sppX_bear_wtd_cattle <- spp_interactions_g(gs_bearwtd_global, elev = 0, act = scaled_graze[,2], 
                                              forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
                                              spp2 = "wtd", cov = scaled_graze[,1])
-  sppX_bear_moose_cattle <- spp_interactions_g(gs_bearmoose_allot0, elev = 0, act = scaled_graze[,2], 
+  sppX_bear_moose_cattle <- spp_interactions_g(gs_bearmoose_global, elev = 0, act = scaled_graze[,2], 
                                                forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
                                                spp2 = "moose", cov = scaled_graze[,1])
-  sppX_bob_md_cattle <- spp_interactions_g(gs_bobmd_allot0, elev = 0, act = scaled_graze[,2], 
+  sppX_bob_md_cattle <- spp_interactions_g(gs_bobmd_global, elev = 0, act = scaled_graze[,2], 
                                            forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
                                            spp2 = "mule_deer", cov = scaled_graze[,1])
-  sppX_bob_wtd_cattle <- spp_interactions_g(gs_bobwtd_allot1, elev = 0, act = scaled_graze[,2], 
+  sppX_bob_wtd_cattle <- spp_interactions_g(gs_bobwtd_global, elev = 0, act = scaled_graze[,2], 
                                             forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
                                             spp2 = "wtd", cov = scaled_graze[,1])
-  sppX_coy_md_cattle <- spp_interactions_g(gs_coymd_graze2, elev = 0, act = scaled_graze[,2], 
+  sppX_coy_md_cattle <- spp_interactions_g(gs_coymd_global, elev = 0, act = scaled_graze[,2], 
                                      forest = 0, pub = 1, area = 1, spp1 = "coyote", 
                                      spp2 = "mule_deer", cov = scaled_graze[,1])
-  sppX_coy_wtd_cattle <- spp_interactions_g(gs_coywtd_allot1, elev = 0, act = scaled_graze[,2], 
+  sppX_coy_wtd_cattle <- spp_interactions_g(gs_coywtd_global, elev = 0, act = scaled_graze[,2], 
                                       forest = 0, pub = 1, area = 1, spp1 = "coyote", 
                                       spp2 = "wtd", cov = scaled_graze[,1])
 
