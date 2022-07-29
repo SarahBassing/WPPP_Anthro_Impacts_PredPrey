@@ -77,6 +77,7 @@
   detFormulas_trail <- c("~Trail", "~Trail")
   detFormulas_graze <- c("~Trail + WeeklyGrazing", "~Trail + WeeklyGrazing")
   detFormulas_allot <- c("~Trail + PublicGrazing", "~Trail + PublicGrazing")
+  detFormulas_global <- c("~Trail + WeeklyGrazing + PublicGrazing", "~Trail + WeeklyGrazing + PublicGrazing")
   
   #'  Question 1: Is co-occurrence dependent?
   occFormulas_null <- c("~1", "~1", "~0")
@@ -106,25 +107,41 @@
   occFormulas_allot2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing", 
                             "~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing", 
                             "~PublicGrazing")
+  occFormulas_global <- c("~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                          "~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                          "~GrazingActivity + PublicGrazing")
+  occFormulas_subglobal <- c("~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                             "~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                             "~1")
 
   
   ####  Cougar-Mule Deer Grazing Season  ####
-  (gs_cougmd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_md_grazing_UMF, silent = TRUE))
+  (gs_cougmd_global <- occuMulti(detFormulas_global, occFormulas_global, coug_md_grazing_UMF, silent = TRUE))
+  
   (gs_cougmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_md_grazing_UMF, silent = TRUE))
-  (gs_cougmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_md_grazing_UMF, silent = TRUE))
   (gs_cougmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_md_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_cougmd_fl <- fitList(gs_cougmd_null, gs_cougmd_hab0, gs_cougmd_hab1, gs_cougmd_allot0, gs_cougmd_allot1, 
-                          gs_cougmd_allot2, gs_cougmd_graze0, gs_cougmd_graze1, gs_cougmd_graze2)
+  gs_cougmd_fl <- fitList(gs_cougmd_allot2, gs_cougmd_graze2)
   #' Model selection
   modSel(gs_cougmd_fl)
-  summary(gs_cougmd_hab0)
-  summary(gs_cougmd_hab1)
+  summary(gs_cougmd_allot2)
+  
+  #' (gs_cougmd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_md_grazing_UMF, silent = TRUE))
+  #' (gs_cougmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_md_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_cougmd_fl <- fitList(gs_cougmd_null, gs_cougmd_hab0, gs_cougmd_hab1, gs_cougmd_allot0, gs_cougmd_allot1, 
+  #'                         gs_cougmd_allot2, gs_cougmd_graze0, gs_cougmd_graze1, gs_cougmd_graze2)
+  #' #' Model selection
+  #' modSel(gs_cougmd_fl)
+  #' summary(gs_cougmd_hab0)
+  #' summary(gs_cougmd_hab1)
   
   #' (gs_cougmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_md_grazing_UMF, silent = TRUE))
   #' (gs_cougmd_graze <- occuMulti(detFormulas_graze, occFormulas_null, coug_md_grazing_UMF, silent = TRUE))
@@ -148,21 +165,33 @@
   #' summary(gs_cougmd_hab1) # f12 not significant
   
   ####  Cougar-ELK Grazing Season  ####
-  (gs_cougelk_null <- occuMulti(detFormulas_null, occFormulas_null, coug_elk_grazing_UMF, silent = TRUE))
-  (gs_cougelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_elk_grazing_UMF, silent = TRUE))
-  (gs_cougelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_elk_grazing_UMF, silent = TRUE))
-  (gs_cougelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_elk_grazing_UMF, silent = TRUE))
-  (gs_cougelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_elk_grazing_UMF, silent = TRUE)) #fail
+  (gs_cougelk_global <- occuMulti(detFormulas_global, occFormulas_global, coug_elk_grazing_UMF, silent = TRUE))
+  
+  (gs_cougelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_elk_grazing_UMF, silent = TRUE))  
   (gs_cougelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_elk_grazing_UMF, silent = TRUE)) #fail
-  (gs_cougelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_elk_grazing_UMF, silent = TRUE))
-  (gs_cougelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_elk_grazing_UMF, silent = TRUE)) #fail
   (gs_cougelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_elk_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_cougelk_fl <- fitList(gs_cougelk_null, gs_cougelk_hab0, gs_cougelk_hab1, gs_cougelk_allot0, gs_cougelk_graze0, gs_cougelk_graze2)
+  gs_cougelk_fl <- fitList(gs_cougelk_allot0,  gs_cougelk_graze2)
   #' Model selection
   modSel(gs_cougelk_fl)
-  summary(gs_cougelk_hab0)
-  summary(gs_cougelk_hab1)
+  summary(gs_cougelk_allot0)
+  summary(gs_cougelk_graze2) # 0.95 delta
+  
+  #' (gs_cougelk_null <- occuMulti(detFormulas_null, occFormulas_null, coug_elk_grazing_UMF, silent = TRUE))
+  #' (gs_cougelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_elk_grazing_UMF, silent = TRUE))
+  #' (gs_cougelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_elk_grazing_UMF, silent = TRUE))
+  #' (gs_cougelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_elk_grazing_UMF, silent = TRUE))
+  #' (gs_cougelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_elk_grazing_UMF, silent = TRUE)) #fail
+  #' (gs_cougelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_elk_grazing_UMF, silent = TRUE)) #fail
+  #' (gs_cougelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_elk_grazing_UMF, silent = TRUE))
+  #' (gs_cougelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_elk_grazing_UMF, silent = TRUE)) #fail
+  #' (gs_cougelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_elk_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_cougelk_fl <- fitList(gs_cougelk_null, gs_cougelk_hab0, gs_cougelk_hab1, gs_cougelk_allot0, gs_cougelk_graze0, gs_cougelk_graze2)
+  #' #' Model selection
+  #' modSel(gs_cougelk_fl)
+  #' summary(gs_cougelk_hab0)
+  #' summary(gs_cougelk_hab1)
   
   #' (gs_cougelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_elk_grazing_UMF, silent = TRUE))
   #' (gs_cougelk_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, coug_elk_grazing_UMF, silent = TRUE))
@@ -186,23 +215,34 @@
   #' # summary(gs_cougelk_hab1) # f12 not significant
   
   ####  Cougar-White-tailed Deer Grazing Season  ####
-  (gs_cougwtd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_wtd_grazing_UMF, silent = TRUE))
+  (gs_cougwtd_global <- occuMulti(detFormulas_global, occFormulas_global, coug_wtd_grazing_UMF, silent = TRUE))
+  
   (gs_cougwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_wtd_grazing_UMF, silent = TRUE))
-  (gs_cougwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_wtd_grazing_UMF, silent = TRUE))
   (gs_cougwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_wtd_grazing_UMF, silent = TRUE))
   
   #' List of fitted models
-  gs_cougwtd_fl <- fitList(gs_cougwtd_null, gs_cougwtd_hab0, gs_cougwtd_hab1, gs_cougwtd_allot0, gs_cougwtd_allot1, 
-                           gs_cougwtd_allot2, gs_cougwtd_graze0, gs_cougwtd_graze1, gs_cougwtd_graze2)
+  gs_cougwtd_fl <- fitList(gs_cougwtd_allot2, gs_cougwtd_graze2)
   #' Model selection
   modSel(gs_cougwtd_fl)
-  summary(gs_cougwtd_allot0)  
-  summary(gs_cougwtd_allot1)
+  summary(gs_cougwtd_allot2)
+  
+  #' (gs_cougwtd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_cougwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_wtd_grazing_UMF, silent = TRUE))
+  #' 
+  #' #' List of fitted models
+  #' gs_cougwtd_fl <- fitList(gs_cougwtd_null, gs_cougwtd_hab0, gs_cougwtd_hab1, gs_cougwtd_allot0, gs_cougwtd_allot1, 
+  #'                          gs_cougwtd_allot2, gs_cougwtd_graze0, gs_cougwtd_graze1, gs_cougwtd_graze2)
+  #' #' Model selection
+  #' modSel(gs_cougwtd_fl)
+  #' summary(gs_cougwtd_allot0)  
+  #' summary(gs_cougwtd_allot1)
   # summary(gs_cougwtd_graze2)
   # summary(gs_cougwtd_graze0)
   
@@ -229,24 +269,35 @@
   #' # summary(gs_cougwtd_graze1) # f12 not significant
   
   ####  Cougar-Moose Grazing Season  ####
-  (gs_cougmoose_null <- occuMulti(detFormulas_null, occFormulas_null, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_moose_grazing_UMF, silent = TRUE))
+  (gs_cougmoose_global <- occuMulti(detFormulas_global, occFormulas_global, coug_moose_grazing_UMF, silent = TRUE))
+  
   (gs_cougmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_moose_grazing_UMF, silent = TRUE))
-  (gs_cougmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_moose_grazing_UMF, silent = TRUE))
   (gs_cougmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_moose_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_cougmoose_fl <- fitList(gs_cougmoose_null, gs_cougmoose_hab0, gs_cougmoose_hab1, gs_cougmoose_allot0, 
-                             gs_cougmoose_allot1, gs_cougmoose_allot2, gs_cougmoose_graze0, gs_cougmoose_graze1, gs_cougmoose_graze2)
+  gs_cougmoose_fl <- fitList(gs_cougmoose_allot2, gs_cougmoose_graze2)
   #' Model selection
   modSel(gs_cougmoose_fl)
-  summary(gs_cougmoose_allot0)    
-  summary(gs_cougmoose_graze0)
-  summary(gs_cougmoose_allot1)
-  summary(gs_cougmoose_hab0)
+  summary(gs_cougmoose_allot2)
+  summary(gs_cougmoose_graze2) #0.64 delta
+  
+  #' (gs_cougmoose_null <- occuMulti(detFormulas_null, occFormulas_null, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coug_moose_grazing_UMF, silent = TRUE))
+  #' (gs_cougmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_moose_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_cougmoose_fl <- fitList(gs_cougmoose_null, gs_cougmoose_hab0, gs_cougmoose_hab1, gs_cougmoose_allot0, 
+  #'                            gs_cougmoose_allot1, gs_cougmoose_allot2, gs_cougmoose_graze0, gs_cougmoose_graze1, gs_cougmoose_graze2)
+  #' #' Model selection
+  #' modSel(gs_cougmoose_fl)
+  #' summary(gs_cougmoose_allot0)    
+  #' summary(gs_cougmoose_graze0)
+  #' summary(gs_cougmoose_allot1)
+  #' summary(gs_cougmoose_hab0)
   
   #' (gs_cougmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_moose_grazing_UMF, silent = TRUE))
   #' (gs_cougmoose_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, coug_moose_grazing_UMF, silent = TRUE))
@@ -272,24 +323,34 @@
   
   
   ####  Wolf-Mule Deer Grazing Season  ####
-  (gs_wolfmd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_md_grazing_UMF, silent = TRUE))
+  (gs_wolfmd_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_md_grazing_UMF, silent = TRUE))
+  
   (gs_wolfmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_md_grazing_UMF, silent = TRUE))
-  (gs_wolfmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_md_grazing_UMF, silent = TRUE))
   (gs_wolfmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_md_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_wolfmd_fl <- fitList(gs_wolfmd_null, gs_wolfmd_hab0, gs_wolfmd_hab1, gs_wolfmd_allot0, gs_wolfmd_allot1, 
-                          gs_wolfmd_allot2, gs_wolfmd_graze0, gs_wolfmd_graze1, gs_wolfmd_graze2)
+  gs_wolfmd_fl <- fitList(gs_wolfmd_allot2, gs_wolfmd_graze2)
   #' Model selection
   modSel(gs_wolfmd_fl)
-  summary(gs_wolfmd_hab0)
-  summary(gs_wolfmd_allot0)
-  summary(gs_wolfmd_hab1)
-  summary(gs_wolfmd_allot1)
+  summary(gs_wolfmd_allot2)
+  
+  #' (gs_wolfmd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_md_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_md_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_wolfmd_fl <- fitList(gs_wolfmd_null, gs_wolfmd_hab0, gs_wolfmd_hab1, gs_wolfmd_allot0, gs_wolfmd_allot1, 
+  #'                         gs_wolfmd_allot2, gs_wolfmd_graze0, gs_wolfmd_graze1, gs_wolfmd_graze2)
+  #' #' Model selection
+  #' modSel(gs_wolfmd_fl)
+  #' summary(gs_wolfmd_hab0)
+  #' summary(gs_wolfmd_allot0)
+  #' summary(gs_wolfmd_hab1)
+  #' summary(gs_wolfmd_allot1)
   
   #' (gs_wolfmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_md_grazing_UMF, silent = TRUE))
   #' (gs_wolfmd_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, wolf_md_grazing_UMF, silent = TRUE))
@@ -314,22 +375,36 @@
   
   
   ####  Wolf-Elk Grazing Season  ####
-  (gs_wolfelk_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_elk_grazing_UMF, silent = TRUE))
-  (gs_wolfelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_elk_grazing_UMF, silent = TRUE))
-  (gs_wolfelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_elk_grazing_UMF, silent = TRUE))
-  (gs_wolfelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_elk_grazing_UMF, silent = TRUE))
-  (gs_wolfelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_elk_grazing_UMF, silent = TRUE)) 
+  #(gs_wolfelk_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
+  (gs_wolfelk_global <- occuMulti(detFormulas_global, occFormulas_subglobal, wolf_elk_grazing_UMF, silent = TRUE)) 
+  
+  (gs_wolfelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_elk_grazing_UMF, silent = TRUE))
   (gs_wolfelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
-  (gs_wolfelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_elk_grazing_UMF, silent = TRUE))
-  (gs_wolfelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_elk_grazing_UMF, silent = TRUE)) 
+  (gs_wolfelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_elk_grazing_UMF, silent = TRUE))
   (gs_wolfelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
   #' List of fitted models
-  gs_wolfelk_fl <- fitList(gs_wolfelk_null, gs_wolfelk_hab0, gs_wolfelk_hab1, gs_wolfelk_allot0, gs_wolfelk_allot1, 
-                           gs_wolfelk_graze0, gs_wolfelk_graze1)
+  gs_wolfelk_fl <- fitList(gs_wolfelk_allot1, gs_wolfelk_graze1)
   #' Model selection
   modSel(gs_wolfelk_fl)
-  summary(gs_wolfelk_hab0)
-  summary(gs_wolfelk_hab1)
+  summary(gs_wolfelk_allot1)
+  summary(gs_wolfelk_graze1) # 0.85 delta
+  
+  #' (gs_wolfelk_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_elk_grazing_UMF, silent = TRUE))
+  #' (gs_wolfelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_elk_grazing_UMF, silent = TRUE))
+  #' (gs_wolfelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_elk_grazing_UMF, silent = TRUE))
+  #' (gs_wolfelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_elk_grazing_UMF, silent = TRUE))
+  #' (gs_wolfelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_elk_grazing_UMF, silent = TRUE)) 
+  #' (gs_wolfelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
+  #' (gs_wolfelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_elk_grazing_UMF, silent = TRUE))
+  #' (gs_wolfelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_elk_grazing_UMF, silent = TRUE)) 
+  #' (gs_wolfelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
+  #' #' List of fitted models
+  #' gs_wolfelk_fl <- fitList(gs_wolfelk_null, gs_wolfelk_hab0, gs_wolfelk_hab1, gs_wolfelk_allot0, gs_wolfelk_allot1, 
+  #'                          gs_wolfelk_graze0, gs_wolfelk_graze1)
+  #' #' Model selection
+  #' modSel(gs_wolfelk_fl)
+  #' summary(gs_wolfelk_hab0)
+  #' summary(gs_wolfelk_hab1)
   
   #' (gs_wolfelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_elk_grazing_UMF, silent = TRUE))
   #' (gs_wolfelk_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, wolf_elk_grazing_UMF, silent = TRUE))
@@ -354,21 +429,31 @@
   #' summary(gs_wolfelk_hab1) # f1 not significant
   
   ####  Wolf-White-tailed Deer Grazing Season  ####
-  (gs_wolfwtd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_wtd_grazing_UMF, silent = TRUE))
+  (gs_wolfwtd_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_wtd_grazing_UMF, silent = TRUE))
+  
   (gs_wolfwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_wtd_grazing_UMF, silent = TRUE))
-  (gs_wolfwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_wtd_grazing_UMF, silent = TRUE))
   (gs_wolfwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_wtd_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_wolfwtd_fl <- fitList(gs_wolfwtd_null, gs_wolfwtd_hab0, gs_wolfwtd_hab1, gs_wolfwtd_allot0, gs_wolfwtd_allot1, gs_wolfwtd_allot2, gs_wolfwtd_graze0, gs_wolfwtd_graze1, gs_wolfwtd_graze2)
+  gs_wolfwtd_fl <- fitList(gs_wolfwtd_allot2, gs_wolfwtd_graze2)
   #' Model selection
   modSel(gs_wolfwtd_fl)
-  summary(gs_wolfwtd_allot0)    
-  summary(gs_wolfwtd_allot1)
+  summary(gs_wolfwtd_allot2)
+  
+  #' (gs_wolfwtd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_wolfwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_wtd_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_wolfwtd_fl <- fitList(gs_wolfwtd_null, gs_wolfwtd_hab0, gs_wolfwtd_hab1, gs_wolfwtd_allot0, gs_wolfwtd_allot1, gs_wolfwtd_allot2, gs_wolfwtd_graze0, gs_wolfwtd_graze1, gs_wolfwtd_graze2)
+  #' #' Model selection
+  #' modSel(gs_wolfwtd_fl)
+  #' summary(gs_wolfwtd_allot0)    
+  #' summary(gs_wolfwtd_allot1)
   # summary(gs_wolfwtd_graze0)
   # summary(gs_wolfelk_graze1)
   
@@ -394,24 +479,35 @@
   #' # summary(gs_wolfwtd_graze1) # f12 not significant
   
   ####  Wolf-Moose Grazing Season  ####
-  (gs_wolfmoose_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_moose_grazing_UMF, silent = TRUE))
+  # (gs_wolfmoose_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_moose_grazing_UMF, silent = TRUE)) # FAIL
+  (gs_wolfmoose_global <- occuMulti(detFormulas_global, occFormulas_subglobal, wolf_moose_grazing_UMF, silent = TRUE))
+  
   (gs_wolfmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_moose_grazing_UMF, silent = TRUE))
-  (gs_wolfmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_moose_grazing_UMF, silent = TRUE))
   (gs_wolfmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_moose_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_wolfmoose_fl <- fitList(gs_wolfmoose_null, gs_wolfmoose_hab0, gs_wolfmoose_hab1, gs_wolfmoose_allot0, gs_wolfmoose_allot1, 
-                             gs_wolfmoose_allot2, gs_wolfmoose_graze0, gs_wolfmoose_graze1, gs_wolfmoose_graze2)
+  gs_wolfmoose_fl <- fitList(gs_wolfmoose_allot2, gs_wolfmoose_graze2)
   #' Model selection
   modSel(gs_wolfmoose_fl)
-  summary(gs_wolfmoose_graze0)
-  summary(gs_wolfmoose_allot0)
   summary(gs_wolfmoose_allot2)
-  summary(gs_wolfmoose_graze1)
+  
+  #' (gs_wolfmoose_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, wolf_moose_grazing_UMF, silent = TRUE))
+  #' (gs_wolfmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, wolf_moose_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_wolfmoose_fl <- fitList(gs_wolfmoose_null, gs_wolfmoose_hab0, gs_wolfmoose_hab1, gs_wolfmoose_allot0, gs_wolfmoose_allot1, 
+  #'                            gs_wolfmoose_allot2, gs_wolfmoose_graze0, gs_wolfmoose_graze1, gs_wolfmoose_graze2)
+  #' #' Model selection
+  #' modSel(gs_wolfmoose_fl)
+  #' summary(gs_wolfmoose_graze0)
+  #' summary(gs_wolfmoose_allot0)
+  #' summary(gs_wolfmoose_allot2)
+  #' summary(gs_wolfmoose_graze1)
   
   #' (gs_wolfmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_moose_grazing_UMF, silent = TRUE))
   #' (gs_wolfmoose_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, wolf_moose_grazing_UMF, silent = TRUE))
@@ -438,23 +534,33 @@
   
   
   ####  Bear-Mule Deer Grazing Season  ####
-  (gs_bearmd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_md_grazing_UMF, silent = TRUE))
+  (gs_bearmd_global <- occuMulti(detFormulas_global, occFormulas_global, bear_md_grazing_UMF, silent = TRUE))
+  
   (gs_bearmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_md_grazing_UMF, silent = TRUE))
-  (gs_bearmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_md_grazing_UMF, silent = TRUE))
   (gs_bearmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_md_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_bearmd_fl <- fitList(gs_bearmd_null, gs_bearmd_hab0, gs_bearmd_hab1, gs_bearmd_allot0, gs_bearmd_allot1, 
-                          gs_bearmd_allot2, gs_bearmd_graze0, gs_bearmd_graze1, gs_bearmd_graze2)
+  gs_bearmd_fl <- fitList(gs_bearmd_allot2, gs_bearmd_graze2)
   #' Model selection
   modSel(gs_bearmd_fl)
-  summary(gs_bearmd_allot1) # f12 not significant    
-  summary(gs_bearmd_allot0)
-  summary(gs_bearmd_allot2) # f12 not significant
+  summary(gs_bearmd_allot2)
+  
+  #' (gs_bearmd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_md_grazing_UMF, silent = TRUE))
+  #' (gs_bearmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_md_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_bearmd_fl <- fitList(gs_bearmd_null, gs_bearmd_hab0, gs_bearmd_hab1, gs_bearmd_allot0, gs_bearmd_allot1, 
+  #'                         gs_bearmd_allot2, gs_bearmd_graze0, gs_bearmd_graze1, gs_bearmd_graze2)
+  #' #' Model selection
+  #' modSel(gs_bearmd_fl)
+  #' summary(gs_bearmd_allot1) # f12 not significant    
+  #' summary(gs_bearmd_allot0)
+  #' summary(gs_bearmd_allot2) # f12 not significant
   # summary(gs_bearmd_hab1) # f12 not significant
   # summary(gs_bearmd_graze1) # f12 not significant
   # summary(gs_bearmd_hab0)
@@ -484,25 +590,37 @@
   #' summary(gs_bearmd_hab0)
   
   ####  Bear-Elk Grazing Season  ####
-  (gs_bearelk_null <- occuMulti(detFormulas_null, occFormulas_null, bear_elk_grazing_UMF, silent = TRUE))
-  (gs_bearelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_elk_grazing_UMF, silent = TRUE))
-  (gs_bearelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_elk_grazing_UMF, silent = TRUE))
-  (gs_bearelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_elk_grazing_UMF, silent = TRUE))
-  (gs_bearelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_elk_grazing_UMF, silent = TRUE)) 
+  (gs_bearelk_global <- occuMulti(detFormulas_global, occFormulas_global, bear_elk_grazing_UMF, silent = TRUE)) 
+  
   (gs_bearelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_elk_grazing_UMF, silent = TRUE)) 
-  (gs_bearelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_elk_grazing_UMF, silent = TRUE))
   (gs_bearelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_elk_grazing_UMF, silent = TRUE)) 
-  (gs_bearelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_elk_grazing_UMF, silent = TRUE)) # not converging well
+  (gs_bearelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_elk_grazing_UMF, silent = TRUE)) # GrazingActivity on f12 not converging well
   #' List of fitted models
-  gs_bearelk_fl <- fitList(gs_bearelk_null, gs_bearelk_hab0, gs_bearelk_hab1, gs_bearelk_allot0, gs_bearelk_allot1, 
-                           gs_bearelk_allot2, gs_bearelk_graze0, gs_bearelk_graze1)
+  gs_bearelk_fl <- fitList(gs_bearelk_allot2, gs_bearelk_graze1)
   #' Model selection
   modSel(gs_bearelk_fl)
-  summary(gs_bearelk_allot1) # f12 not significant  
-  summary(gs_bearelk_hab1) # f12 not significant
-  summary(gs_bearelk_allot0)
-  summary(gs_bearelk_graze1) # f12 not significant
-  summary(gs_bearelk_hab0)
+  summary(gs_bearelk_graze1)
+  summary(gs_bearelk_allot2) # 0.20 delta
+  
+  #' (gs_bearelk_null <- occuMulti(detFormulas_null, occFormulas_null, bear_elk_grazing_UMF, silent = TRUE))
+  #' (gs_bearelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_elk_grazing_UMF, silent = TRUE))
+  #' (gs_bearelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_elk_grazing_UMF, silent = TRUE))
+  #' (gs_bearelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_elk_grazing_UMF, silent = TRUE))
+  #' (gs_bearelk_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_elk_grazing_UMF, silent = TRUE)) 
+  #' (gs_bearelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_elk_grazing_UMF, silent = TRUE)) 
+  #' (gs_bearelk_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_elk_grazing_UMF, silent = TRUE))
+  #' (gs_bearelk_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_elk_grazing_UMF, silent = TRUE)) 
+  #' (gs_bearelk_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_elk_grazing_UMF, silent = TRUE)) # not converging well
+  #' #' List of fitted models
+  #' gs_bearelk_fl <- fitList(gs_bearelk_null, gs_bearelk_hab0, gs_bearelk_hab1, gs_bearelk_allot0, gs_bearelk_allot1, 
+  #'                          gs_bearelk_allot2, gs_bearelk_graze0, gs_bearelk_graze1)
+  #' #' Model selection
+  #' modSel(gs_bearelk_fl)
+  #' summary(gs_bearelk_allot1) # f12 not significant  
+  #' summary(gs_bearelk_hab1) # f12 not significant
+  #' summary(gs_bearelk_allot0)
+  #' summary(gs_bearelk_graze1) # f12 not significant
+  #' summary(gs_bearelk_hab0)
   #summary(gs_bearelk_graze0)
   
   #' (gs_bearelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_elk_grazing_UMF, silent = TRUE))
@@ -529,23 +647,33 @@
   #' summary(gs_bearelk_hab0)
   
   ####  Bear-White-tailed Deer Grazing Season  ####
-  (gs_bearwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_wtd_grazing_UMF, silent = TRUE))
+  (gs_bearwtd_global <- occuMulti(detFormulas_global, occFormulas_global, bear_wtd_grazing_UMF, silent = TRUE))
+  
   (gs_bearwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_wtd_grazing_UMF, silent = TRUE))
-  (gs_bearwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_wtd_grazing_UMF, silent = TRUE))
   (gs_bearwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_wtd_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_bearwtd_fl <- fitList(gs_bearwtd_null, gs_bearwtd_hab0, gs_bearwtd_hab1, gs_bearwtd_allot0, gs_bearwtd_allot1, 
-                           gs_bearwtd_allot2, gs_bearwtd_graze0, gs_bearwtd_graze1, gs_bearwtd_graze2)
+  gs_bearwtd_fl <- fitList(gs_bearwtd_allot2, gs_bearwtd_graze2)
   #' Model selection
   modSel(gs_bearwtd_fl)
-  summary(gs_bearwtd_allot1) # f12 not significant    
-  summary(gs_bearwtd_allot0)
-  summary(gs_bearwtd_allot2) # f12 not significant
+  summary(gs_bearwtd_allot2)
+  
+  #' (gs_bearwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bearwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_wtd_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_bearwtd_fl <- fitList(gs_bearwtd_null, gs_bearwtd_hab0, gs_bearwtd_hab1, gs_bearwtd_allot0, gs_bearwtd_allot1, 
+  #'                          gs_bearwtd_allot2, gs_bearwtd_graze0, gs_bearwtd_graze1, gs_bearwtd_graze2)
+  #' #' Model selection
+  #' modSel(gs_bearwtd_fl)
+  #' summary(gs_bearwtd_allot1) # f12 not significant    
+  #' summary(gs_bearwtd_allot0)
+  #' summary(gs_bearwtd_allot2) # f12 not significant
   # summary(gs_bearwtd_graze0)
   # summary(gs_bearwtd_graze1)
   
@@ -572,22 +700,34 @@
   
   
   ####  Bear-Moose Grazing Season  ####
-  (gs_bearmoose_null <- occuMulti(detFormulas_null, occFormulas_null, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_moose_grazing_UMF, silent = TRUE)) # not converging well
-  (gs_bearmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_moose_grazing_UMF, silent = TRUE))
+  (gs_bearmoose_global <- occuMulti(detFormulas_global, occFormulas_subglobal, bear_moose_grazing_UMF, silent = TRUE)) 
+  
+  (gs_bearmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_moose_grazing_UMF, silent = TRUE)) 
   (gs_bearmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_moose_grazing_UMF, silent = TRUE))
-  (gs_bearmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_moose_grazing_UMF, silent = TRUE)) # not converging well
+  (gs_bearmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_moose_grazing_UMF, silent = TRUE)) # GrazingActivity on f2 & f12 not converging well
   #' List of fitted models
-  gs_bearmoose_fl <- fitList(gs_bearmoose_null, gs_bearmoose_hab0, gs_bearmoose_hab1, gs_bearmoose_allot0, gs_bearmoose_allot1, 
-                             gs_bearmoose_allot2, gs_bearmoose_graze0, gs_bearmoose_graze1)
+  gs_bearmoose_fl <- fitList(gs_bearmoose_allot2, gs_bearmoose_graze1)
   #' Model selection
   modSel(gs_bearmoose_fl)
-  summary(gs_bearmoose_allot0)  
-  summary(gs_bearmoose_allot1)
+  summary(gs_bearmoose_allot2)
+  summary(gs_bearmoose_graze1) # 0.20 delta
+  
+  #' (gs_bearmoose_null <- occuMulti(detFormulas_null, occFormulas_null, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_moose_grazing_UMF, silent = TRUE)) 
+  #' (gs_bearmoose_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bear_moose_grazing_UMF, silent = TRUE))
+  #' (gs_bearmoose_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bear_moose_grazing_UMF, silent = TRUE)) # not converging well
+  #' #' List of fitted models
+  #' gs_bearmoose_fl <- fitList(gs_bearmoose_null, gs_bearmoose_hab0, gs_bearmoose_hab1, gs_bearmoose_allot0, gs_bearmoose_allot1, 
+  #'                            gs_bearmoose_allot2, gs_bearmoose_graze0, gs_bearmoose_graze1)
+  #' #' Model selection
+  #' modSel(gs_bearmoose_fl)
+  #' summary(gs_bearmoose_allot0)  
+  #' summary(gs_bearmoose_allot1)
   # summary(gs_bearmoose_graze0)
   # summary(gs_bearmoose_graze1) 
   
@@ -616,21 +756,31 @@
   
   
   ####  Coyote-Mule Deer Grazing Season  ####
-  (gs_coymd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coy_md_grazing_UMF, silent = TRUE))
+  (gs_coymd_global <- occuMulti(detFormulas_global, occFormulas_global, coy_md_grazing_UMF, silent = TRUE))
+  
   (gs_coymd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coy_md_grazing_UMF, silent = TRUE))
-  (gs_coymd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coy_md_grazing_UMF, silent = TRUE))
   (gs_coymd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coy_md_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_coymd_fl <- fitList(gs_coymd_null, gs_coymd_hab0, gs_coymd_hab1, gs_coymd_allot0, gs_coymd_allot1, gs_coymd_allot2, 
-                         gs_coymd_graze0, gs_coymd_graze1, gs_coymd_graze2)
+  gs_coymd_fl <- fitList(gs_coymd_allot2, gs_coymd_graze2)
   #' Model selection
   modSel(gs_coymd_fl)
   summary(gs_coymd_graze2)
+  
+  #' (gs_coymd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coy_md_grazing_UMF, silent = TRUE))
+  #' (gs_coymd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coy_md_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_coymd_fl <- fitList(gs_coymd_null, gs_coymd_hab0, gs_coymd_hab1, gs_coymd_allot0, gs_coymd_allot1, gs_coymd_allot2, 
+  #'                        gs_coymd_graze0, gs_coymd_graze1, gs_coymd_graze2)
+  #' #' Model selection
+  #' modSel(gs_coymd_fl)
+  #' summary(gs_coymd_graze2)
   
   #' (gs_coymd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coy_md_grazing_UMF, silent = TRUE))
   #' (gs_coymd_dgraze <- occuMulti(detFormulas_graze, occFormulas_null, coy_md_grazing_UMF, silent = TRUE))
@@ -653,22 +803,32 @@
   #' summary(gs_coymd_graze2)
   
   ####  Coyote-White-tailed Deer Grazing Season  ####
-  (gs_coywtd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coy_wtd_grazing_UMF, silent = TRUE))
+  (gs_coywtd_global <- occuMulti(detFormulas_global, occFormulas_global, coy_wtd_grazing_UMF, silent = TRUE))
+  
   (gs_coywtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coy_wtd_grazing_UMF, silent = TRUE))
-  (gs_coywtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coy_wtd_grazing_UMF, silent = TRUE))
   (gs_coywtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coy_wtd_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_coywtd_fl <- fitList(gs_coywtd_null, gs_coywtd_hab0, gs_coywtd_hab1, gs_coywtd_allot0, gs_coywtd_allot1, 
-                          gs_coywtd_allot2, gs_coywtd_graze0, gs_coywtd_graze1, gs_coywtd_graze2)
+  gs_coywtd_fl <- fitList(gs_coywtd_allot2, gs_coywtd_graze2)
   #' Model selection
   modSel(gs_coywtd_fl)
-  summary(gs_coywtd_allot1)   
   summary(gs_coywtd_allot2)
+  
+  #' (gs_coywtd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, coy_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_coywtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coy_wtd_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_coywtd_fl <- fitList(gs_coywtd_null, gs_coywtd_hab0, gs_coywtd_hab1, gs_coywtd_allot0, gs_coywtd_allot1, 
+  #'                         gs_coywtd_allot2, gs_coywtd_graze0, gs_coywtd_graze1, gs_coywtd_graze2)
+  #' #' Model selection
+  #' modSel(gs_coywtd_fl)
+  #' summary(gs_coywtd_allot1)   
+  #' summary(gs_coywtd_allot2)
   #summary(gs_coywtd_graze2) 
   
   #' (gs_coywtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coy_wtd_grazing_UMF, silent = TRUE))
@@ -694,22 +854,32 @@
   
   
   ####  Bobcat-Mule Deer Grazing Season  ####
-  (gs_bobmd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bob_md_grazing_UMF, silent = TRUE))
+  (gs_bobmd_global <- occuMulti(detFormulas_global, occFormulas_global, bob_md_grazing_UMF, silent = TRUE))
+  
   (gs_bobmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bob_md_grazing_UMF, silent = TRUE))
-  (gs_bobmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bob_md_grazing_UMF, silent = TRUE))
   (gs_bobmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bob_md_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_bobmd_fl <- fitList(gs_bobmd_null, gs_bobmd_hab0, gs_bobmd_hab1, gs_bobmd_allot0, gs_bobmd_allot1, gs_bobmd_allot2, 
-                         gs_bobmd_graze0, gs_bobmd_graze1, gs_bobmd_graze2)
+  gs_bobmd_fl <- fitList(gs_bobmd_allot2, gs_bobmd_graze2)
   #' Model selection
   modSel(gs_bobmd_fl)
-  summary(gs_bobmd_allot0)   
-  summary(gs_bobmd_allot1)  # f12 not significant
+  summary(gs_bobmd_allot2)
+  
+  #' (gs_bobmd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bob_md_grazing_UMF, silent = TRUE))
+  #' (gs_bobmd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bob_md_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_bobmd_fl <- fitList(gs_bobmd_null, gs_bobmd_hab0, gs_bobmd_hab1, gs_bobmd_allot0, gs_bobmd_allot1, gs_bobmd_allot2, 
+  #'                        gs_bobmd_graze0, gs_bobmd_graze1, gs_bobmd_graze2)
+  #' #' Model selection
+  #' modSel(gs_bobmd_fl)
+  #' summary(gs_bobmd_allot0)   
+  #' summary(gs_bobmd_allot1)  # f12 not significant
   # summary(gs_bobmd_graze0)
   # summary(gs_bobmd_graze2)
   # summary(gs_bobmd_graze1)
@@ -737,21 +907,31 @@
   #' # summary(gs_bobmd_graze1) # f12 not significant
   
   ####  Bobcat-White-tailed Deer Grazing Season  ####
-  (gs_bobwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bob_wtd_grazing_UMF, silent = TRUE))
+  (gs_bobwtd_global <- occuMulti(detFormulas_global, occFormulas_global, bob_wtd_grazing_UMF, silent = TRUE))
+  
   (gs_bobwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bob_wtd_grazing_UMF, silent = TRUE))
-  (gs_bobwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bob_wtd_grazing_UMF, silent = TRUE))
   (gs_bobwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bob_wtd_grazing_UMF, silent = TRUE))
   #' List of fitted models
-  gs_bobwtd_fl <- fitList(gs_bobwtd_null, gs_bobwtd_hab0, gs_bobwtd_hab1, gs_bobwtd_allot0, gs_bobwtd_allot1, gs_bobwtd_allot2, gs_bobwtd_graze0, gs_bobwtd_graze1, gs_bobwtd_graze2)
+  gs_bobwtd_fl <- fitList(gs_bobwtd_allot2, gs_bobwtd_graze2)
   #' Model selection
   modSel(gs_bobwtd_fl)
-  summary(gs_bobwtd_allot1)    
-  summary(gs_bobwtd_allot2) 
+  summary(gs_bobwtd_allot2)
+  
+  #' (gs_bobwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_allot1 <- occuMulti(detFormulas_allot, occFormulas_allot1, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_graze0 <- occuMulti(detFormulas_graze, occFormulas_graze0, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_graze1 <- occuMulti(detFormulas_graze, occFormulas_graze1, bob_wtd_grazing_UMF, silent = TRUE))
+  #' (gs_bobwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, bob_wtd_grazing_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' gs_bobwtd_fl <- fitList(gs_bobwtd_null, gs_bobwtd_hab0, gs_bobwtd_hab1, gs_bobwtd_allot0, gs_bobwtd_allot1, gs_bobwtd_allot2, gs_bobwtd_graze0, gs_bobwtd_graze1, gs_bobwtd_graze2)
+  #' #' Model selection
+  #' modSel(gs_bobwtd_fl)
+  #' summary(gs_bobwtd_allot1)    
+  #' summary(gs_bobwtd_allot2) 
   # summary(gs_bobwtd_graze2) # f12 not significant
   # summary(gs_bobwtd_graze0)
   # summary(gs_bobwtd_graze1) # f12 not significant
@@ -787,10 +967,10 @@
   detFormulas_trail <- c("~Trail", "~Trail")
   detFormulas_pub <- c("~Trail + Public", "~Trail + Public")
   detFormulas_hunt <- c("~Trail + WeeklyHunting", "~Trail + WeeklyHunting") #' not significant for any species
-  #detFormulas_pubhunt <- c("~Trail + Public + WeeklyHunting", "~Trail + Public + WeeklyHunting")
+  detFormulas_globe <- c("~Trail + Public + WeeklyHunting", "~Trail + Public + WeeklyHunting")
   #'  Remove Public vs Private covariate from predator sub-model
   detFormulas_pubish <- c("~Trail", "~Trail + Public")
-  #detFormulas_pubhuntish <- c("~Trail + WeeklyHunting", "~Trail + Public + WeeklyHunting")
+  detFormulas_subglobe <- c("~Trail + WeeklyHunting", "~Trail + Public + WeeklyHunting")
   
   #'  Question 1: Is co-occurrence dependent?
   occFormulas_null <- c("~1", "~1", "~0")
@@ -820,6 +1000,9 @@
   occFormulas_hunt2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
                          "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
                          "~HuntingActivity")
+  occFormulas_globe <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
+                         "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
+                         "~HuntingActivity + Public")
   
   #'  Remove Public vs Private covariate from predator sub-model
   occFormulas_pubish0 <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
@@ -831,25 +1014,39 @@
   occFormulas_pubish2 <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
                            "~Study_Area + Elev + I(Elev^2) + PercForest + Public", 
                            "~Public")
+  occFormulas_subglobe <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
+                           "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
+                           "~HuntingActivity + Public")
   
   
   ####  Cougar-Mule Deer Hunting Season  ####
-  (hs_cougmd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_md_hunting_UMF, silent = TRUE))
-  (hs_cougmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_md_hunting_UMF, silent = TRUE)) 
-  (hs_cougmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_md_hunting_UMF, silent = TRUE)) 
-  (hs_cougmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_md_hunting_UMF, silent = TRUE)) 
-  (hs_cougmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_md_hunting_UMF, silent = TRUE))
+  (hs_cougmd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_md_hunting_UMF, silent = TRUE))
+  
   (hs_cougmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_md_hunting_UMF, silent = TRUE))
-  (hs_cougmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_md_hunting_UMF, silent = TRUE))
   (hs_cougmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_md_hunting_UMF, silent = TRUE))
   (hs_cougmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_md_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
-  hs_cougmd_fl <- fitList(hs_cougmd_null, hs_cougmd_hab0, hs_cougmd_hab1, hs_cougmd_pub0, hs_cougmd_pub1, hs_cougmd_pub2, hs_cougmd_hunt0, hs_cougmd_hunt1) 
+  hs_cougmd_fl <- fitList(hs_cougmd_pub2, hs_cougmd_hunt1) 
   #' Model selection
   modSel(hs_cougmd_fl)
   summary(hs_cougmd_pub2)
-  summary(hs_cougmd_hunt0)
-  summary(hs_cougmd_hab1)
+  
+  #' (hs_cougmd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_md_hunting_UMF, silent = TRUE))
+  #' (hs_cougmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_md_hunting_UMF, silent = TRUE))
+  #' (hs_cougmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_md_hunting_UMF, silent = TRUE))
+  #' (hs_cougmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_md_hunting_UMF, silent = TRUE))
+  #' (hs_cougmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_md_hunting_UMF, silent = TRUE))
+  #' (hs_cougmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_md_hunting_UMF, silent = TRUE)) # FAIL
+  #' #' List of fitted models
+  #' hs_cougmd_fl <- fitList(hs_cougmd_null, hs_cougmd_hab0, hs_cougmd_hab1, hs_cougmd_pub0, hs_cougmd_pub1, hs_cougmd_pub2, hs_cougmd_hunt0, hs_cougmd_hunt1) 
+  #' #' Model selection
+  #' modSel(hs_cougmd_fl)
+  #' summary(hs_cougmd_pub2)
+  #' summary(hs_cougmd_hunt0)
+  #' summary(hs_cougmd_hab1)
   
   
   #' #'  Note: using occupancy model formulas that drop Public covariate from predator sub-model
@@ -881,20 +1078,35 @@
   #' summary(hs_cougmd_hunt1)
 
   ####  Cougar-Elk Hunting Season  ####
-  (hs_cougelk_null <- occuMulti(detFormulas_null, occFormulas_null, coug_elk_hunting_UMF, silent = TRUE))
-  (hs_cougelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_elk_hunting_UMF, silent = TRUE)) 
-  (hs_cougelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #(hs_cougelk_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_elk_hunting_UMF, silent = TRUE)) #FAIL
+  (hs_cougelk_global <- occuMulti(detFormulas_globe, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # still not great on coug model
+  
   (hs_cougelk_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_elk_hunting_UMF, silent = TRUE))
   (hs_cougelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
   (hs_cougelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_cougelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # not converging well 
-  (hs_cougelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_elk_hunting_UMF, silent = TRUE)) # not converging well
+  (hs_cougelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1 not converging well 
+  (hs_cougelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1not converging well
   (hs_cougelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
-  hs_cougelk_fl <- fitList(hs_cougelk_null, hs_cougelk_hab0, hs_cougelk_hunt0, hs_cougelk_hunt1) 
+  hs_cougelk_fl <- fitList(hs_cougelk_pub0, hs_cougelk_hunt0, hs_cougelk_hunt1) 
   #' Model selection
   modSel(hs_cougelk_fl)
   summary(hs_cougelk_hunt1)
+  
+  #' (hs_cougelk_null <- occuMulti(detFormulas_null, occFormulas_null, coug_elk_hunting_UMF, silent = TRUE))
+  #' (hs_cougelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_elk_hunting_UMF, silent = TRUE))
+  #' (hs_cougelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_cougelk_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_elk_hunting_UMF, silent = TRUE))
+  #' (hs_cougelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_cougelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_cougelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_cougelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_elk_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_cougelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #' #' List of fitted models
+  #' hs_cougelk_fl <- fitList(hs_cougelk_null, hs_cougelk_hab0, hs_cougelk_pub0, hs_cougelk_hunt0, hs_cougelk_hunt1)
+  #' #' Model selection
+  #' modSel(hs_cougelk_fl)
+  #' summary(hs_cougelk_hunt1)
   
   #' (hs_cougelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_elk_hunting_UMF, silent = TRUE))
   #' (hs_cougelk_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, coug_elk_hunting_UMF, silent = TRUE))
@@ -922,20 +1134,30 @@
   #' summary(hs_cougelk_pub0)
   
   ####  Cougar-White-tailed Deer Hunting Season  ####
-  (hs_cougwtd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_wtd_hunting_UMF, silent = TRUE))
-  (hs_cougwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_cougwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_cougwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_wtd_hunting_UMF, silent = TRUE))
-  (hs_cougwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_wtd_hunting_UMF, silent = TRUE)) 
+  (hs_cougwtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_wtd_hunting_UMF, silent = TRUE))
+  
   (hs_cougwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_wtd_hunting_UMF, silent = TRUE))
-  (hs_cougwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_wtd_hunting_UMF, silent = TRUE))
-  (hs_cougwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_wtd_hunting_UMF, silent = TRUE)) # not converging well
   (hs_cougwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_wtd_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_cougwtd_fl <- fitList(hs_cougwtd_null, hs_cougwtd_hab0, hs_cougwtd_hab1, hs_cougwtd_pub0, hs_cougwtd_pub1, hs_cougwtd_pub2, hs_cougwtd_hunt0, hs_cougwtd_hunt1, hs_cougwtd_hunt2) 
+  hs_cougwtd_fl <- fitList(hs_cougwtd_pub2, hs_cougwtd_hunt2) 
   #' Model selection
   modSel(hs_cougwtd_fl)
   summary(hs_cougwtd_pub2)
+  
+  #' (hs_cougwtd_null <- occuMulti(detFormulas_null, occFormulas_null, coug_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_cougwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_cougwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_cougwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_cougwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_wtd_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_cougwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_wtd_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_cougwtd_fl <- fitList(hs_cougwtd_null, hs_cougwtd_hab0, hs_cougwtd_hab1, hs_cougwtd_pub0, hs_cougwtd_pub1, hs_cougwtd_pub2, hs_cougwtd_hunt0, hs_cougwtd_hunt1, hs_cougwtd_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_cougwtd_fl)
+  #' summary(hs_cougwtd_pub2)
   
   #' (hs_cougwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_wtd_hunting_UMF, silent = TRUE))
   #' (hs_cougwtd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, coug_wtd_hunting_UMF, silent = TRUE))
@@ -964,21 +1186,36 @@
   #' summary(hs_cougwtd_pub0)
   
   ####  Cougar-Moose Hunting Season  ####
-  (hs_cougmoose_null <- occuMulti(detFormulas_null, occFormulas_null, coug_moose_hunting_UMF, silent = TRUE))
-  (hs_cougmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_moose_hunting_UMF, silent = TRUE)) 
-  (hs_cougmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_moose_hunting_UMF, silent = TRUE))
+  #(hs_cougmoose_global <- occuMulti(detFormulas_globe, occFormulas_globe, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_cougmoose_global <- occuMulti(detFormulas_globe, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE))
+  
   (hs_cougmoose_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_moose_hunting_UMF, silent = TRUE))
-  (hs_cougmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_moose_hunting_UMF, silent = TRUE)) # not converging well
+  (hs_cougmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_moose_hunting_UMF, silent = TRUE)) # f2 & f12 intercepts not converging well
   (hs_cougmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_cougmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE)) # not converging well
+  (hs_cougmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE)) # HuntingActivity f1 not converging well
   (hs_cougmoose_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
   (hs_cougmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
-  hs_cougmoose_fl <- fitList(hs_cougmoose_null, hs_cougmoose_hab0, hs_cougmoose_hab1, hs_cougmoose_pub0, hs_cougmoose_pub1, hs_cougmoose_hunt0) 
+  hs_cougmoose_fl <- fitList(hs_cougmoose_pub0, hs_cougmoose_hunt0) 
   #' Model selection
   modSel(hs_cougmoose_fl)
   summary(hs_cougmoose_hunt0)
-  summary(hs_cougmoose_pub1) # f12 not significant
+  
+  #' (hs_cougmoose_null <- occuMulti(detFormulas_null, occFormulas_null, coug_moose_hunting_UMF, silent = TRUE))
+  #' (hs_cougmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coug_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_cougmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coug_moose_hunting_UMF, silent = TRUE))
+  #' (hs_cougmoose_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_moose_hunting_UMF, silent = TRUE))
+  #' (hs_cougmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_moose_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_cougmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_cougmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_cougmoose_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_cougmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  #' #' List of fitted models
+  #' hs_cougmoose_fl <- fitList(hs_cougmoose_null, hs_cougmoose_hab0, hs_cougmoose_hab1, hs_cougmoose_pub0, hs_cougmoose_pub1, hs_cougmoose_hunt0) 
+  #' #' Model selection
+  #' modSel(hs_cougmoose_fl)
+  #' summary(hs_cougmoose_hunt0)
+  #' summary(hs_cougmoose_pub1) # f12 not significant
   
   #' (hs_cougmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_moose_hunting_UMF, silent = TRUE))
   #' (hs_cougmoose_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, coug_moose_hunting_UMF, silent = TRUE))
@@ -1007,21 +1244,33 @@
   
 
   ####  Wolf-Mule Deer Hunting Season  ####
-  (hs_wolfmd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_md_hunting_UMF, silent = TRUE))
-  (hs_wolfmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_md_hunting_UMF, silent = TRUE)) 
-  (hs_wolfmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_md_hunting_UMF, silent = TRUE)) 
-  (hs_wolfmd_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_md_hunting_UMF, silent = TRUE))
+  #(hs_wolfmd_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_md_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_wolfmd_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
+  
   (hs_wolfmd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_md_hunting_UMF, silent = TRUE))
   (hs_wolfmd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_md_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfmd_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_md_hunting_UMF, silent = TRUE))
-  (hs_wolfmd_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_md_hunting_UMF, silent = TRUE))
   (hs_wolfmd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_wolfmd_fl <- fitList(hs_wolfmd_null, hs_wolfmd_hab0, hs_wolfmd_hab1, hs_wolfmd_pub0, hs_wolfmd_pub1, hs_wolfmd_hunt0, hs_wolfmd_hunt1, hs_wolfmd_hunt2) 
+  hs_wolfmd_fl <- fitList(hs_wolfmd_pub1, hs_wolfmd_hunt2) 
   #' Model selection
   modSel(hs_wolfmd_fl)
-  summary(hs_wolfmd_hunt1)
   summary(hs_wolfmd_hunt2)
+  
+  #' (hs_wolfmd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_md_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfmd_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_md_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_md_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_md_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_wolfmd_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_md_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmd_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_md_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_wolfmd_fl <- fitList(hs_wolfmd_null, hs_wolfmd_hab0, hs_wolfmd_hab1, hs_wolfmd_pub0, hs_wolfmd_pub1, hs_wolfmd_hunt0, hs_wolfmd_hunt1, hs_wolfmd_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_wolfmd_fl)
+  #' summary(hs_wolfmd_hunt1)
+  #' summary(hs_wolfmd_hunt2)
   
   #' #'  Note: using detection & occupancy model formulas that drop Public covariate from predator sub-models
   #' (hs_wolfmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_md_hunting_UMF, silent = TRUE))
@@ -1052,20 +1301,32 @@
   
   
   ####  Wolf-Elk Hunting Season  ####
-  (hs_wolfelk_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_elk_hunting_UMF, silent = TRUE))
-  (hs_wolfelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_elk_hunting_UMF, silent = TRUE)) 
-  (hs_wolfelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_elk_hunting_UMF, silent = TRUE)) 
-  (hs_wolfelk_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_elk_hunting_UMF, silent = TRUE))
+  #(hs_wolfelk_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_elk_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_wolfelk_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))  # human density on interaction is a bit wonky
+  
   (hs_wolfelk_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_elk_hunting_UMF, silent = TRUE))
   (hs_wolfelk_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_elk_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfelk_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_elk_hunting_UMF, silent = TRUE))
-  (hs_wolfelk_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_elk_hunting_UMF, silent = TRUE))
   (hs_wolfelk_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_wolfelk_fl <- fitList(hs_wolfelk_null, hs_wolfelk_hab0, hs_wolfelk_hab1, hs_wolfelk_pub0, hs_wolfelk_pub1, hs_wolfelk_hunt0, hs_wolfelk_hunt1, hs_wolfelk_hunt2) 
+  hs_wolfelk_fl <- fitList(hs_wolfelk_pub1, hs_wolfelk_hunt2) 
   #' Model selection
   modSel(hs_wolfelk_fl)
-  summary(hs_wolfelk_hunt0)
+  summary(hs_wolfelk_hunt2)
+  
+  #' (hs_wolfelk_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_elk_hunting_UMF, silent = TRUE))
+  #' (hs_wolfelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_elk_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_elk_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfelk_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_elk_hunting_UMF, silent = TRUE))
+  #' (hs_wolfelk_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_elk_hunting_UMF, silent = TRUE))
+  #' (hs_wolfelk_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_elk_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_wolfelk_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_elk_hunting_UMF, silent = TRUE))
+  #' (hs_wolfelk_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_elk_hunting_UMF, silent = TRUE))
+  #' (hs_wolfelk_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_wolfelk_fl <- fitList(hs_wolfelk_null, hs_wolfelk_hab0, hs_wolfelk_hab1, hs_wolfelk_pub0, hs_wolfelk_pub1, hs_wolfelk_hunt0, hs_wolfelk_hunt1, hs_wolfelk_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_wolfelk_fl)
+  #' summary(hs_wolfelk_hunt0)
   
   #' (hs_wolfelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_elk_hunting_UMF, silent = TRUE))
   #' (hs_wolfelk_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, wolf_elk_hunting_UMF, silent = TRUE))
@@ -1093,20 +1354,32 @@
   #' summary(hs_wolfelk_hunt0)
   
   ####  Wolf-White-tailed Deer Hunting Season  ####
-  (hs_wolfwtd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_wtd_hunting_UMF, silent = TRUE))
-  (hs_wolfwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_wolfwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_wolfwtd_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_wtd_hunting_UMF, silent = TRUE))
+  # (hs_wolfwtd_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_wtd_hunting_UMF, silent = TRUE))  # FAIL
+  (hs_wolfwtd_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))
+  
   (hs_wolfwtd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_wtd_hunting_UMF, silent = TRUE))
   (hs_wolfwtd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_wtd_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfwtd_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_wtd_hunting_UMF, silent = TRUE))
-  (hs_wolfwtd_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_wtd_hunting_UMF, silent = TRUE)) # FAIL
   (hs_wolfwtd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))  
   #' List of fitted models
-  hs_wolfwtd_fl <- fitList(hs_wolfwtd_null, hs_wolfwtd_hab0, hs_wolfwtd_hab1, hs_wolfwtd_pub0, hs_wolfwtd_pub1, hs_wolfwtd_hunt0, hs_wolfwtd_hunt2) 
+  hs_wolfwtd_fl <- fitList(hs_wolfwtd_pub1, hs_wolfwtd_hunt2) 
   #' Model selection
   modSel(hs_wolfwtd_fl)
-  summary(hs_wolfwtd_hunt0)
+  summary(hs_wolfwtd_hunt2)
+  
+  #' (hs_wolfwtd_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_wolfwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfwtd_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_wolfwtd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_wolfwtd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_wtd_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_wolfwtd_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_wolfwtd_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_wtd_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_wolfwtd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))  
+  #' #' List of fitted models
+  #' hs_wolfwtd_fl <- fitList(hs_wolfwtd_null, hs_wolfwtd_hab0, hs_wolfwtd_hab1, hs_wolfwtd_pub0, hs_wolfwtd_pub1, hs_wolfwtd_hunt0, hs_wolfwtd_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_wolfwtd_fl)
+  #' summary(hs_wolfwtd_hunt0)
   
   #' (hs_wolfwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_wtd_hunting_UMF, silent = TRUE))
   #' (hs_wolfwtd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, wolf_wtd_hunting_UMF, silent = TRUE))
@@ -1134,20 +1407,31 @@
   #' summary(hs_wolfwtd_hunt0)
   
   ####  Wolf-Moose Hunting Season  ####
-  (hs_wolfmoose_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_moose_hunting_UMF, silent = TRUE))
-  (hs_wolfmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_moose_hunting_UMF, silent = TRUE)) 
-  (hs_wolfmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_moose_hunting_UMF, silent = TRUE)) 
-  (hs_wolfmoose_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_moose_hunting_UMF, silent = TRUE))
+  (hs_wolfmoose_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
+  
   (hs_wolfmoose_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_moose_hunting_UMF, silent = TRUE))
   (hs_wolfmoose_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_moose_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfmoose_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_moose_hunting_UMF, silent = TRUE))
-  (hs_wolfmoose_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_moose_hunting_UMF, silent = TRUE))
   (hs_wolfmoose_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_wolfmoose_fl <- fitList(hs_wolfmoose_null, hs_wolfmoose_hab0, hs_wolfmoose_hab1, hs_wolfmoose_pub0, hs_wolfmoose_pub1, hs_wolfmoose_hunt0, hs_wolfmoose_hunt1, hs_wolfmoose_hunt2)
+  hs_wolfmoose_fl <- fitList(hs_wolfmoose_pub1, hs_wolfmoose_hunt2)
   #' Model selection
   modSel(hs_wolfmoose_fl)
   summary(hs_wolfmoose_hunt2)
+  
+  #' (hs_wolfmoose_null <- occuMulti(detFormulas_null, occFormulas_null, wolf_moose_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, wolf_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, wolf_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_wolfmoose_pub0 <- occuMulti(detFormulas_pubish, occFormulas_pubish0, wolf_moose_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmoose_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_moose_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmoose_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_moose_hunting_UMF, silent = TRUE)) # FAIL
+  #' (hs_wolfmoose_hunt0 <- occuMulti(detFormulas_pubish, occFormulas_hunt0, wolf_moose_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmoose_hunt1 <- occuMulti(detFormulas_pubish, occFormulas_hunt1, wolf_moose_hunting_UMF, silent = TRUE))
+  #' (hs_wolfmoose_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_wolfmoose_fl <- fitList(hs_wolfmoose_null, hs_wolfmoose_hab0, hs_wolfmoose_hab1, hs_wolfmoose_pub0, hs_wolfmoose_pub1, hs_wolfmoose_hunt0, hs_wolfmoose_hunt1, hs_wolfmoose_hunt2)
+  #' #' Model selection
+  #' modSel(hs_wolfmoose_fl)
+  #' summary(hs_wolfmoose_hunt2)
   
   #' (hs_wolfmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, wolf_moose_hunting_UMF, silent = TRUE))
   #' (hs_wolfmoose_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, wolf_moose_hunting_UMF, silent = TRUE))
@@ -1176,24 +1460,34 @@
   
   
   ####  Bear-Mule Deer Hunting Season  ####
-  (hs_bearmd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
-  (hs_bearmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_md_hunting_UMF, silent = TRUE)) 
-  (hs_bearmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_md_hunting_UMF, silent = TRUE)) 
-  (hs_bearmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_md_hunting_UMF, silent = TRUE))
-  (hs_bearmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_md_hunting_UMF, silent = TRUE))
+  (hs_bearmd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_md_hunting_UMF, silent = TRUE))
+  
   (hs_bearmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_md_hunting_UMF, silent = TRUE))
-  (hs_bearmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_md_hunting_UMF, silent = TRUE))
-  (hs_bearmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_md_hunting_UMF, silent = TRUE)) 
   (hs_bearmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_md_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_bearmd_fl <- fitList(hs_bearmd_null, hs_bearmd_hab0, hs_bearmd_hab1, hs_bearmd_pub0, hs_bearmd_pub1, hs_bearmd_pub2, hs_bearmd_hunt0, hs_bearmd_hunt1, hs_bearmd_hunt2) 
+  hs_bearmd_fl <- fitList(hs_bearmd_pub2, hs_bearmd_hunt2) 
   #' Model selection
   modSel(hs_bearmd_fl)
-  summary(hs_bearmd_hunt0)
-  summary(hs_bearmd_hunt1) # f12 not significant
-  summary(hs_bearmd_hunt2) # f12 not significant
-  summary(hs_bearmd_pub0)
-  summary(hs_bearmd_pub1) # f12 not significant
+  summary(hs_bearmd_hunt2)
+  
+  #' (hs_bearmd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
+  #' (hs_bearmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_md_hunting_UMF, silent = TRUE))
+  #' (hs_bearmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_md_hunting_UMF, silent = TRUE))
+  #' (hs_bearmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_md_hunting_UMF, silent = TRUE))
+  #' (hs_bearmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_md_hunting_UMF, silent = TRUE))
+  #' (hs_bearmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_md_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_bearmd_fl <- fitList(hs_bearmd_null, hs_bearmd_hab0, hs_bearmd_hab1, hs_bearmd_pub0, hs_bearmd_pub1, hs_bearmd_pub2, hs_bearmd_hunt0, hs_bearmd_hunt1, hs_bearmd_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_bearmd_fl)
+  #' summary(hs_bearmd_hunt0)
+  #' summary(hs_bearmd_hunt1) # f12 not significant
+  #' summary(hs_bearmd_hunt2) # f12 not significant
+  #' summary(hs_bearmd_pub0)
+  #' summary(hs_bearmd_pub1) # f12 not significant
   
   #' (hs_bearmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
   #' (hs_bearmd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bear_md_hunting_UMF, silent = TRUE))
@@ -1222,20 +1516,32 @@
   #' summary(hs_bearmd_hab1)
   
   ####  Bear-Elk Hunting Season  ####
-  (hs_bearelk_null <- occuMulti(detFormulas_null, occFormulas_null, bear_elk_hunting_UMF, silent = TRUE))
-  (hs_bearelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_elk_hunting_UMF, silent = TRUE)) 
-  (hs_bearelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_elk_hunting_UMF, silent = TRUE)) 
-  (hs_bearelk_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_elk_hunting_UMF, silent = TRUE))
+  #(hs_bearelk_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_elk_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_bearelk_global <- occuMulti(detFormulas_globe, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE)) # human density effect on interaction a bit large w/ lots of uncertainty
+  
   (hs_bearelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_elk_hunting_UMF, silent = TRUE))
   (hs_bearelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_elk_hunting_UMF, silent = TRUE)) #FAIL
-  (hs_bearelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_elk_hunting_UMF, silent = TRUE))
-  (hs_bearelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_elk_hunting_UMF, silent = TRUE))
   (hs_bearelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_bearelk_fl <- fitList(hs_bearelk_null, hs_bearelk_hab0, hs_bearelk_hab1, hs_bearelk_pub0, hs_bearelk_pub1, hs_bearelk_hunt0, hs_bearelk_hunt1, hs_bearelk_hunt2)
+  hs_bearelk_fl <- fitList(hs_bearelk_pub1, hs_bearelk_hunt2)
   #' Model selection
   modSel(hs_bearelk_fl)
-  summary(hs_bearelk_hab1) 
+  summary(hs_bearelk_pub1)
+  
+  #' (hs_bearelk_null <- occuMulti(detFormulas_null, occFormulas_null, bear_elk_hunting_UMF, silent = TRUE))
+  #' (hs_bearelk_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_elk_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearelk_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_elk_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearelk_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_elk_hunting_UMF, silent = TRUE))
+  #' (hs_bearelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_elk_hunting_UMF, silent = TRUE))
+  #' (hs_bearelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_elk_hunting_UMF, silent = TRUE)) #FAIL
+  #' (hs_bearelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_elk_hunting_UMF, silent = TRUE))
+  #' (hs_bearelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_elk_hunting_UMF, silent = TRUE))
+  #' (hs_bearelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_bearelk_fl <- fitList(hs_bearelk_null, hs_bearelk_hab0, hs_bearelk_hab1, hs_bearelk_pub0, hs_bearelk_pub1, hs_bearelk_hunt0, hs_bearelk_hunt1, hs_bearelk_hunt2)
+  #' #' Model selection
+  #' modSel(hs_bearelk_fl)
+  #' summary(hs_bearelk_hab1) 
   
   #' (hs_bearelk_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_elk_hunting_UMF, silent = TRUE))
   #' (hs_bearelk_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bear_elk_hunting_UMF, silent = TRUE))
@@ -1265,21 +1571,31 @@
   
   
   ####  Bear-White-tailed Deer Hunting Season  ####
-  (hs_bearwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_wtd_hunting_UMF, silent = TRUE))
-  (hs_bearwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bearwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bearwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_wtd_hunting_UMF, silent = TRUE))
-  (hs_bearwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_wtd_hunting_UMF, silent = TRUE)) 
+  (hs_bearwtd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_wtd_hunting_UMF, silent = TRUE))
+  
   (hs_bearwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bearwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_wtd_hunting_UMF, silent = TRUE))
-  (hs_bearwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_wtd_hunting_UMF, silent = TRUE))
   (hs_bearwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_wtd_hunting_UMF, silent = TRUE))
   #' List of fitted models
-  hs_bearwtd_fl <- fitList(hs_bearwtd_null, hs_bearwtd_hab0, hs_bearwtd_hab1, hs_bearwtd_pub0, hs_bearwtd_pub1, hs_bearwtd_pub2, hs_bearwtd_hunt0, hs_bearwtd_hunt1, hs_bearwtd_hunt2) 
+  hs_bearwtd_fl <- fitList(hs_bearwtd_pub2, hs_bearwtd_hunt2) 
   #' Model selection
   modSel(hs_bearwtd_fl)
-  summary(hs_bearwtd_pub0)
-  summary(hs_bearwtd_pub1)
+  summary(hs_bearwtd_pub2)
+  
+  #' (hs_bearwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bear_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bearwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bearwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bearwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bearwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_wtd_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_bearwtd_fl <- fitList(hs_bearwtd_null, hs_bearwtd_hab0, hs_bearwtd_hab1, hs_bearwtd_pub0, hs_bearwtd_pub1, hs_bearwtd_pub2, hs_bearwtd_hunt0, hs_bearwtd_hunt1, hs_bearwtd_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_bearwtd_fl)
+  #' summary(hs_bearwtd_pub0)
+  #' summary(hs_bearwtd_pub1)
   
   #' (hs_bearwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_wtd_hunting_UMF, silent = TRUE))
   #' (hs_bearwtd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bear_wtd_hunting_UMF, silent = TRUE))
@@ -1308,20 +1624,31 @@
   #' summary(hs_bearwtd_hab0)
   
   ####  Bear-Moose Hunting Season  ####
-  (hs_bearmoose_null <- occuMulti(detFormulas_null, occFormulas_null, bear_moose_hunting_UMF, silent = TRUE))
-  (hs_bearmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_moose_hunting_UMF, silent = TRUE)) 
-  (hs_bearmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_moose_hunting_UMF, silent = TRUE)) 
-  (hs_bearmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_moose_hunting_UMF, silent = TRUE))
-  (hs_bearmoose_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_moose_hunting_UMF, silent = TRUE)) #FAIL
+  (hs_bearmoose_global <- occuMulti(detFormulas_globe, occFormulas_pub1, bear_moose_hunting_UMF, silent = TRUE))
+  
   (hs_bearmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_moose_hunting_UMF, silent = TRUE)) 
-  (hs_bearmoose_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_moose_hunting_UMF, silent = TRUE))
   (hs_bearmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_moose_hunting_UMF, silent = TRUE))
   (hs_bearmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_moose_hunting_UMF, silent = TRUE)) #FAIL
   #' List of fitted models
-  hs_bearmoose_fl <- fitList(hs_bearmoose_null, hs_bearmoose_hab0, hs_bearmoose_hab1, hs_bearmoose_pub0, hs_bearmoose_pub1, hs_bearmoose_hunt0, hs_bearmoose_hunt2) 
+  hs_bearmoose_fl <- fitList(hs_bearmoose_pub1, hs_bearmoose_hunt2) 
   #' Model selection
   modSel(hs_bearmoose_fl)
-  summary(hs_bearmoose_hunt0)
+  summary(hs_bearmoose_pub1)
+  
+  #' (hs_bearmoose_null <- occuMulti(detFormulas_null, occFormulas_null, bear_moose_hunting_UMF, silent = TRUE))
+  #' (hs_bearmoose_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bear_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmoose_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bear_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bear_moose_hunting_UMF, silent = TRUE))
+  #' (hs_bearmoose_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bear_moose_hunting_UMF, silent = TRUE)) #FAIL
+  #' (hs_bearmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_moose_hunting_UMF, silent = TRUE)) 
+  #' (hs_bearmoose_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bear_moose_hunting_UMF, silent = TRUE))
+  #' (hs_bearmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_moose_hunting_UMF, silent = TRUE))
+  #' (hs_bearmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_moose_hunting_UMF, silent = TRUE)) #FAIL
+  #' #' List of fitted models
+  #' hs_bearmoose_fl <- fitList(hs_bearmoose_null, hs_bearmoose_hab0, hs_bearmoose_hab1, hs_bearmoose_pub0, hs_bearmoose_pub1, hs_bearmoose_hunt0, hs_bearmoose_hunt2) 
+  #' #' Model selection
+  #' modSel(hs_bearmoose_fl)
+  #' summary(hs_bearmoose_hunt0)
   
   #' (hs_bearmoose_trail <- occuMulti(detFormulas_trail, occFormulas_null, bear_moose_hunting_UMF, silent = TRUE))
   #' (hs_bearmoose_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bear_moose_hunting_UMF, silent = TRUE))
@@ -1351,21 +1678,33 @@
 
   
   ####  Coyote-Mule Deer Hunting Season  ####
-  (hs_coymd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_md_hunting_UMF, silent = TRUE)) 
-  (hs_coymd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_md_hunting_UMF, silent = TRUE)) 
-  (hs_coymd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_md_hunting_UMF, silent = TRUE))
-  (hs_coymd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, coy_md_hunting_UMF, silent = TRUE)) 
-  (hs_coymd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, coy_md_hunting_UMF, silent = TRUE))
+  # (hs_coymd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coy_md_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_coymd_global <- occuMulti(detFormulas_globe, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
+  
   (hs_coymd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_md_hunting_UMF, silent = TRUE))
-  (hs_coymd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coy_md_hunting_UMF, silent = TRUE)) 
   (hs_coymd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
   (hs_coymd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_md_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
-  hs_coymd_fl <- fitList(hs_coymd_null, hs_coymd_hab0, hs_coymd_hab1, hs_coymd_pub0, hs_coymd_pub1, hs_coymd_pub2, hs_coymd_hunt0, hs_coymd_hunt1)
+  hs_coymd_fl <- fitList(hs_coymd_pub2, hs_coymd_hunt1)
   #' Model selection
   modSel(hs_coymd_fl)
-  summary(hs_coymd_hunt0)
   summary(hs_coymd_hunt1)
+  
+  #' (hs_coymd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_coymd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_coymd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_md_hunting_UMF, silent = TRUE))
+  #' (hs_coymd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, coy_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_coymd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, coy_md_hunting_UMF, silent = TRUE))
+  #' (hs_coymd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_md_hunting_UMF, silent = TRUE))
+  #' (hs_coymd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coy_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_coymd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
+  #' (hs_coymd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_md_hunting_UMF, silent = TRUE)) # FAIL
+  #' #' List of fitted models
+  #' hs_coymd_fl <- fitList(hs_coymd_null, hs_coymd_hab0, hs_coymd_hab1, hs_coymd_pub0, hs_coymd_pub1, hs_coymd_pub2, hs_coymd_hunt0, hs_coymd_hunt1)
+  #' #' Model selection
+  #' modSel(hs_coymd_fl)
+  #' summary(hs_coymd_hunt0)
+  #' summary(hs_coymd_hunt1)
   
   #' (hs_coymd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coy_md_hunting_UMF, silent = TRUE))
   #' (hs_coymd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, coy_md_hunting_UMF, silent = TRUE))
@@ -1397,20 +1736,31 @@
   #' summary(hs_coymd_hunt1)
   
   ####  Coyote-White-tailed Deer Hunting Season  ####
-  (hs_coywtd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_coywtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_coywtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_wtd_hunting_UMF, silent = TRUE))
-  (hs_coywtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, coy_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_coywtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, coy_wtd_hunting_UMF, silent = TRUE))
+  (hs_coywtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coy_wtd_hunting_UMF, silent = TRUE))
+  
   (hs_coywtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_wtd_hunting_UMF, silent = TRUE))
-  (hs_coywtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coy_wtd_hunting_UMF, silent = TRUE)) 
   (hs_coywtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_wtd_hunting_UMF, silent = TRUE))
   (hs_coywtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_wtd_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
-  hs_coywtd_fl <- fitList(hs_coywtd_null, hs_coywtd_hab0, hs_coywtd_hab1, hs_coywtd_pub0, hs_coywtd_pub1, hs_coywtd_pub2, hs_coywtd_hunt0, hs_coywtd_hunt1)
+  hs_coywtd_fl <- fitList(hs_coywtd_pub2, hs_coywtd_hunt1)
   #' Model selection
   modSel(hs_coywtd_fl)
   summary(hs_coywtd_hunt1)
+  
+  #' (hs_coywtd_null <- occuMulti(detFormulas_null, occFormulas_null, coy_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_coywtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, coy_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_coywtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, coy_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_coywtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, coy_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_coywtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, coy_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_coywtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_coywtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coy_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_coywtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_coywtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_wtd_hunting_UMF, silent = TRUE)) # FAIL
+  #' #' List of fitted models
+  #' hs_coywtd_fl <- fitList(hs_coywtd_null, hs_coywtd_hab0, hs_coywtd_hab1, hs_coywtd_pub0, hs_coywtd_pub1, hs_coywtd_pub2, hs_coywtd_hunt0, hs_coywtd_hunt1)
+  #' #' Model selection
+  #' modSel(hs_coywtd_fl)
+  #' summary(hs_coywtd_hunt1)
   
   #' (hs_coywtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, coy_wtd_hunting_UMF, silent = TRUE))
   #' (hs_coywtd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, coy_wtd_hunting_UMF, silent = TRUE))
@@ -1439,22 +1789,32 @@
   
   
   ####  Bobcat-Mule Deer Hunting Season  ####
-  (hs_bobmd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_md_hunting_UMF, silent = TRUE)) 
-  (hs_bobmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_md_hunting_UMF, silent = TRUE)) 
-  (hs_bobmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_md_hunting_UMF, silent = TRUE))
-  (hs_bobmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_md_hunting_UMF, silent = TRUE)) 
-  (hs_bobmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_md_hunting_UMF, silent = TRUE))
+  (hs_bobmd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bob_md_hunting_UMF, silent = TRUE))
+  
   (hs_bobmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_md_hunting_UMF, silent = TRUE))
-  (hs_bobmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bob_md_hunting_UMF, silent = TRUE)) 
-  (hs_bobmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_md_hunting_UMF, silent = TRUE)) 
   (hs_bobmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_md_hunting_UMF, silent = TRUE)) 
   #' List of fitted models
-  hs_bobmd_fl <- fitList(hs_bobmd_null, hs_bobmd_hab0, hs_bobmd_hab1, hs_bobmd_pub0, hs_bobmd_pub1, hs_bobmd_pub2, hs_bobmd_hunt0, hs_bobmd_hunt1, hs_bobmd_hunt2)
+  hs_bobmd_fl <- fitList(hs_bobmd_pub2, hs_bobmd_hunt2)
   #' Model selection
   modSel(hs_bobmd_fl)
-  summary(hs_bobmd_hunt0)
-  summary(hs_bobmd_hunt1)
-  summary(hs_bobmd_pub0)
+  summary(hs_bobmd_hunt2)
+  
+  #' (hs_bobmd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobmd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobmd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_md_hunting_UMF, silent = TRUE))
+  #' (hs_bobmd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobmd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_md_hunting_UMF, silent = TRUE))
+  #' (hs_bobmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_md_hunting_UMF, silent = TRUE))
+  #' (hs_bobmd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bob_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_md_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_md_hunting_UMF, silent = TRUE)) 
+  #' #' List of fitted models
+  #' hs_bobmd_fl <- fitList(hs_bobmd_null, hs_bobmd_hab0, hs_bobmd_hab1, hs_bobmd_pub0, hs_bobmd_pub1, hs_bobmd_pub2, hs_bobmd_hunt0, hs_bobmd_hunt1, hs_bobmd_hunt2)
+  #' #' Model selection
+  #' modSel(hs_bobmd_fl)
+  #' summary(hs_bobmd_hunt0)
+  #' summary(hs_bobmd_hunt1)
+  #' summary(hs_bobmd_pub0)
   
   #' (hs_bobmd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bob_md_hunting_UMF, silent = TRUE))
   #' (hs_bobmd_hunt <- occuMulti(detFormulas_hunt, occFormulas_null, bob_md_hunting_UMF, silent = TRUE))
@@ -1485,23 +1845,35 @@
   
   
   ####  Bobcat-White-tailed Deer Hunting Season  ####
-  (hs_bobwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bobwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bobwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_wtd_hunting_UMF, silent = TRUE))
-  (hs_bobwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bob_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bobwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_wtd_hunting_UMF, silent = TRUE))
-  (hs_bobwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_wtd_hunting_UMF, silent = TRUE)) # not converging well
-  (hs_bobwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_wtd_hunting_UMF, silent = TRUE)) 
-  (hs_bobwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_wtd_hunting_UMF, silent = TRUE))
+  # (hs_bobwtd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bob_wtd_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_bobwtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, bob_wtd_hunting_UMF, silent = TRUE))
+  
   (hs_bobwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_wtd_hunting_UMF, silent = TRUE))
+  (hs_bobwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_wtd_hunting_UMF, silent = TRUE))
+  (hs_bobwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_wtd_hunting_UMF, silent = TRUE)) # HunterActivity not converging well
   #' List of fitted models
-  hs_bobwtd_fl <- fitList(hs_bobwtd_null, hs_bobwtd_hab0, hs_bobwtd_hab1, hs_bobwtd_pub0, hs_bobwtd_pub1, hs_bobwtd_pub2, hs_bobwtd_hunt0, hs_bobwtd_hunt1)
+  hs_bobwtd_fl <- fitList(hs_bobwtd_pub2, hs_bobwtd_hunt1)
   #' Model selection
   modSel(hs_bobwtd_fl)
-  summary(hs_bobwtd_pub1) # f12 not significant
-  summary(hs_bobwtd_pub0)
-  summary(hs_bobwtd_pub2) # f12 not significant
-  summary(hs_bobwtd_hunt1) 
+  summary(hs_bobwtd_pub2)
+  
+  #' (hs_bobwtd_null <- occuMulti(detFormulas_null, occFormulas_null, bob_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobwtd_hab0 <- occuMulti(detFormulas_trail, occFormulas_hab0, bob_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobwtd_hab1 <- occuMulti(detFormulas_trail, occFormulas_hab1, bob_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bobwtd_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, bob_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bobwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_wtd_hunting_UMF, silent = TRUE)) # not converging well
+  #' (hs_bobwtd_pub0 <- occuMulti(detFormulas_pub, occFormulas_pub0, bob_wtd_hunting_UMF, silent = TRUE)) 
+  #' (hs_bobwtd_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bob_wtd_hunting_UMF, silent = TRUE))
+  #' (hs_bobwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_wtd_hunting_UMF, silent = TRUE))
+  #' #' List of fitted models
+  #' hs_bobwtd_fl <- fitList(hs_bobwtd_null, hs_bobwtd_hab0, hs_bobwtd_hab1, hs_bobwtd_pub0, hs_bobwtd_pub1, hs_bobwtd_pub2, hs_bobwtd_hunt0, hs_bobwtd_hunt1)
+  #' #' Model selection
+  #' modSel(hs_bobwtd_fl)
+  #' summary(hs_bobwtd_pub1) # f12 not significant
+  #' summary(hs_bobwtd_pub0)
+  #' summary(hs_bobwtd_pub2) # f12 not significant
+  #' summary(hs_bobwtd_hunt1) 
   
   
   #' (hs_bobwtd_trail <- occuMulti(detFormulas_trail, occFormulas_null, bob_wtd_hunting_UMF, silent = TRUE))
@@ -1564,39 +1936,39 @@
   
   #'  Run each model through function
   #'  Grazing season models
-  occ_cougmd_grazing <- occ_out(gs_cougmd_hab0, "Cougar", "Mule Deer", "Grazing")
-  occ_cougelk_grazing <- occ_out(gs_cougelk_hab0, "Cougar", "Elk", "Grazing")
-  occ_cougwtd_grazing <- occ_out(gs_cougwtd_allot0, "Cougar", "White-tailed Deer", "Grazing")
-  occ_cougmoose_grazing <- occ_out(gs_cougmoose_allot0, "Cougar", "Moose", "Grazing")
-  occ_wolfmd_grazing <- occ_out(gs_wolfmd_hab0, "Wolf", "Mule Deer", "Grazing")
-  occ_wolfelk_grazing <- occ_out(gs_wolfelk_hab0, "Wolf", "Elk", "Grazing")
-  occ_wolfwtd_grazing <- occ_out(gs_wolfwtd_allot0, "Wolf", "White-tailed Deer", "Grazing")
-  occ_wolfmoose_grazing <- occ_out(gs_wolfmoose_graze0, "Wolf", "Moose", "Grazing")
-  occ_bearmd_grazing <- occ_out(gs_bearmd_allot1, "Black Bear", "Mule Deer", "Grazing")
-  occ_bearelk_grazing <- occ_out(gs_bearelk_allot1, "Black Bear", "Elk", "Grazing")
-  occ_bearwtd_grazing <- occ_out(gs_bearwtd_allot1, "Black Bear", "White-tailed Deer", "Grazing")
-  occ_bearmoose_grazing <- occ_out(gs_bearmoose_allot0, "Black Bear", "Moose", "Grazing")
-  occ_coymd_grazing <- occ_out(gs_coymd_graze2, "Coyote", "Mule Deer", "Grazing")
-  occ_coyelk_grazing <- occ_out(gs_coywtd_allot1, "Coyote", "White-tailed Deer", "Grazing")
-  occ_bobwtd_grazing <- occ_out(gs_bobmd_allot0, "Bobcat", "Mule Deer Deer", "Grazing")
-  occ_bobmoose_grazing <- occ_out(gs_bobwtd_allot1, "Bobcat", "White-tailed Deer", "Grazing")
+  occ_cougmd_grazing <- occ_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
+  occ_cougelk_grazing <- occ_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
+  occ_cougwtd_grazing <- occ_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
+  occ_cougmoose_grazing <- occ_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
+  occ_wolfmd_grazing <- occ_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
+  occ_wolfelk_grazing <- occ_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
+  occ_wolfwtd_grazing <- occ_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
+  occ_wolfmoose_grazing <- occ_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
+  occ_bearmd_grazing <- occ_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
+  occ_bearelk_grazing <- occ_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
+  occ_bearwtd_grazing <- occ_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
+  occ_bearmoose_grazing <- occ_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
+  occ_coymd_grazing <- occ_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
+  occ_coyelk_grazing <- occ_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
+  occ_bobwtd_grazing <- occ_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
+  occ_bobmoose_grazing <- occ_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
   #'  Hunting season models
-  occ_cougmd_hunting <- occ_out(hs_cougmd_pub2, "Cougar", "Mule Deer", "Hunting")
-  occ_cougelk_hunting <- occ_out(hs_cougelk_hunt1, "Cougar", "Elk", "Hunting")
-  occ_cougwtd_hunting <- occ_out(hs_cougwtd_pub2, "Cougar", "White-tailed Deer", "Hunting")
-  occ_cougmoose_hunting <- occ_out(hs_cougmoose_hunt0, "Cougar", "Moose", "Hunting")
-  occ_wolfmd_hunting <- occ_out(hs_wolfmd_hunt1, "Wolf", "Mule Deer", "Hunting")
-  occ_wolfelk_hunting <- occ_out(hs_wolfelk_hunt0, "Wolf", "Elk", "Hunting")
-  occ_wolfwtd_hunting <- occ_out(hs_wolfwtd_hunt0, "Wolf", "White-tailed Deer", "Hunting")
-  occ_wolfmoose_hunting <- occ_out(hs_wolfmoose_hunt2, "Wolf", "Moose", "Hunting")
-  occ_bearmd_hunting <- occ_out(hs_bearmd_hunt0, "Black Bear", "Mule Deer", "Hunting")
-  occ_bearelk_hunting <- occ_out(hs_bearelk_hab1, "Black Bear", "Elk", "Hunting")
-  occ_bearwtd_hunting <- occ_out(hs_bearwtd_pub0, "Black Bear", "White-tailed Deer", "Hunting")
-  occ_bearmoose_hunting <- occ_out(hs_bearmoose_hunt0, "Black Bear", "Moose", "Hunting")
-  occ_coymd_hunting <- occ_out(hs_coymd_hunt0, "Coyote", "Mule Deer", "Hunting")
-  occ_coyelk_hunting <- occ_out(hs_coywtd_hunt1, "Coyote", "White-tailed Deer", "Hunting")
-  occ_bobwtd_hunting <- occ_out(hs_bobmd_hunt0, "Bobcat", "Mule Deer Deer", "Hunting")
-  occ_bobmoose_hunting <- occ_out(hs_bobwtd_pub1, "Bobcat", "White-tailed Deer", "Hunting")
+  occ_cougmd_hunting <- occ_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
+  occ_cougelk_hunting <- occ_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
+  occ_cougwtd_hunting <- occ_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
+  occ_cougmoose_hunting <- occ_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
+  occ_wolfmd_hunting <- occ_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
+  occ_wolfelk_hunting <- occ_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
+  occ_wolfwtd_hunting <- occ_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
+  occ_wolfmoose_hunting <- occ_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
+  occ_bearmd_hunting <- occ_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
+  occ_bearelk_hunting <- occ_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
+  occ_bearwtd_hunting <- occ_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
+  occ_bearmoose_hunting <- occ_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
+  occ_coymd_hunting <- occ_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
+  occ_coyelk_hunting <- occ_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
+  occ_bobwtd_hunting <- occ_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
+  occ_bobmoose_hunting <- occ_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
   
   #'  Merge into larger data frames for easy comparison
   #'  Full models
@@ -1636,6 +2008,7 @@
     spread(Parameter, Est_SE_Pval) %>%
     relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
     relocate("[Species 1:Species 2] GrazingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
+    relocate("[Species 1:Species 2] PublicGrazing1", .after = "[Species 1:Species 2] GrazingActivity") %>%
     relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
     relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
     relocate("[Species 1] PublicGrazing1", .after = "[Species 1] GrazingActivity") %>%
@@ -1656,7 +2029,7 @@
     separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] GrazingActivity", c("[Species 1:Species 2] GrazingActivity (SE)", "[Species 1:Species 2] GrazingActivity Pval"), sep = "_") %>%
-    #separate("[Species 1:Species 2] PublicGrazing1", c("[Species 1:Species 2] PublicGrazing (SE)", "[Species 1:Species 2] PublicGrazing Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] PublicGrazing1", c("[Species 1:Species 2] GrazingAllotment (SE)", "[Species 1:Species 2] GrazingAllotment Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
     
   #'  Hunting results tables
@@ -1700,11 +2073,11 @@
     separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
     separate("[Species 1] HuntingActivity", c("[Species 1] HuntingActivity (SE)", "[Species 1] HuntingActivity Pval"), sep = "_") %>%
     separate("[Species 2] HuntingActivity", c("[Species 2] HuntingActivity (SE)", "[Species 2] HuntingActivity Pval"), sep = "_") %>%
-    separate("[Species 1] Public1", c("[Species 1] Public1 (SE)", "[Species 1] Public1 Pval"), sep = "_") %>%
-    separate("[Species 2] Public1", c("[Species 2] Public1 (SE)", "[Species 2] Public1 Pval"), sep = "_") %>%
+    separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
+    separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] HuntingActivity", c("[Species 1:Species 2] HuntingActivity (SE)", "[Species 1:Species 2] HuntingActivity Pval"), sep = "_") %>%
-    separate("[Species 1:Species 2] Public1", c("[Species 1:Species 2] Public1 (SE)", "[Species 1:Species 2] Public1 Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] Public1", c("[Species 1:Species 2] PublicLand (SE)", "[Species 1:Species 2] PublicLand Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
   
   #'  Save!
@@ -1738,39 +2111,39 @@
   
   #'  Run each model through detection function
   #'  Grazing season models
-  det_cougmd_grazing <- det_out(gs_cougmd_hab0, "Cougar", "Mule Deer", "Grazing")
-  det_cougelk_grazing <- det_out(gs_cougelk_hab0, "Cougar", "Elk", "Grazing")
-  det_cougwtd_grazing <- det_out(gs_cougwtd_allot0, "Cougar", "White-tailed Deer", "Grazing")
-  det_cougmoose_grazing <- det_out(gs_cougmoose_allot0, "Cougar", "Moose", "Grazing")
-  det_wolfmd_grazing <- det_out(gs_wolfmd_hab0, "Wolf", "Mule Deer", "Grazing")
-  det_wolfelk_grazing <- det_out(gs_wolfelk_hab0, "Wolf", "Elk", "Grazing")
-  det_wolfwtd_grazing <- det_out(gs_wolfwtd_allot0, "Wolf", "White-tailed Deer", "Grazing")
-  det_wolfmoose_grazing <- det_out(gs_wolfmoose_graze0, "Wolf", "Moose", "Grazing")
-  det_bearmd_grazing <- det_out(gs_bearmd_allot1, "Black Bear", "Mule Deer", "Grazing")
-  det_bearelk_grazing <- det_out(gs_bearelk_allot1, "Black Bear", "Elk", "Grazing")
-  det_bearwtd_grazing <- det_out(gs_bearwtd_graze0, "Black Bear", "White-tailed Deer", "Grazing")
-  det_bearmoose_grazing <- det_out(gs_bearmoose_allot0, "Black Bear", "Moose", "Grazing")
-  det_coymd_grazing <- det_out(gs_coymd_graze2, "Coyote", "Mule Deer", "Grazing")
-  det_coyelk_grazing <- det_out(gs_coywtd_allot1, "Coyote", "White-tailed Deer", "Grazing")
-  det_bobwtd_grazing <- det_out(gs_bobmd_allot0, "Bobcat", "Mule Deer Deer", "Grazing")
-  det_bobmoose_grazing <- det_out(gs_bobwtd_allot1, "Bobcat", "White-tailed Deer", "Grazing")
+  det_cougmd_grazing <- det_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
+  det_cougelk_grazing <- det_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
+  det_cougwtd_grazing <- det_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
+  det_cougmoose_grazing <- det_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
+  det_wolfmd_grazing <- det_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
+  det_wolfelk_grazing <- det_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
+  det_wolfwtd_grazing <- det_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
+  det_wolfmoose_grazing <- det_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
+  det_bearmd_grazing <- det_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
+  det_bearelk_grazing <- det_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
+  det_bearwtd_grazing <- det_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
+  det_bearmoose_grazing <- det_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
+  det_coymd_grazing <- det_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
+  det_coyelk_grazing <- det_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
+  det_bobwtd_grazing <- det_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
+  det_bobmoose_grazing <- det_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
   #'  Hunting season models
-  det_cougmd_hunting <- det_out(hs_cougmd_pub2, "Cougar", "Mule Deer", "Hunting")
-  det_cougelk_hunting <- det_out(hs_cougelk_hunt1, "Cougar", "Elk", "Hunting")
-  det_cougwtd_hunting <- det_out(hs_cougwtd_pub2, "Cougar", "White-tailed Deer", "Hunting")
-  det_cougmoose_hunting <- det_out(hs_cougmoose_hunt0, "Cougar", "Moose", "Hunting")
-  det_wolfmd_hunting <- det_out(hs_wolfmd_hunt1, "Wolf", "Mule Deer", "Hunting")
-  det_wolfelk_hunting <- det_out(hs_wolfelk_hunt0, "Wolf", "Elk", "Hunting")
-  det_wolfwtd_hunting <- det_out(hs_wolfwtd_hunt0, "Wolf", "White-tailed Deer", "Hunting")
-  det_wolfmoose_hunting <- det_out(hs_wolfmoose_hunt2, "Wolf", "Moose", "Hunting")
-  det_bearmd_hunting <- det_out(hs_bearmd_hunt0, "Black Bear", "Mule Deer", "Hunting")
-  det_bearelk_hunting <- det_out(hs_bearelk_hab1, "Black Bear", "Elk", "Hunting")
-  det_bearwtd_hunting <- det_out(gs_bearwtd_allot1, "Black Bear", "White-tailed Deer", "Hunting")
-  det_bearmoose_hunting <- det_out(hs_bearmoose_hunt0, "Black Bear", "Moose", "Hunting")
-  det_coymd_hunting <- det_out(hs_coymd_hunt0, "Coyote", "Mule Deer", "Hunting")
-  det_coyelk_hunting <- det_out(hs_coywtd_hunt1, "Coyote", "White-tailed Deer", "Hunting")
-  det_bobwtd_hunting <- det_out(hs_bobmd_hunt0, "Bobcat", "Mule Deer Deer", "Hunting")
-  det_bobmoose_hunting <- det_out(hs_bobwtd_pub1, "Bobcat", "White-tailed Deer", "Hunting")
+  det_cougmd_hunting <- det_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
+  det_cougelk_hunting <- det_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
+  det_cougwtd_hunting <- det_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
+  det_cougmoose_hunting <- det_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
+  det_wolfmd_hunting <- det_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
+  det_wolfelk_hunting <- det_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
+  det_wolfwtd_hunting <- det_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
+  det_wolfmoose_hunting <- det_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
+  det_bearmd_hunting <- det_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
+  det_bearelk_hunting <- det_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
+  det_bearwtd_hunting <- det_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
+  det_bearmoose_hunting <- det_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
+  det_coymd_hunting <- det_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
+  det_coyelk_hunting <- det_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
+  det_bobwtd_hunting <- det_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
+  det_bobmoose_hunting <- det_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
 
   
   #'  Merge into larger data frames for easy comparison
@@ -1846,12 +2219,16 @@
       Parameter = gsub("moose", "Species 2", Parameter)
     ) %>%
     spread(Parameter, Est_SE_Pval) %>%
+    relocate("[Species 1] Public1", .after = "[Species 1] TrailDirt road") %>%
+    relocate("[Species 2] Public1", .after = "[Species 2] TrailDirt road") %>%
     separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
     separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
     separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
-    separate("[Species 1] Public1", c("[Species 1] Public1 (SE)", "[Species 1] Public1 Pval"), sep = "_") %>%
-    separate("[Species 2] Public1", c("[Species 2] Public1 (SE)", "[Species 2] Public1 Pval"), sep = "_") %>%
+    separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
+    separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
+    separate("[Species 1] WeeklyHunting", c("[Species 1] WeeklyHunting (SE)", "[Species 1] WeeklyHunting Pval"), sep = "_") %>%
+    separate("[Species 2] WeeklyHunting", c("[Species 2] WeeklyHunting (SE)", "[Species 2] WeeklyHunting Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
   
   #'  Save!
