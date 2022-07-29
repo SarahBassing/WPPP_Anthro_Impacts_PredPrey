@@ -26,9 +26,9 @@
   rm(list = ls())
   
   library(jagsUI)
-  #library(R2jags)
   library(abind)
   library(mcmcplots)
+  library(loo)
   library(tidyverse)
   
   
@@ -195,12 +195,13 @@
   psi_cov_graze[,5] <- covs_graze$PercForest
   head(psi_cov_graze)
   
-  psi_cov_hunt <- matrix(NA, ncol = 5, nrow = nsites_hunt)
+  psi_cov_hunt <- matrix(NA, ncol = 6, nrow = nsites_hunt)
   psi_cov_hunt[,1] <- 1
   psi_cov_hunt[,2] <- covs_hunt$Study_Area
   psi_cov_hunt[,3] <- covs_hunt$Elev
   psi_cov_hunt[,4] <- (covs_hunt$Elev)^2
   psi_cov_hunt[,5] <- covs_hunt$PercForest
+  psi_cov_hunt[,6] <- covs_hunt$Public
   head(psi_cov_hunt)
   
   #'  Matrix for second order occupancy (psi): 2-way interactions
@@ -225,8 +226,8 @@
   rho_cov_hunt <- array(NA, dim = c(nsites_hunt, nsurveys_hunt, 4)) # last digit = number of covariates
   rho_cov_hunt[,,1] <- 1
   rho_cov_hunt[,1:nsurveys_hunt,2] <- hTrail    # repeat site-level covariate for each survey
-  rho_cov_hunt[,1:nsurveys_hunt,3] <- Public    # repeat site-level covariate for each survey
-  rho_cov_hunt[,,4] <- hunter_week_cov
+  rho_cov_hunt[,,3] <- hunter_week_cov          # repeat site-level covariate for each survey
+  rho_cov_hunt[,1:nsurveys_hunt,4] <- Public
   head(rho_cov_hunt)
   
   #'  Matrix for second order detection (rho): 2-way interactions
@@ -502,7 +503,10 @@
   #' ")
   
   #'  Source model in JAGS language
-  source("./Scripts/JAGS_models/Grazing_p(trail)_psi(.).R")
+  source("./Scripts/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).R")
+  
+  source("./Scripts/JAGS_models/Hunting_p(trail_hunteractivity_public)_psi(habitat).R")
+  
   
   #'  Provide initial values for model
   #'  Get maximum possible state across all potential surveys at a site (site x spp matrix)
@@ -545,7 +549,8 @@
                         "bob_md_hunter", "bob_wtd_hunter", "coy_md_hunter", "coy_wtd_hunter")
   
   #'  Inits function
-  inits <- function(){list(z = zcat_graze[[1]])}
+  inits <- function(){list(z = zcat_graze[[9]])}
+  inits <- function(){list(z = zcat_hunt[[1]])}
   # jags.inits <- list("z" = zcat_graze[[1]])
 
   #'  Parameters monitored
@@ -554,29 +559,22 @@
               "mean.pSpp1", "mean.pSpp2", "mean.pSpp3", "z")
 
   #'  MCMC settings
-  nc <- 3; ni <- 500; nb <- 300; nt <- 2; na <- 100
+  nc <- 3; ni <- 5000; nb <- 3000; nt <- 2; na <- 1000
   #nc <- 3; ni <- 50000; nb <- 30000; nt <- 20; na <- 10000
   
   start.time <- Sys.time()
   #'  Call JAGS, check convergence and summarize posteriors
   #'  jagsUI version
-  out1 <- jags(bundled_graze_list[[1]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail)_psi(.).txt',
+  out1 <- jags(bundled_graze_list[[9]], inits = inits, params, './Outputs/JAGS_models/Grazing_p(trail_cattleactivity)_psi(habitat)_inxpsi(cattleactivity).txt',
                n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, 
-               parallel = TRUE) 
+               parallel = TRUE)
+  out1 <- jags(bundled_hunt_list[[1]], inits = inits, params, './Outputs/JAGS_models/Hunting_p(trail_hunteractivity_public)_psi(habitat).txt',
+               n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, 
+               parallel = TRUE)
   
   # out1 <- jags(bundled_graze_list[[1]], inits = inits, params, 'multi-spp_OccMod.txt',
   #              n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.adapt = na, 
   #              parallel = TRUE)
-  
-  #'  R2jags version
-  # out1 <- jags(bundled_graze_list[[1]], inits = inits, params, 'multi-spp_OccMod.txt',
-  #                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, #n.burnin = 300
-  #                       jags.module = c("glm","dic"))
-  # #  CAN'T GET JAGS.PARALLEL TO RUN--- ISSUE WITH INITS
-  # out1 <- do.call(jags.parallel, 
-  #                 list(bundled_graze_list[[1]], inits = jags.inits, params, 'multi-spp_OccMod.txt', 
-  #                       n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, n.cluster = nc, 
-  #                       jags.module = c("glm","dic"))) # for whatever reason doesn't like inits!!!!
   end.time <- Sys.time()
   (run.time <- end.time - start.time)
   
@@ -585,18 +583,15 @@
   mcmcplot(out1$samples)
   which(out1$summary[,"Rhat"] > 1.1) #summary[,8]
   print(out1$summary[1:36, -c(4:6)], 3)
-  save(list=ls(), file="Test_MultiSpp_Model.Rdata")
+  save(list=ls(), file="./Outputs/JAGS_models/Hunting_p(trail_hunteractivity_public)_psi(habitat_public)_inxpsi(hunteractivity).Rdata")
   
-  #' #'  For R2jags
-  #' out2 <- out1
-  #' mcmcplot(out2)
-  #' jag.sum <- out1$BUGSoutput$summary
-  #' print(jag.sum[1:37,-c(4:6)], 3)
-  #' which(jag.sum[,"Rhat"] > 1.1)
-  #' write.table(jag.sum, file ="G:/My Drive/1_Repositories/WPPP_Anthro_Impacts_PredPrey/Test_MultiSpp_Model.txt", sep="\t")
-  #' save(out1, file = "G:/My Drive/1_Repositories/WPPP_Anthro_Impacts_PredPrey/Test_MultiSpp_Model.RData")
-  
-
+  # #  Pull MCMC chains together to compute WAIC
+  # mcmc_out <- as.mcmc(out1)
+  # mcmc_all <- rbind(mcmc_out[[1]], mcmc_out[[2]], mcmc_out[[3]])
+  # dim(mcmc_all)
+  # tst <- out1$sims.list
+  # #  Computes WAIC value for model comparison
+  # out1_WAIC <- waic(tst)
   
   
   
