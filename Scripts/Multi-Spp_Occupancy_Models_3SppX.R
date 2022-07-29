@@ -75,6 +75,7 @@
   #'  Question 1: Does grazing activity affect detection?
   detFormulas_trail <- c("~Trail", "~Trail", "~Trail")
   detFormulas_graze <- c("~Trail + WeeklyGrazing", "~Trail + WeeklyGrazing", "~Trail") # no grazing on cattle detection
+  detFormulas_gs_global <- c("~Trail + WeeklyGrazing + PublicGrazing", "~Trail + WeeklyGrazing + PublicGrazing", "~Trail + PublicGrazing")
   
   #'  Question 1: Is co-occurrence dependent?
   occFormulas_null <- c("~1", "~1", "~1", "~0", "~0", "~0", "~0") # no interactions
@@ -114,8 +115,21 @@
                               "~GrazingActivity", "~1", "~1",
                               "~0")
   
+  occFormulas_gs_global <- c("~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                             "~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                             "~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                             "~PublicGrazing", "~1", "~1",
+                             "~GrazingActivity + PublicGrazing")
+  occFormulas_gs_subglobal <- c("~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                               "~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                               "~Study_Area + Elev + I(Elev^2) + PercForest + PublicGrazing",
+                               "~PublicGrazing", "~1", "~1",
+                               "~PublicGrazing")
+  
   
   ####  Cougar-Mule Deer-Cattle Grazing Season  ####
+  (coug.md.cow_global <- occuMulti(detFormulas_gs_global, occFormulas_gs_subglobal, coug_md_cattle_grazing_UMF, silent = TRUE))
+  
   (coug.md.cow_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_md_cattle_grazing_UMF, silent = TRUE))
   (coug.md.cow_graze <- occuMulti(detFormulas_graze, occFormulas_null, coug_md_cattle_grazing_UMF, silent = TRUE))
   #' List of fitted models
@@ -137,6 +151,8 @@
   summary(coug.md.cow_hab0)
   
   ####  Cougar-Elk-Cattle Grazing Season  ####
+  (coug.elk.cow_global <- occuMulti(detFormulas_gs_global, occFormulas_gs_global, coug_elk_cattle_grazing_UMF, silent = TRUE))
+  
   (coug.elk.cow_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_elk_cattle_grazing_UMF, silent = TRUE))
   (coug.elk.cow_graze <- occuMulti(detFormulas_graze, occFormulas_null, coug_elk_cattle_grazing_UMF, silent = TRUE))
   #' List of fitted models
@@ -158,6 +174,8 @@
   summary(coug.elk.cow_hab0)
   
   ####  Cougar-White-tailed Deer-Cattle Grazing Season  ####
+  (coug.wtd.cow_global <- occuMulti(detFormulas_gs_global, occFormulas_gs_global, coug_wtd_cattle_grazing_UMF, silent = TRUE))
+  
   (coug.wtd.cow_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_wtd_cattle_grazing_UMF, silent = TRUE))
   (coug.wtd.cow_graze <- occuMulti(detFormulas_graze, occFormulas_null, coug_wtd_cattle_grazing_UMF, silent = TRUE))
   #' List of fitted models
@@ -180,6 +198,9 @@
   summary(coug.wtd.cow_grzpub)
   
   ####  Cougar-Moose-Cattle Grazing Season  ####
+  (coug.moose.cow_global <- occuMulti(detFormulas_gs_global, occFormulas_gs_global, coug_moose_cattle_grazing_UMF, silent = TRUE))
+  
+  
   (coug.moose.cow_trail <- occuMulti(detFormulas_trail, occFormulas_null, coug_moose_cattle_grazing_UMF, silent = TRUE))
   (coug.moose.cow_graze <- occuMulti(detFormulas_graze, occFormulas_null, coug_moose_cattle_grazing_UMF, silent = TRUE))
   #' List of fitted models
