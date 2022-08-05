@@ -78,7 +78,7 @@
                                    CameraLocation == "OK3733_14", 1, 0),
            PublicGrazing = ifelse(USFS_grazing == 1 | DNR_grazing == 1 | WDFW_grazing == 1, 1, 0)) %>%
     arrange(Year, CameraLocation) #NECESSARY TO MATCH DH's CAMERALOCATION ORDER
-  
+  #write.csv(stations, "./Data/stations_data.csv")
   
   #'  Remove rows when camera was completely inoperable so missing detection data
   #'  for ALL sampling occasions at that site
