@@ -366,15 +366,14 @@
     cbind(row.names(.)) %>%
     cbind(TrpNgts_graze) 
   colnames(GrazingActivity) <- c("CattleCounts", "CameraLocation", "TrapNights")
-  #'  Calculate detections/trap night so standardized by effort
+  #'  Calculate mean detections/trap night so standardized by effort
   GrazingActivity <- GrazingActivity %>%
-    transmute(CameraLocation = CameraLocation, 
+    transmute(CameraLocation = CameraLocation,
               GrazingActivity = CattleCounts/TrapNights) %>%
     #'  0 detections/0 trap nights causes problems
     mutate(GrazingActivity = ifelse(GrazingActivity == "NaN", 0, GrazingActivity),
            GrazingActivity = round(GrazingActivity, 2))
-
-  
+    
   #'  Total hunter detection events across entire study period
   sum_hunt18 <- rowSums(DH_all_hunt18, na.rm = TRUE)
   sum_hunt19 <- rowSums(DH_all_hunt19, na.rm = TRUE)
@@ -387,9 +386,9 @@
     cbind(row.names(.)) %>%
     cbind(TrpNgts_hunt)
   colnames(HuntingActivity) <- c("HunterCounts", "CameraLocation", "TrapNights")
-  #'  Calculate detections/trap night so standardized by effort
+  #'  Calculate mean detections/trap night so standardized by effort
   HuntingActivity <- HuntingActivity %>%
-    transmute(CameraLocation = CameraLocation, 
+    transmute(CameraLocation = CameraLocation,
               HuntingActivity = HunterCounts/TrapNights) %>%
     #'  0 detections/0 trap nights causes problems
     mutate(HuntingActivity = ifelse(HuntingActivity == "NaN", 0, HuntingActivity),
@@ -404,9 +403,9 @@
     cbind(row.names(.)) %>%
     cbind(TrpNgts_hunt)
   colnames(VehicleActivity) <- c("VehicleCounts", "CameraLocation", "TrapNights")
-  #'  Calculate detections/trap night so standardized by effort
+  #'  Calculate mean detections/trap night so standardized by effort
   VehicleActivity <- VehicleActivity %>%
-    transmute(CameraLocation = CameraLocation, 
+    transmute(CameraLocation = CameraLocation,
               VehicleActivity = VehicleCounts/TrapNights) %>%
     #'  0 detections/0 trap nights causes problems
     mutate(VehicleActivity = ifelse(VehicleActivity == "NaN", 0, VehicleActivity),
