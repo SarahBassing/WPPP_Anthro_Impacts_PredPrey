@@ -15,6 +15,7 @@
   library(circular)
   library(ggplot2)
   library(khroma)
+  library(patchwork)
   library(sp)
   library(tidyverse)
   
@@ -199,31 +200,10 @@
     densityPlot(spp3$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name3, " Daily Activity"))
 
     #'  Visualize temporal overlap
-    # overlapPlot(spp1$sunTime, spp2$sunTime, rug = F, linet = c(1, 1),
-    #             linec = c("red", "blue"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue)"))
-    # 
-    # overlapPlot(spp1$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
-    #             linec = c("red", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name3, " (green)"))
-    # 
-    # overlapPlot(spp2$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
-    #             linec = c("blue", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name2, " (blue) and ", name3, " (green)"))
-    # 
-    # 
-    # overlapPlot(spp1_spp3.present$sunTime, spp2_spp3.present$sunTime, rug = T, linet = c(1, 1),
-    #             linec = c("red", "blue"), linew = c(2, 2),
-    #             main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Present"))
-    # 
-    # overlapPlot(spp1_spp3.absent$sunTime, spp2_spp3.absent$sunTime, rug = T, linet = c(1, 1),
-    #             linec = c("red", "blue"), linew = c(2, 2),
-    #             main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Absent"))
-    # 
     #'  Overlap when anthropogenic activity is present
     saveOverlap_present <- overlapPlot(spp1_spp3.present$sunTime, spp2_spp3.present$sunTime, rug = T, 
                                        xscale = NA, xcenter = "noon", linet = c(1, 1), linec = c("red", "blue"), 
                                        linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " and ", name2, " \ndiel activity when ", name3, " are present")) 
-    # anthro_activity <- "Present"
-    # Species <- "Predator"
-    # saveOverlap_present <- cbind(saveOverlap_present, Species, anthro_activity)
     #'  Density plot of anthropogenic activity (meaningless if activity is allotments or public land)
     saveDensity <- densityPlot(spp3$sunTime, add = T, xscale = NA, linec = "black", lwd = 2, lty = 2, extend = NULL)
     legend("topleft", c("Predator", "Prey", "Anthro activity"), lty=c(1, 1, 2), col=c("red", "blue", "black"), bg = "white", bty = "n")
@@ -231,26 +211,18 @@
     #'  Wrangle density data from wide to long format
     DensityA_p <- saveOverlap_present[,1:2] %>%
       mutate(Species = "Predator",
-             Anthro_Activity = "Present")#,
-    #          Anthro_Density = saveDensity$y)
-    # colnames(DensityA_p) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+             Anthro_Activity = "Present")
     DensityB_p <- saveOverlap_present[,c(1,3)] %>%
       mutate(Species = "Prey",
-             Anthro_Activity = "Present")#,
-             # Anthro_Density = saveDensity$y)
-    # colnames(DensityB_p) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+             Anthro_Activity = "Present")
     overlap_present <- full_join(DensityA_p, DensityB_p, by = c("x", "Anthro_Activity")) %>%
       full_join(saveDensity, by ="x") %>%
       mutate(Species.z = name3)
-    #' overlap_present <- rbind(DensityA_p, DensityB_p)
      
     #'  Overlap when anthropogenic activity is absent (meaningless when allotment or public land)
     saveOverlap_absent <- overlapPlot(spp1_spp3.absent$sunTime, spp2_spp3.absent$sunTime, rug = T, 
                                xscale = NA, xcenter = "noon", linet = c(1, 1), linec = c("red", "blue"), 
                                linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " and ", name2, " \ndiel activity when ", name3, " are absent")) 
-    # anthro_activity <- "Absent"
-    # Species <- "Prey"
-    # saveOverlap_absent <- cbind(saveOverlap_absent, Species, anthro_activity)
     #'  Replot anthropogenic activity density data just for comparison even though it's absent at these sites
     saveDensity <- densityPlot(spp3$sunTime, add = T, xscale = NA, linec = "black", lwd = 2, lty = 2, extend = NULL)
     legend("topleft", c("Predator", "Prey", "Anthro activity"), lty=c(1, 1, 2), col=c("red", "blue", "black"), bg = "white", bty = "n")
@@ -258,30 +230,15 @@
     #'  Wrangle from wide to long format
     DensityA_a <- saveOverlap_absent[,1:2] %>%
       mutate(Species = "Predator",
-             Anthro_Activity = "Absent")#,
-    #          Anthro_Density = saveDensity$y)
-    # colnames(DensityA_a) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+             Anthro_Activity = "Absent")
     DensityB_a <- saveOverlap_absent[,c(1,3)] %>%
       mutate(Species = "Prey",
-             Anthro_Activity = "Absent")#,
-    #          Anthro_Density = saveDensity$y)
-    # colnames(DensityB_a) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
-    # overlap_absent <- rbind(DensityA_a, DensityB_a)
-
+             Anthro_Activity = "Absent")
     overlap_absent <- full_join(DensityA_a, DensityB_a, by = c("x", "Anthro_Activity")) %>%
       full_join(saveDensity, by ="x") %>%
       mutate(Species.z = name3)
-    #'  Bind into single long dataset of density estimates
+    #'  Bind into single long data set of density estimates
     plotdata <- rbind(overlap_present, overlap_absent)
-    
-    
-    # plotdata <- rbind(saveOverlap_present, saveOverlap_absent) %>%
-    #   full_join(saveDensity, by ="x")
-    # colnames(plotdata) <- c("x", "DensityA", "DensityB", "Species", "Anthro_Activity", "Anthro_Density")
-    # plotdata <- full_join(saveOverlap_present, saveOverlap_absent, by = "x") %>%
-    #   full_join(saveDensity, by ="x")
-    # colnames(plotdata) <- c("x", "DensityA_spp3.pres", "DensityB_spp3.pres", "DensityA_spp3.abs", "DensityB_spp3.abs", "Anthro_Activity")
-    
     
     #'  Calculate coefficient of overlap
     dhats_spp1.spp2.spp3 <- overlapEst(A = spp1_spp3.present$sunTime,
@@ -958,9 +915,50 @@
   
   ####  Figures for visualization  ####
   #'  -----------------------------
-  ####  Overlap plots  ####
-  
+  ####  Overlap plots with cattle and hunter activity  ####
+  overlap_anthro_activity_plots <- function(dat, name1, name2, name3) {
+    #'  Separate data sets based on whether cattle/hunter activity is present
+    pres <- dat[dat$Anthro_Activity == "Present",]
+    abs <- dat[dat$Anthro_Activity == "Absent",]
+    
+    overlap_p <- ggplot(pres, aes(x, densityA, colour = Species.x)) +
+      geom_line(lwd = 0.75) + 
+      geom_line(aes(x, densityB, colour = Species.y), lwd = 0.75) +  
+      geom_area(aes(y = pmin(densityA, densityB)),
+                alpha = 0.3, color = NA) +
+      geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 0.75) +  
+      scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
+                         labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
+      geom_vline(xintercept = pi/2, linetype="dotted") +
+      geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
+      theme_bw() +
+      labs(x = "Time of day", y = "Density", color = "Species", title = paste0(name3, " present")) +
+      scale_color_manual(labels = c(name3, name1, name2), values = c("black", "red", "blue"))
+    #plot(overlap_p)
+    
+    overlap_a <- ggplot(abs, aes(x, densityA, colour = Species.x)) +
+      geom_line(lwd = 0.75) + 
+      geom_line(aes(x, densityB, colour = Species.y), lwd = 0.75) +  
+      geom_area(aes(y = pmin(densityA, densityB)),
+                alpha = 0.3, color = NA) +
+      geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 0.75) +  
+      scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
+                         labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
+      geom_vline(xintercept = pi/2, linetype="dotted") +
+      geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
+      theme_bw() +
+      labs(x = "Time of day", y = "Density", color = "Species", title = paste0(name3, " absent")) +
+      scale_color_manual(labels = c(name3, name1, name2), values = c("black", "red", "blue"))
+    #plot(overlap_a)
+    
+    plots <- overlap_p + overlap_a + plot_layout(guides = "collect") +
+      plot_annotation(title = 'Predator-prey temporal overlap')
+    plot(plots)
 
+    #plots <- list(overlap_p, overlap_a)
+    return(plots)
+  }
+  coug_md_graze_overPlot <- overlap_anthro_activity_plots(coug_md_graze_over[[11]], name1 = "Cougar", name2 = "Mule deer", name3 = "Cattle")
   coug_md <- coug_md_graze_over[[11]]#pred_prey_graze_overlap[[1]][[11]]
   coug_md2 <- coug_md[coug_md$Anthro_Activity == "Present",]
   # ggplot(coug_md2, aes(x, Density, color = Species)) +
@@ -989,15 +987,15 @@
     geom_vline(xintercept = pi/2, linetype="dotted") +
     geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
     theme_bw() +
-    labs(x = "Time of day", y = "Density", color = "Species", title = paste0("Predator-prey temporal overlap when ", name3, " are present")) 
-  
+    labs(x = "Time of day", y = "Density", color = "Species", title = paste0("Predator-prey temporal overlap when ", name3, " are present")) + 
+    scale_color_manual(labels = c(name3, name1, name2), values = c("black", "red", "blue")) 
     
 
   
   # restructure data table so in long format with a column indicating species and presence/absence of cattle, then replot in ggplot
   
   
-  
+  bright(5)
   
   
   #' #'  Split up data into species-specific groups 
