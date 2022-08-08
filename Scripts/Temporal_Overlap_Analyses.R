@@ -14,6 +14,7 @@
   library(overlap)
   library(circular)
   library(ggplot2)
+  library(khroma)
   library(sp)
   library(tidyverse)
   
@@ -59,6 +60,9 @@
                       proj4string=CRS("+proj=longlat +datum=WGS84"))
   
   #'  Convert radians to sun times to account for seasonal changes in sunlight 
+  #'  Converts a vector of clock times to "sun times", by mapping sunrise to π/2 
+  #'  and sunset to 3π/2. Sunrise & sunset times are determined based on the dates 
+  #'  and locations provided
   sunTime <- sunTime(megadata$radTime, Dates = megadata$DateTime, Coords = xy)
   head(sunTime)
   
@@ -166,7 +170,7 @@
     #'  site where spp1 was detected (based on cameras where spp1 & spp2 were detected)
     spp3.present <- spp1_dat$CameraLocation %in% spp3$CameraLocation
     spp1_dat <- cbind(spp1_dat, spp3.present)
-    #'  Split out data into camera locations where both are present vs spp3 absent
+    #'  Split out data into camera locations where both spp1 & spp3 are present vs spp3 absent
     spp1_spp3.present <- spp1_dat[spp1_dat$spp3.present == T,]
     spp1_spp3.absent <- spp1_dat[spp1_dat$spp3.present == F,]
     
@@ -174,7 +178,7 @@
     #'  site where spp2 was detected (based on cameras where spp1 & spp2 were detected)
     spp3.present <- spp2_dat$CameraLocation %in% spp3$CameraLocation
     spp2_dat <- cbind(spp2_dat, spp3.present)
-    #'  Split out data into camera locations where both are present vs spp3 absent
+    #'  Split out data into camera locations where both spp1 & spp3 are present vs spp3 absent
     spp2_spp3.present <- spp2_dat[spp2_dat$spp3.present == T,]
     spp2_spp3.absent <- spp2_dat[spp2_dat$spp3.present == F,]
     
@@ -195,24 +199,90 @@
     densityPlot(spp3$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name3, " Daily Activity"))
 
     #'  Visualize temporal overlap
-    overlapPlot(spp1$sunTime, spp2$sunTime, rug = F, linet = c(1, 1),
-                linec = c("red", "blue"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue)"))
+    # overlapPlot(spp1$sunTime, spp2$sunTime, rug = F, linet = c(1, 1),
+    #             linec = c("red", "blue"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue)"))
+    # 
+    # overlapPlot(spp1$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
+    #             linec = c("red", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name3, " (green)"))
+    # 
+    # overlapPlot(spp2$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
+    #             linec = c("blue", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name2, " (blue) and ", name3, " (green)"))
+    # 
+    # 
+    # overlapPlot(spp1_spp3.present$sunTime, spp2_spp3.present$sunTime, rug = T, linet = c(1, 1),
+    #             linec = c("red", "blue"), linew = c(2, 2),
+    #             main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Present"))
+    # 
+    # overlapPlot(spp1_spp3.absent$sunTime, spp2_spp3.absent$sunTime, rug = T, linet = c(1, 1),
+    #             linec = c("red", "blue"), linew = c(2, 2),
+    #             main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Absent"))
+    # 
+    #'  Overlap when anthropogenic activity is present
+    saveOverlap_present <- overlapPlot(spp1_spp3.present$sunTime, spp2_spp3.present$sunTime, rug = T, 
+                                       xscale = NA, xcenter = "noon", linet = c(1, 1), linec = c("red", "blue"), 
+                                       linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " and ", name2, " \ndiel activity when ", name3, " are present")) 
+    # anthro_activity <- "Present"
+    # Species <- "Predator"
+    # saveOverlap_present <- cbind(saveOverlap_present, Species, anthro_activity)
+    #'  Density plot of anthropogenic activity (meaningless if activity is allotments or public land)
+    saveDensity <- densityPlot(spp3$sunTime, add = T, xscale = NA, linec = "black", lwd = 2, lty = 2, extend = NULL)
+    legend("topleft", c("Predator", "Prey", "Anthro activity"), lty=c(1, 1, 2), col=c("red", "blue", "black"), bg = "white", bty = "n")
+    
+    #'  Wrangle density data from wide to long format
+    DensityA_p <- saveOverlap_present[,1:2] %>%
+      mutate(Species = "Predator",
+             Anthro_Activity = "Present")#,
+    #          Anthro_Density = saveDensity$y)
+    # colnames(DensityA_p) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+    DensityB_p <- saveOverlap_present[,c(1,3)] %>%
+      mutate(Species = "Prey",
+             Anthro_Activity = "Present")#,
+             # Anthro_Density = saveDensity$y)
+    # colnames(DensityB_p) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+    overlap_present <- full_join(DensityA_p, DensityB_p, by = c("x", "Anthro_Activity")) %>%
+      full_join(saveDensity, by ="x") %>%
+      mutate(Species.z = name3)
+    #' overlap_present <- rbind(DensityA_p, DensityB_p)
+     
+    #'  Overlap when anthropogenic activity is absent (meaningless when allotment or public land)
+    saveOverlap_absent <- overlapPlot(spp1_spp3.absent$sunTime, spp2_spp3.absent$sunTime, rug = T, 
+                               xscale = NA, xcenter = "noon", linet = c(1, 1), linec = c("red", "blue"), 
+                               linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " and ", name2, " \ndiel activity when ", name3, " are absent")) 
+    # anthro_activity <- "Absent"
+    # Species <- "Prey"
+    # saveOverlap_absent <- cbind(saveOverlap_absent, Species, anthro_activity)
+    #'  Replot anthropogenic activity density data just for comparison even though it's absent at these sites
+    saveDensity <- densityPlot(spp3$sunTime, add = T, xscale = NA, linec = "black", lwd = 2, lty = 2, extend = NULL)
+    legend("topleft", c("Predator", "Prey", "Anthro activity"), lty=c(1, 1, 2), col=c("red", "blue", "black"), bg = "white", bty = "n")
+    
+    #'  Wrangle from wide to long format
+    DensityA_a <- saveOverlap_absent[,1:2] %>%
+      mutate(Species = "Predator",
+             Anthro_Activity = "Absent")#,
+    #          Anthro_Density = saveDensity$y)
+    # colnames(DensityA_a) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+    DensityB_a <- saveOverlap_absent[,c(1,3)] %>%
+      mutate(Species = "Prey",
+             Anthro_Activity = "Absent")#,
+    #          Anthro_Density = saveDensity$y)
+    # colnames(DensityB_a) <- c("x", "Density", "Species", "Anthro_Activity", "Anthro_Density")
+    # overlap_absent <- rbind(DensityA_a, DensityB_a)
 
-    overlapPlot(spp1$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
-                linec = c("red", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name3, " (green)"))
-
-    overlapPlot(spp2$sunTime, spp3$sunTime, rug = F, linet = c(1, 1),
-                linec = c("blue", "yellow"), linew = c(2, 2), main = paste0("Overlap Plots of ", name2, " (blue) and ", name3, " (green)"))
-
-
-    overlapPlot(spp1_spp3.present$sunTime, spp2_spp3.present$sunTime, rug = F, linet = c(1, 1),
-                linec = c("red", "blue"), linew = c(2, 2),
-                main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Present"))
-
-    overlapPlot(spp1_spp3.absent$sunTime, spp2_spp3.absent$sunTime, rug = F, linet = c(1, 1),
-                linec = c("red", "blue"), linew = c(2, 2),
-                main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue) \nwhen ", name3, " are Absent"))
-
+    overlap_absent <- full_join(DensityA_a, DensityB_a, by = c("x", "Anthro_Activity")) %>%
+      full_join(saveDensity, by ="x") %>%
+      mutate(Species.z = name3)
+    #'  Bind into single long dataset of density estimates
+    plotdata <- rbind(overlap_present, overlap_absent)
+    
+    
+    # plotdata <- rbind(saveOverlap_present, saveOverlap_absent) %>%
+    #   full_join(saveDensity, by ="x")
+    # colnames(plotdata) <- c("x", "DensityA", "DensityB", "Species", "Anthro_Activity", "Anthro_Density")
+    # plotdata <- full_join(saveOverlap_present, saveOverlap_absent, by = "x") %>%
+    #   full_join(saveDensity, by ="x")
+    # colnames(plotdata) <- c("x", "DensityA_spp3.pres", "DensityB_spp3.pres", "DensityA_spp3.abs", "DensityB_spp3.abs", "Anthro_Activity")
+    
+    
     #'  Calculate coefficient of overlap
     dhats_spp1.spp2.spp3 <- overlapEst(A = spp1_spp3.present$sunTime,
                                        B = spp2_spp3.present$sunTime, type = dhat)
@@ -259,11 +329,13 @@
     overlap_list <- list(dhats_spp1.spp2.spp3, dhats_spp1.spp2.NOspp3,
                          spp12.spp3.boot, spp12.NOspp3.boot,
                          spp3.present_CI, spp3.absent_CI, ndet_spp1_spp3.present,
-                         ndet_spp2_spp3.present, ndet_spp1_spp3.absent, ndet_spp2_spp3.absent)
+                         ndet_spp2_spp3.present, ndet_spp1_spp3.absent, ndet_spp2_spp3.absent,
+                         plotdata)
     names(overlap_list) <- c("dhat_spp3.present", "dhat_spp3.absent", "dhat_spp3.present_boot",
                              "dhat_spp3.absent_boot", "spp3.present_CI", "spp3.absent_CI",
                              "ndet_spp1_spp3.present", "ndet_spp2_spp3.present",
-                             "ndet_spp1_spp3.absent", "ndet_spp2_spp3.absent")
+                             "ndet_spp1_spp3.absent", "ndet_spp2_spp3.absent",
+                             "overlap.plot.data")
 
     return(overlap_list)
   }
@@ -376,6 +448,9 @@
   ####  Predator-Prey Overlap Grazing Allotments  ####
   #'  Estimate temporal overlap between predators and prey on grazing allotments 
   #'  vs off grazing allotments
+  #'  Note- density plots of "allotment activity" are BS- just pulling times of
+  #'  any other species detection at these cameras so do NOT use these data when
+  #'  making plots for paper
   coug_md_allot_over <- pred_prey_overlap(spp1 = filter(grazing_first_OK, Species == "Cougar"),
                                          spp2 = filter(grazing_first_OK, Species == "Mule Deer"),
                                          spp3 = filter(grazing_first_OK, PublicGrazing == 1),
@@ -430,7 +505,7 @@
                                            spp2 = filter(grazing_first_OK, Species == "White-tailed Deer"),
                                            spp3 = filter(grazing_first_OK, PublicGrazing == 1),
                                            name1 = "Black Bear", name2 = "White-tailed Deer",
-                                           name3 = "Allotments", nboot = 100, dhat = "Dhat1")    # bear-wtd: cattle present all >>50, cattle absent bear <50
+                                           name3 = "Allotments", nboot = 10000, dhat = "Dhat1")    # bear-wtd: cattle present all >>50, cattle absent bear <50
   bear_wtd_allot_over_dhat4 <- pred_prey_overlap(spp1 = filter(grazing_first_OK, Species == "Black Bear"),
                                            spp2 = filter(grazing_first_OK, Species == "White-tailed Deer"),
                                            spp3 = filter(grazing_first_OK, PublicGrazing == 1),
@@ -584,6 +659,9 @@
   
   ####  Predator-Prey Overlap Public vs Private Land  ####
   #'  Estimate temporal overlap between predators and prey on public vs private land
+  #'  Note- density plots of "allotment activity" are BS- just pulling times of
+  #'  any other species detection at these cameras so do NOT use these data when
+  #'  making plots for paper
   # coug_md_public_over <- pred_prey_overlap(spp1 = filter(hunting_first, Species == "Cougar"),
   #                                        spp2 = filter(hunting_first, Species == "Mule Deer"),
   #                                        spp3 = filter(hunting_first, Public1 == 1),
@@ -707,13 +785,12 @@
   save(pred_prey_public_overlap, file = paste0("./Outputs/Temporal Overlap/pred_prey_public_overlap_", Sys.Date(), ".RData"))
 
   
-  ####  Result tables & figures  ####
-  #'  ---------------------------
-  #load("./Outputs/Temporal Overlap/pred_prey_graze_overlap_2022-07-01.RData")
-  load("./Outputs/Temporal Overlap/pred_prey_graze_overlap_OK_2022-08-02.RData")
-  load("./Outputs/Temporal Overlap/pred_prey_allot_overlap_OK_2022-08-02.RData")
-  load("./Outputs/Temporal Overlap/pred_prey_hunt_overlap_2022-08-02.RData")
-  load("./Outputs/Temporal Overlap/pred_prey_public_overlap_2022-08-04.RData")
+  ####  Result tables & figures for predator-prey overlap  ####
+  #'  -----------------------------------------------------
+  load("./Outputs/Temporal Overlap/pred_prey_graze_overlap_OK_2022-08-07.RData")
+  load("./Outputs/Temporal Overlap/pred_prey_allot_overlap_OK_2022-08-07.RData")
+  load("./Outputs/Temporal Overlap/pred_prey_hunt_overlap_2022-08-08.RData")
+  load("./Outputs/Temporal Overlap/pred_prey_public_overlap_2022-08-08.RData")
   
   #'  Create results tables from overlap estimates
   #'  Indexing [2,i] gives norm0 CIs, [4,i] gives basic0 CIs
@@ -806,7 +883,6 @@
     dplyr::select(-Allotment.activity)
   # write.csv(allotment_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_allot_overlap_", Sys.Date(), ".csv"))
   
-  
   #'  Hunting results: NE & OK study areas
   coug_md_hunt_out <- results_table(pred_prey_hunt_overlap[[1]], spp1 = "Cougar", spp2 = "Mule Deer", spp3 = "Hunter")
   coug_elk_hunt_out <- results_table(pred_prey_hunt_overlap[[2]], spp1 = "Cougar", spp2 = "Elk", spp3 = "Hunter")
@@ -882,6 +958,48 @@
   
   ####  Figures for visualization  ####
   #'  -----------------------------
+  ####  Overlap plots  ####
+  
+
+  coug_md <- coug_md_graze_over[[11]]#pred_prey_graze_overlap[[1]][[11]]
+  coug_md2 <- coug_md[coug_md$Anthro_Activity == "Present",]
+  # ggplot(coug_md2, aes(x, Density, color = Species)) +
+  #   geom_line(lwd = 0.75) +
+  #   geom_area(aes(y = pmin(Density)),
+  #             alpha = 0.3) +
+  #   geom_line(aes(x, Anthro_Density), color = "black", linetype = "dashed", lwd = 0.75) +
+  #   scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0)) +
+  #   #scale_x_continuous(breaks = seq(0, 6, by = 1.5)) +
+  #   geom_vline(xintercept = pi/2, linetype="dotted") + 
+  #   geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
+  #   theme_bw() +
+  #   labs(x = "Time (hrs)", y = "Density", color = "Legend") + 
+  #   scale_colour_manual("", 
+  #                       breaks = c("DensityA", "DensityB", "Anthro_Density"),
+  #                       values = c("blue", "red", "black"))
+  ggplot(coug_md2, aes(x, densityA, colour = Species.x)) +
+    geom_line(lwd = 0.75) + 
+    geom_line(aes(x, densityB, colour = Species.y), lwd = 0.75) +  
+    geom_area(aes(y = pmin(densityA, densityB)),
+              alpha = 0.3, color = NA) +
+    geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 0.75) +  
+    scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
+                       labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
+    #scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0)) +
+    geom_vline(xintercept = pi/2, linetype="dotted") +
+    geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
+    theme_bw() +
+    labs(x = "Time of day", y = "Density", color = "Species", title = paste0("Predator-prey temporal overlap when ", name3, " are present")) 
+  
+    
+
+  
+  # restructure data table so in long format with a column indicating species and presence/absence of cattle, then replot in ggplot
+  
+  
+  
+  
+  
   #' #'  Split up data into species-specific groups 
   #' coug_cattle <- filter(cattle_overlap_tbl, grepl("Cougar", `Species.pair`))
   #' wolf_cattle <- filter(cattle_overlap_tbl, grepl("Wolf", `Species.pair`))
@@ -921,56 +1039,73 @@
   #'   guides(color = "none") +
   #'   ggtitle("Coefficient of overlap when grazing is and is not detected")
   
-  #'  Make one single facet_grid plot by grouped by predator species
+  #'  Make one single facet_grid plot by grouped by ungulate species
+  cattle_overlap_tbl$prey <- factor(cattle_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
   overlap_grazing_effect <- ggplot(cattle_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Grazing.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Grazing.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    guides(color = "none", shape = guide_legend(title = "Grazing activity")) + 
-    ggtitle("Coefficient of overlap when cattle activity is and is not detected on camera") +
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
+    geom_point(stat = 'identity', aes(col = prey, shape = Grazing.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    scale_colour_bright() +
+    ylim(0,1) + theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-10,0)) +
+    guides(color = "none", shape = guide_legend(title = "Cattle activity")) + 
+    ggtitle("Effect of cattle activity in predator-prey diel activity patterns") +
     xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
+    facet_grid(~prey, scales = "free", space = "free") 
   overlap_grazing_effect
   ggsave(overlap_grazing_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Grazing_Effect_Plot_OKonly.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
-  #'  Make one single facet_grid plot by grouped by predator species
+  #'  Make one single facet_grid plot by grouped by ungulate species
+  allotment_overlap_tbl$prey <- factor(allotment_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
   allotment_overlap_tbl$Public_Grazing <- factor(allotment_overlap_tbl$Public_Grazing, levels = c("Permitted", "Not permitted"))
   overlap_allot_effect <- ggplot(allotment_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Public_Grazing)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Public_Grazing), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
+    geom_point(stat = 'identity', aes(col = prey, shape = Public_Grazing), size = 2.75, position = position_dodge(width = 0.4)) + 
+    scale_colour_bright() +
+    ylim(0,1) + theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-10,0)) +
     guides(color = "none", shape = guide_legend(title = "Public grazing")) + 
-    ggtitle("Coefficient of overlap on and off public grazing allotments") +
+    ggtitle("Effect of public grazing allotments on predator-prey diel activity patterns") +
     xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
+    facet_grid(~prey, scales = "free", space = "free") 
   overlap_allot_effect
   ggsave(overlap_allot_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Allotment_Effect_Plot_OKonly.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
-  #'  Make one single facet_grid plot by grouped by predator species
+  #'  Make one single facet_grid plot by grouped by ungulate species
+  hunter_overlap_tbl$prey <- factor(hunter_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
   overlap_hunting_effect <- ggplot(hunter_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Hunter.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Hunter.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
+    geom_point(stat = 'identity', aes(col = prey, shape = Hunter.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    scale_colour_bright() +
+    ylim(0,1) + theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-10,0)) +
     guides(color = "none", shape = guide_legend(title = "Hunter activity")) + 
-    ggtitle("Coefficient of overlap when hunters are and are not detected") +
+    ggtitle("Effect of hunter activity on predator-prey diel activity patterns") +
     xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
+    facet_grid(~prey, scales = "free", space = "free") 
   overlap_hunting_effect
   ggsave(overlap_hunting_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Hunter_Effect_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
-  #'  Make one single facet_grid plot by grouped by predator species
+  #'  Make one single facet_grid plot by grouped by ungulate species
+  public_overlap_tbl$prey <- factor(public_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
   overlap_public_effect <- ggplot(public_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = PublicLand.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = PublicLand.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
+    geom_point(stat = 'identity', aes(col = prey, shape = PublicLand.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    scale_colour_bright() +
+    ylim(0,1) + theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-10,0)) +
     guides(color = "none", shape = guide_legend(title = "Property Ownership")) + 
-    ggtitle("Coefficient of overlap on public vs private land") +
+    ggtitle("Effect of land ownership on predator-prey diel activity patterns") +
     xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
+    facet_grid(~prey, scales = "free", space = "free") 
   overlap_public_effect
   ggsave(overlap_public_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_PublicVPrivate_Effect_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   
+  #'  -----------------------------------
   ####  Single species temporal overlap  ####
   #'  -----------------------------------
   #'  Function to estimate differences in temporal activity for a species at camera  
@@ -992,18 +1127,33 @@
     ndet_spp2.absent <- nrow(spp1_spp2.absent)
     print(ndet_spp2.present); print(ndet_spp2.absent)
     
-    #'  Visualize general temporal activity with density plots
+    #' #'  Visualize general temporal activity with density plots
     densityPlot(spp1$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name1, " Daily Activity"))
     densityPlot(spp2$sunTime, rug = T, col = "blue", main = paste0("Density Plot of ", name2, " Daily Activity"))
+     
+    #' #'  Visualize temporal overlap
+    #' overlapPlot(spp1$sunTime, spp2$sunTime, rug = F, linet = c(1, 1), 
+    #'             linec = c("red", "blue"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue)"))
+    #' 
+    #' overlapPlot(spp1_spp2.present$sunTime, spp1_spp2.absent$sunTime, rug = T, 
+    #'             xscale = 24, xcenter = "noon",
+    #'             linet = c(1, 1), linec = c("red", "blue"), linew = c(2, 2),  
+    #'             main = paste0("Overlap Plots of ", name1, " \nwhen ", name2, " are Present (red) and Absente (blue)"))
+    # # Add vertical dotted lines to mark sunrise (05:30) and sunset (18:47):
+    # # (times must be in hours if the x-axis is labelled in hours)
+    # abline(v=c(5.5, 18+47/60), lty=3)
+    # abline(v=c(5.5, (18+47/60) - 24), lty=3)
     
-    #'  Visualize temporal overlap
-    overlapPlot(spp1$sunTime, spp2$sunTime, rug = F, linet = c(1, 1), 
-                linec = c("red", "blue"), linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " (red) and ", name2, " (blue)"))
+  
+    saveOverlap <- overlapPlot(spp1_spp2.present$sunTime, spp1_spp2.absent$sunTime, rug = T, 
+                xscale = NA, xcenter = "noon", linet = c(1, 1), linec = c("red", "blue"), 
+                linew = c(2, 2), main = paste0("Overlap Plots of ", name1, " diel activity \nwhen ", name2, " are Present and Absente")) 
+    saveDensity <- densityPlot(spp2$sunTime, add = T, xscale = NA, linec = "black", lwd = 2, lty = 2, extend = NULL)
+    legend("topleft", c("Anthro activity present", "Anthro activity  absent", "Anthro activity"), lty=c(1, 1, 2), col=c("red", "blue", "black"), bg = "white", bty = "n")
     
-    overlapPlot(spp1_spp2.present$sunTime, spp1_spp2.absent$sunTime, rug = F, linet = c(1, 1), 
-                linec = c("red", "blue"), linew = c(2, 2),  
-                main = paste0("Overlap Plots of ", name1, " \nwhen ", name2, " are Present (red) and Absente (blue)"))
-    
+    plotdata <- full_join(saveOverlap, saveDensity, by = "x")
+    colnames(plotdata) <- c("x", "DensityA", "DensityB", "Anthro_Activity")
+
     #'  Calculate coefficient of overlap
     dhats_spp1.spp2 <- overlapEst(A = spp1_spp2.present$sunTime, 
                                   B = spp1_spp2.absent$sunTime, type = dhat) 
@@ -1029,8 +1179,6 @@
     #'  outside (0, 1) interval. See Overlap vignette for more details.
     CI <- bootCIlogit(dhats_spp1.spp2, spp1.spp2.boot) #dhats_spp1.spp2[i]
     
-    watson.two.test
-    
     #'  Print results
     #'  Effect of spp2 being present
     print("Overlap coefficients when spp2 is present"); print(dhats_spp1.spp2)
@@ -1038,14 +1186,14 @@
     print("Bootstrap 95% CI"); print(CI)
     
     #'  Save as a giant list
-    overlap_list <- list(dhats_spp1.spp2, spp1.spp2.boot, CI, ndet_spp2.present, ndet_spp2.absent)
-    names(overlap_list) <- c("dhats_spp1.spp2", "spp1.spp2.boot", "CI", "ndet_spp2.present", "ndet_spp2.absent")
+    overlap_list <- list(dhats_spp1.spp2, spp1.spp2.boot, CI, ndet_spp2.present, ndet_spp2.absent, plotdata)
+    names(overlap_list) <- c("dhats_spp1.spp2", "spp1.spp2.boot", "CI", "ndet_spp2.present", "ndet_spp2.absent", "overlap.plot.data")
     
     return(overlap_list)
   }
   #'  Estimate temporal overlap for a species when cattle are/aren't detected
-  #'  THINK ABOUT focusing on only OK study area since big difference in number of
-  #'  cameras with cattle in NE vs OK, pooling across study areas could be confounding
+  #'  Focusing on only OK study area since big difference in number of cameras 
+  #'  with cattle in NE vs OK, pooling across study areas could be confounding
   #'  any apparent temporal patterns
   ####  Single-Species Overlap Grazing Season  ####
   coug_graze_over <- spp_overlap(spp1 = filter(grazing_first_OK, Species == "Cougar"),
@@ -1244,95 +1392,89 @@
   moose_public_out <- results_table(public_overlap[[8]], spp1 = "Moose")
   
   grazing_effects <- rbind(coug_graze_out, bear_graze_out, bob_graze_out, #wolf_graze_out, elk_graze_out, 
-                           coy_graze_out, md_graze_out, wtd_graze_out, moose_graze_out)
+                           coy_graze_out, md_graze_out, wtd_graze_out, moose_graze_out) %>%
+    mutate(`Anthropogenic \ndisturbance` = "Cattle activity")
   write.csv(grazing_effects, file = paste0("./Outputs/Temporal Overlap/graze_effect_overlap_tbl_OK_", Sys.Date(), ".csv"))
   allot_effects <- rbind(coug_allot_out, wolf_allot_out, bear_allot_out, bob_allot_out,
-                         coy_allot_out, md_allot_out, elk_allot_out, wtd_allot_out, moose_allot_out)
+                         coy_allot_out, md_allot_out, wtd_allot_out, moose_allot_out) %>% #elk_allot_out, 
+    mutate(`Anthropogenic \ndisturbance` = "Grazing allotment")
   write.csv(allot_effects, file = paste0("./Outputs/Temporal Overlap/allotment_effect_overlap_tbl_OK_", Sys.Date(), ".csv"))
   hunter_effects <- rbind(coug_hunt_out, wolf_hunt_out, bear_hunt_out, bob_hunt_out,
-                          coy_hunt_out, md_hunt_out, elk_hunt_out, wtd_hunt_out, moose_hunt_out)
+                          coy_hunt_out, md_hunt_out, elk_hunt_out, wtd_hunt_out, moose_hunt_out) %>%
+    mutate(`Anthropogenic \ndisturbance` = "Hunter activity")
   write.csv(hunter_effects, file = paste0("./Outputs/Temporal Overlap/hunter_effect_overlap_tbl_", Sys.Date(), ".csv"))
   public_effects <- rbind(coug_public_out, bear_public_out, bob_public_out, #wolf_public_out, 
-                          coy_public_out, md_public_out, elk_public_out, wtd_public_out, moose_public_out) 
+                          coy_public_out, md_public_out, elk_public_out, wtd_public_out, moose_public_out) %>%
+    mutate(`Anthropogenic \ndisturbance` = "Land ownership")
   write.csv(public_effects, file = paste0("./Outputs/Temporal Overlap/public_v_private_effect_overlap_tbl_", Sys.Date(), ".csv"))
   
   
   ####  Plot coefficient of overlap estimates for all species  ####
   #'  ---------------------------------------------------------
   #'  Plot coefficient of overlap estimates for each species
-  # spp_overlap_grazing_plot <- ggplot(grazing_effects, aes(x = Species, y = Dhat)) +  
-  #   geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.2) +
-  #   geom_point(stat = 'identity', aes(col = Species), size = 3.5) + 
-  #   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
-  #   guides(color = guide_legend(title = "Species")) + 
-  #   ggtitle("Coefficient of overlap when grazing is and is not detected")
-  # #ggsave(spp_overlap_grazing_plot, filename = "./Outputs/Temporal Overlap/Overlap_Grazing_Effect_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  # #ggsave(spp_overlap_grazing_plot, filename = "./Outputs/Temporal Overlap/Overlap_Grazing_Effect_Spp_Plot_OK.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  # 
-  # spp_overlap_hunter_plot <- ggplot(hunter_effects, aes(x = Species, y = Dhat)) +  
-  #   geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.2) +
-  #   geom_point(stat = 'identity', aes(col = Species), size = 3.5) + 
-  #   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
-  #   guides(color = guide_legend(title = "Species")) + 
-  #   ggtitle("Coefficient of overlap when hunters are and are not detected")
-  # #ggsave(spp_overlap_hunter_plot, filename = "./Outputs/Temporal Overlap/Overlap_Hunter_Effect_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  # 
-  # spp_overlap_public_plot <- ggplot(public_effects, aes(x = Species, y = Dhat)) +  
-  #   geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.2) +
-  #   geom_point(stat = 'identity', aes(col = Species), size = 3.5) + 
-  #   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) + 
-  #   guides(color = guide_legend(title = "Species")) + 
-  #   ggtitle("Coefficient of overlap on public/timber vs private lands")
-  # # ggsave(spp_overlap_public_plot, filename = "./Outputs/Temporal Overlap/Overlap_PublicVPrivate_Effect_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  #'  Make one single facet_grid plot 
+  spp_overlap <- rbind(grazing_effects, allot_effects, hunter_effects, public_effects)
+  
+  spp_overlap_facet <- ggplot(spp_overlap, aes(x = Species, y = Dhat)) +   
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = `Anthropogenic \ndisturbance`), width = 0.3) +
+    geom_point(stat = 'identity', aes(col = `Anthropogenic \ndisturbance`), size = 2.5) + 
+    scale_colour_bright() +
+    ylim(0,1) + theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    guides(color = "none") + 
+    ggtitle("Species-specific differences in diel activity patterns") +
+    xlab("Species") + ylab("Coefficient of overlap (Dhat)") +
+    facet_grid(~`Anthropogenic \ndisturbance`, scales = "free", space = "free")
+  spp_overlap_facet
+  ggsave(spp_overlap_facet, filename = "./Outputs/Temporal Overlap/Figures/SpeciesSpecific_Overlap_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   
-  #'  Make one single facet_grid plot by grouped by predator species
-  spp_overlap_grazing_effect <- ggplot(grazing_effects, aes(x = `Species.pair`, y = Dhat, group = Grazing.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Grazing.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    guides(color = "none", shape = guide_legend(title = "Grazing activity")) + 
-    ggtitle("Coefficient of overlap when cattle activity is and is not detected on camera") +
-    xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
-  spp_overlap_grazing_effect
-  ggsave(spp_overlap_grazing_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Grazing_Effect_Plot_OKonly_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  
-  #'  Make one single facet_grid plot by grouped by predator species
-  allotment_overlap_tbl$Public_Grazing <- factor(allot_effects$Public_Grazing, levels = c("Permitted", "Not permitted"))
-  spp_overlap_allot_effect <- ggplot(allot_effects, aes(x = `Species.pair`, y = Dhat, group = Public_Grazing)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Public_Grazing), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    guides(color = "none", shape = guide_legend(title = "Public grazing")) + 
-    ggtitle("Coefficient of overlap on and off public grazing allotments") +
-    xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
-  spp_overlap_allot_effect
-  ggsave(spp_overlap_allot_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Allotment_Effect_Plot_OKonly_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  
-  #'  Make one single facet_grid plot by grouped by predator species
-  spp_overlap_hunting_effect <- ggplot(hunter_effects, aes(x = `Species.pair`, y = Dhat, group = Hunter.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = Hunter.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    guides(color = "none", shape = guide_legend(title = "Hunter activity")) + 
-    ggtitle("Coefficient of overlap when hunters are and are not detected") +
-    xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
-  spp_overlap_hunting_effect
-  ggsave(spp_overlap_hunting_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Hunter_Effect_Plot_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
-  
-  #'  Make one single facet_grid plot by grouped by predator species
-  spp_overlap_public_effect <- ggplot(public_effects, aes(x = `Species.pair`, y = Dhat, group = PublicLand.activity)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = predator, shape = PublicLand.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
-    ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    guides(color = "none", shape = guide_legend(title = "Property Ownership")) + 
-    ggtitle("Coefficient of overlap on public vs private land") +
-    xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
-    facet_grid(~predator, scales = "free", space = "free") 
-  spp_overlap_public_effect
-  ggsave(spp_overlap_public_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_PublicVPrivate_Effect_Plot_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  #' spp_overlap_grazing_effect <- ggplot(grazing_effects, aes(x = Species, y = Dhat)) +   
+  #'   geom_errorbar(aes(ymin = l95, ymax = u95, col = Species), width = 0.3, position = position_dodge(width = 0.4)) +
+  #'   geom_point(stat = 'identity', aes(col = Species), size = 2.75) + 
+  #'   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  #'   guides(color = "none", shape = guide_legend(title = "Grazing activity")) + 
+  #'   ggtitle("Coefficient of overlap when cattle activity is and is not detected on camera") +
+  #'   xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
+  #'   facet_grid(~predator, scales = "free", space = "free") 
+  #' spp_overlap_grazing_effect
+  #' ggsave(spp_overlap_grazing_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Grazing_Effect_Plot_OKonly_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  #' 
+  #' #'  Make one single facet_grid plot by grouped by predator species
+  #' allotment_overlap_tbl$Public_Grazing <- factor(allot_effects$Public_Grazing, levels = c("Permitted", "Not permitted"))
+  #' spp_overlap_allot_effect <- ggplot(allot_effects, aes(x = `Species.pair`, y = Dhat, group = Public_Grazing)) +   
+  #'   geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
+  #'   geom_point(stat = 'identity', aes(col = predator, shape = Public_Grazing), size = 2.75, position = position_dodge(width = 0.4)) + 
+  #'   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  #'   guides(color = "none", shape = guide_legend(title = "Public grazing")) + 
+  #'   ggtitle("Coefficient of overlap on and off public grazing allotments") +
+  #'   xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
+  #'   facet_grid(~predator, scales = "free", space = "free") 
+  #' spp_overlap_allot_effect
+  #' ggsave(spp_overlap_allot_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Allotment_Effect_Plot_OKonly_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  #' 
+  #' #'  Make one single facet_grid plot by grouped by predator species
+  #' spp_overlap_hunting_effect <- ggplot(hunter_effects, aes(x = `Species.pair`, y = Dhat, group = Hunter.activity)) +   
+  #'   geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
+  #'   geom_point(stat = 'identity', aes(col = predator, shape = Hunter.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+  #'   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  #'   guides(color = "none", shape = guide_legend(title = "Hunter activity")) + 
+  #'   ggtitle("Coefficient of overlap when hunters are and are not detected") +
+  #'   xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
+  #'   facet_grid(~predator, scales = "free", space = "free") 
+  #' spp_overlap_hunting_effect
+  #' ggsave(spp_overlap_hunting_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Hunter_Effect_Plot_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  #' 
+  #' #'  Make one single facet_grid plot by grouped by predator species
+  #' spp_overlap_public_effect <- ggplot(public_effects, aes(x = `Species.pair`, y = Dhat, group = PublicLand.activity)) +   
+  #'   geom_errorbar(aes(ymin = l95, ymax = u95, col = predator), width = 0.3, position = position_dodge(width = 0.4)) +
+  #'   geom_point(stat = 'identity', aes(col = predator, shape = PublicLand.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+  #'   ylim(0,1) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  #'   guides(color = "none", shape = guide_legend(title = "Property Ownership")) + 
+  #'   ggtitle("Coefficient of overlap on public vs private land") +
+  #'   xlab("Species pairing") + ylab("Coefficient of overlap (Dhat)") +
+  #'   facet_grid(~predator, scales = "free", space = "free") 
+  #' spp_overlap_public_effect
+  #' ggsave(spp_overlap_public_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_PublicVPrivate_Effect_Plot_Spp_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   
