@@ -689,30 +689,34 @@
                            newdata = cov_df0, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp1,
              Interaction = paste0(spp2, " absent"),
-             Presence = "Absent",
-             Public_Grazing = "Not permitted") %>% 
+             `Interacting species` = "Absent",
+             Public_Grazing = "Not permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df0)
     spp2_absent1 <- predict(mod, type = "state", species = spp1, cond = no_spp2,
                             newdata = cov_df1, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp1,
              Interaction = paste0(spp2, " absent"),
-             Presence = "Absent",
-             Public_Grazing = "Permitted") %>% 
+             `Interacting species` = "Absent",
+             Public_Grazing = "Permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df1)
     #'  Predict conditional occupancy when spp2 is present
     spp2_present0 <- predict(mod, type = "state", species = spp1, cond = spp2,
                             newdata = cov_df0, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp1,
              Interaction = paste0(spp2, " present"),
-             Presence = "Present",
-             Public_Grazing = "Not permitted") %>% 
+             `Interacting species` = "Present",
+             Public_Grazing = "Not permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df0)
     spp2_present1 <- predict(mod, type = "state", species = spp1, cond = spp2,
                             newdata = cov_df1, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp1,
              Interaction = paste0(spp2, " present"),
-             Presence = "Present",
-             Public_Grazing = "Permitted") %>% 
+             `Interacting species` = "Present",
+             Public_Grazing = "Permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df1)
     
     #'  Predict conditional occupancy when spp1 is absent
@@ -720,30 +724,34 @@
                            newdata = cov_df0, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp2,
              Interaction = paste0(spp1, " absent"),
-             Presence = "Absent",
-             Public_Grazing = "Not permitted") %>% 
+             `Interacting species` = "Absent",
+             Public_Grazing = "Not permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df0)
     spp1_absent1 <- predict(mod, type = "state", species = spp2, cond = no_spp1,
                             newdata = cov_df1, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp2,
              Interaction = paste0(spp1, " absent"),
-             Presence = "Absent",
-             Public_Grazing = "Permitted") %>% 
+             `Interacting species` = "Absent",
+             Public_Grazing = "Permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df1)
     #'  Predict conditional occupancy when spp1 is present
     spp1_present0 <- predict(mod, type = "state", species = spp2, cond = spp1,
                             newdata = cov_df0, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp2,
              Interaction = paste0(spp1, " present"),
-             Presence = "Present",
-             Public_Grazing = "Not permitted") %>% 
+             `Interacting species` = "Present",
+             Public_Grazing = "Not permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df0)
     spp1_present1 <- predict(mod, type = "state", species = spp2, cond = spp1,
                              newdata = cov_df1, se.fit = TRUE, nsims = n) %>%
       mutate(Species = spp2,
              Interaction = paste0(spp1, " present"),
-             Presence = "Present",
-             Public_Grazing = "Permitted") %>% 
+             `Interacting species` = "Present",
+             Public_Grazing = "Permitted",
+             SpeciesPairing = paste0(spp1, "-", spp2)) %>% 
       bind_cols(cov_df1)
     
     #'  Create one large data frame with all marginal probabilities
@@ -755,23 +763,26 @@
     
     return(sppX_allot_df)
   }
-  sppX_coug_md_allot <- allot_conditional_occu_g(gs_cougmd_global, area = 1, spp1 = "cougar", spp2 = "muledeer", n = 10^5)
+  # sppX_coug_md_allot <- allot_conditional_occu_g(gs_cougmd_global, area = 1, spp1 = "cougar", spp2 = "muledeer", n = 10^5)
   sppX_coug_elk_allot <- allot_conditional_occu_g(gs_cougelk_global, area = 0, spp1 = "cougar", spp2 = "elk", n = 10^5)
-  sppX_coug_wtd_allot <- allot_conditional_occu_g(gs_cougwtd_global, area = 1, spp1 = "cougar", spp2 = "wtd", n = 10^5)
+  sppX_coug_elk_allot$Species <- factor(sppX_coug_elk_allot$Species, levels = c("cougar", "elk"))
+  # sppX_coug_wtd_allot <- allot_conditional_occu_g(gs_cougwtd_global, area = 1, spp1 = "cougar", spp2 = "wtd", n = 10^5)
   sppX_coug_moose_allot <- allot_conditional_occu_g(gs_cougmoose_global, area = 1, spp1 = "cougar", spp2 = "moose", n = 10^5)
-  sppX_wolf_md_allot <- allot_conditional_occu_g(gs_wolfmd_global, area = 1, spp1 = "wolf", spp2 = "md", n = 10^5)
-  sppX_wolf_elk_allot <- allot_conditional_occu_g(gs_wolfelk_global, area = 0, spp1 = "wolf", spp2 = "elk", n = 10^5)
-  sppX_wolf_wtd_allot <- allot_conditional_occu_g(gs_wolfwtd_global, area = 1, spp1 = "wolf", spp2 = "wtd", n = 10^5)
+  # sppX_wolf_md_allot <- allot_conditional_occu_g(gs_wolfmd_global, area = 1, spp1 = "wolf", spp2 = "md", n = 10^5)
+  # sppX_wolf_elk_allot <- allot_conditional_occu_g(gs_wolfelk_global, area = 0, spp1 = "wolf", spp2 = "elk", n = 10^5)
+  # sppX_wolf_wtd_allot <- allot_conditional_occu_g(gs_wolfwtd_global, area = 1, spp1 = "wolf", spp2 = "wtd", n = 10^5)
   sppX_wolf_moose_allot <- allot_conditional_occu_g(gs_wolfmoose_global, area = 1, spp1 = "wolf", spp2 = "moose", n = 10^5)
-  sppX_bear_md_allot <- allot_conditional_occu_g(gs_bearmd_global, area = 1, spp1 = "blackbear", spp2 = "md", n = 10^5)
+  sppX_wolf_moose_allot$Species <- factor(sppX_wolf_moose_allot$Species, levels = c("wolf", "moose"))
+  # sppX_bear_md_allot <- allot_conditional_occu_g(gs_bearmd_global, area = 1, spp1 = "blackbear", spp2 = "md", n = 10^5)
   sppX_bear_elk_allot <- allot_conditional_occu_g(gs_bearelk_global, area = 0, spp1 = "blackbear", spp2 = "elk", n = 10^5)
-  sppX_bear_wtd_allot <- allot_conditional_occu_g(gs_bearwtd_global, area = 1, spp1 = "blackbear", spp2 = "wtd", n = 10^5)
+  # sppX_bear_wtd_allot <- allot_conditional_occu_g(gs_bearwtd_global, area = 1, spp1 = "blackbear", spp2 = "wtd", n = 10^5)
   sppX_bear_moose_allot <- allot_conditional_occu_g(gs_bearmoose_global, area = 1, spp1 = "blackbear", spp2 = "moose", n = 10^5)
-  sppX_bob_md_allot <- allot_conditional_occu_g(gs_bobmd_global, area = 1, spp1 = "bobcat", spp2 = "md", n = 10^5)
-  sppX_bob_wtd_allot <- allot_conditional_occu_g(gs_bobwtd_global, area = 1, spp1 = "bobcat", spp2 = "wtd", n = 10^5)
-  sppX_coy_md_allot <- allot_conditional_occu_g(gs_coymd_global, area = 1, spp1 = "coyote", spp2 = "md", n = 10^5)
-  sppX_coy_wtd_allot <- allot_conditional_occu_g(gs_coywtd_global, area = 1, spp1 = "coyote", spp2 = "wtd", n = 10^5)
+  # sppX_bob_md_allot <- allot_conditional_occu_g(gs_bobmd_global, area = 1, spp1 = "bobcat", spp2 = "md", n = 10^5)
+  # sppX_bob_wtd_allot <- allot_conditional_occu_g(gs_bobwtd_global, area = 1, spp1 = "bobcat", spp2 = "wtd", n = 10^5)
+  # sppX_coy_md_allot <- allot_conditional_occu_g(gs_coymd_global, area = 1, spp1 = "coyote", spp2 = "md", n = 10^5)
+  # sppX_coy_wtd_allot <- allot_conditional_occu_g(gs_coywtd_global, area = 1, spp1 = "coyote", spp2 = "wtd", n = 10^5)
   
+    
   ####  Visualize Allotment Effect on Conditional Occupancy  ####
   sppX_wolf_moose_allot$Species <- factor(sppX_wolf_moose_allot$Species, levels = c("wolf","moose"))
   ggplot(sppX_wolf_moose_allot, aes(x = Public_Grazing, y = Predicted, group = Species, colour = Species)) +
@@ -783,7 +794,6 @@
     ylab("Conditional occupancy probability") +
     ggtitle("Effect public grazing allotments on \nwolf and moose occurrence")
   sppX_coug_elk_allot$Species <- factor(sppX_coug_elk_allot$Species, levels = c("cougar","elk"))
-  sppX_coug_elk_allot <- mutate(sppX_coug_elk_allot, `Interacting species` = gsub(".* ", "", Interaction))
   ggplot(sppX_coug_elk_allot, aes(x = Public_Grazing, y = Predicted, group = Interaction, colour = Species)) + 
     geom_point(aes(shape = `Interacting species`), size = 2, position = position_dodge(width = 0.2)) +
     geom_errorbar(width = 0.2, aes(ymin = lower, ymax = upper), position = "dodge") +
@@ -795,6 +805,7 @@
     ggtitle("Effect public grazing allotments on cougar and elk occurrence")
   
   ####  ONLY SIGNIFICANT RELATIONSHIPS FOR PAPER  ####
+  #'  Conditional occupancy with the effect of cattle activity
   sppX_coug_wtd <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Species == "cougar",]
   sppX_wtd_coug <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Species == "wtd",]
   sppX_coy_wtd <- sppX_coy_wtd_cattle[sppX_coy_wtd_cattle$Species == "coyote",]
@@ -850,3 +861,26 @@
   ggsave("./Outputs/Figures/OccX_wtd_coug_coy_graze.tiff", wtd_coug_coy_graze_facet, 
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', ) #, compression = 'lzw'
     
+  #'  Conditional occupancy in response to grazing allotments
+  sppX_allot <- rbind(sppX_coug_elk_allot, sppX_coug_moose_allot, sppX_wolf_moose_allot, sppX_bear_elk_allot, sppX_bear_moose_allot)
+  sppX_allot$Species <- factor(sppX_allot$Species, levels = c("blackbear", "cougar", "wolf", "elk", "moose"))
+  newlabs <- c("cougar-elk" = "Cougar-Elk", "cougar-moose" = "Cougar-Moose", "wolf-moose" = "Wolf-Moose",
+               "blackbear-elk" = "Black bear-Elk", "blackbear-moose" = "Black bear-Moose")
+  
+  pred_prey_allot_facet <- ggplot(sppX_allot, aes(x = Public_Grazing, y = Predicted, group = Interaction, colour = Species)) + 
+    geom_point(aes(shape = `Interacting species`), size = 2.5, position = position_dodge(width = 0.4)) +
+    geom_errorbar(width = 0.2, aes(ymin = lower, ymax = upper), position = position_dodge(width = 0.4)) +
+    scale_colour_bright() +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~SpeciesPairing, scales = "free_y", labeller = as_labeller(newlabs)) + 
+    theme(legend.position = c(1, -.05),
+          legend.justification = c(1.2, -0.05)) + 
+    xlab("Public grazing") + 
+    ylab("Conditional occupancy probability") +
+    ggtitle("Effect public grazing allotments on predator-prey co-occurrence")
+  pred_prey_allot_facet
+  ggsave("./Outputs/Figures/OccX_bear_coug_wolf_elk_moose_allot.tiff", pred_prey_allot_facet, 
+         units = "in", width = 7, height = 6, dpi = 600, device = 'tiff', ) #, compression = 'lzw'
+  
+  
