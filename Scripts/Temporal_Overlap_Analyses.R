@@ -1073,7 +1073,7 @@
                               bear_md_graze_out, bear_wtd_graze_out, bear_moose_graze_out4, 
                               bear_moose_graze_out1, bob_md_graze_out4, bob_md_graze_out1, 
                               coy_md_graze_out, coy_wtd_graze_out)
-  # write.csv(cattle_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_graze_overlap_", Sys.Date(), ".csv"))
+  write.csv(cattle_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_graze_overlap_", Sys.Date(), ".csv"))
   
   #'  Grazing Allotment results: Okanogan study area only
   coug_md_allot_out <- results_table(pred_prey_allot_overlap[[1]], spp1 = "Cougar", spp2 = "Mule Deer", spp3 = "Allotment")
@@ -1104,7 +1104,7 @@
                                  bob_md_allot_out1, coy_md_allot_out, coy_wtd_allot_out) %>%
     mutate(Public_Grazing = ifelse(Allotment.activity == "Detected", "Permitted", "Not permitted")) %>%
     dplyr::select(-Allotment.activity)
-  # write.csv(allotment_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_allot_overlap_", Sys.Date(), ".csv"))
+  write.csv(allotment_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_allot_overlap_", Sys.Date(), ".csv"))
   
   #'  Hunting results: NE & OK study areas
   coug_md_hunt_out <- results_table(pred_prey_hunt_overlap[[1]], spp1 = "Cougar", spp2 = "Mule Deer", spp3 = "Hunter")
@@ -1132,7 +1132,7 @@
                               bear_md_hunt_out4, bear_md_hunt_out1, 
                               bear_elk_hunt_out, bear_wtd_hunt_out, bear_moose_hunt_out, 
                               bob_md_hunt_out, bob_wtd_hunt_out, coy_md_hunt_out, coy_wtd_hunt_out)
-  # write.csv(hunter_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_hunt_overlap_", Sys.Date(), ".csv"))
+  write.csv(hunter_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_hunt_overlap_", Sys.Date(), ".csv"))
   
   #'  Public vs private lands results: NE & OK study areas
   coug_elk_public_out <- results_table(pred_prey_public_overlap[[1]], spp1 = "Cougar", spp2 = "Elk", spp3 = "PublicLand")
@@ -1176,7 +1176,7 @@
                               bear_wtd_public_out1, bob_md_public_out4, bob_md_public_out1, bob_wtd_public_out4, 
                               bob_wtd_public_out1, coy_md_public_out, coy_wtd_public_out) %>%
     mutate(PublicLand.activity = ifelse(PublicLand.activity == "Detected", "Public/Timber", "Private"))
-  # write.csv(public_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_public_overlap_", Sys.Date(), ".csv"))
+  write.csv(public_overlap_tbl, file = paste0("./Outputs/Temporal Overlap/pred-prey_public_overlap_", Sys.Date(), ".csv"))
   
   
   ####  Figures comparing predator-prey coefficients of overlap  ####
