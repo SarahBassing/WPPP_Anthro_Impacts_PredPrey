@@ -387,8 +387,9 @@
   (cond_coy_wtd_gs <- conditional_occu_g(gs_coywtd_global, pub = 1, area = 1, 
                                          spp1 = "coyote", spp2 = "wtd")) 
   
-  
+  #'  --------------------------------------------------
   ####  Covariate effects on species interaction term  ####
+  #'  --------------------------------------------------
   #'  Function to predict species interactions in response to covariate of interest
   spp_interactions_g <- function(mod, elev, act, forest, pub, area, spp1, spp2, cov) {
     #'  Create data frame using the scaled covariate of interest while holding
@@ -491,7 +492,20 @@
                                       forest = 0, pub = 1, area = 1, spp1 = "coyote", 
                                       spp2 = "wtd", cov = scaled_graze[,1])
 
+  #'  Save these since they take so long to generate!
+  sppX_cattle_list <- list(sppX_coug_wtd_cattle, sppX_wolf_wtd_cattle, sppX_bob_md_cattle, 
+                           sppX_bob_wtd_cattle, sppX_coy_md_cattle, sppX_coy_wtd_cattle)
+  names(sppX_cattle_list) <- c("sppX_coug_wtd_cattle", "sppX_wolf_wtd_cattle", "sppX_bob_md_cattle", 
+                               "sppX_bob_wtd_cattle", "sppX_coy_md_cattle", "sppX_coy_wtd_cattle")
+  save(sppX_cattle_list, file = "./Outputs/sppX_cattle_for_visualizing.RData")
+  
+  
+  #'  ------------------------------------
   ####  Visualize conditional occupancy  ####
+  #'  ------------------------------------
+  #'  Load predicted conditional occupancy
+  load("./Outputs/sppX_cattle_for_visualizing.RData")
+  
   #'  Plot each pairing from the perspective of the predator, then the prey
   #'  Only focus on pairings where the top model contained an interaction term
   sppX_coug_wtd <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Species == "cougar",]
@@ -805,13 +819,74 @@
     ggtitle("Effect public grazing allotments on cougar and elk occurrence")
   
   ####  ONLY SIGNIFICANT RELATIONSHIPS FOR PAPER  ####
-  #'  Conditional occupancy with the effect of cattle activity
-  sppX_coug_wtd <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Species == "cougar",]
-  sppX_wtd_coug <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Species == "wtd",]
-  sppX_coy_wtd <- sppX_coy_wtd_cattle[sppX_coy_wtd_cattle$Species == "coyote",]
-  sppX_wtd_coy <- sppX_coy_wtd_cattle[sppX_coy_wtd_cattle$Species == "wtd",]
+  #'  Load predicted conditional occupancy
+  load("./Outputs/sppX_cattle_for_visualizing.RData")
   
-  #'  Merge predator and prey responses together for facet wrap plots
+  #'  Cougar-wtd co-occurrence with cattle activity
+  coug_wtd_data <- sppX_cattle_list$sppX_coug_wtd_cattle %>% #rbind(sppX_coug_wtd, sppX_wtd_coug) %>%
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "cougar absent", "cougar present")))
+  newlabs <- c("cougar" = "Cougar", "wtd" = "White-tailed deer") 
+  coug_wtd_graze_facet <- ggplot(coug_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_colour_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    #scale_color_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    #scale_fill_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Cattle grazing activity (cattle detections/day)") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Effect of cattle activity on cougar - white-tailed deer co-occurrence")
+  coug_wtd_graze_facet
+  
+  ggsave("./Outputs/Figures/OccX_coug_wtd_graze.tiff", coug_wtd_graze_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  #'  Coyote-wtd co-occurrence with cattle activity
+  coy_wtd_data <- sppX_cattle_list$sppX_coy_wtd_cattle %>% #rbind(sppX_coy_wtd, sppX_wtd_coy) %>%
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "coyote absent", "coyote present")))
+  newlabs <- c("coyote" = "Coyote", "wtd" = "White-tailed deer") 
+  coy_wtd_graze_facet <- ggplot(coy_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    #scale_color_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    #scale_fill_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Cattle grazing activity (cattle detections/day)") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Effect of cattle activity on coyote - white-tailed deer co-occurrence")
+  coy_wtd_graze_facet
+  
+  ggsave("./Outputs/Figures/OccX_coy_wtd_graze.tiff", coy_wtd_graze_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  
+  
+  #'  Split up predator-prey data to plot predator results and prey results separately
+  sppX_coug_wtd <- sppX_cattle_list$sppX_coug_wtd_cattle[sppX_cattle_list$sppX_coug_wtd_cattle$Species == "cougar",]
+  sppX_wtd_coug <- sppX_cattle_list$sppX_coug_wtd_cattle[sppX_cattle_list$sppX_coug_wtd_cattle$Species == "wtd",]
+  sppX_coy_wtd <- sppX_cattle_list$sppX_coy_wtd_cattle[sppX_cattle_list$sppX_coy_wtd_cattle$Species == "coyote",]
+  sppX_wtd_coy <- sppX_cattle_list$sppX_coy_wtd_cattle[sppX_cattle_list$sppX_coy_wtd_cattle$Species == "wtd",]
+  # sppX_coy_md <- sppX_coy_md_cattle[sppX_coy_md_cattle$Species == "coyote",]
+  # sppX_md_coy <- sppX_coy_md_cattle[sppX_coy_md_cattle$Species == "mule_deer",]
+  
+  #'  Merge predator responses together for facet wrap plots
   pred_data <- rbind(sppX_coug_wtd, sppX_coy_wtd) %>%
     mutate(Predator = gsub( " .*$", "", Interaction ),
            InterX = gsub(".* ", "", Interaction))
@@ -832,6 +907,7 @@
     ggtitle("Effect of cattle activity on predator co-occurrence with white-tailed deer")
   coug_coy_wtd_graze_facet
   
+  #'  Merge prey responses together for facet wrap plots
   prey_data <- rbind(sppX_wtd_coug, sppX_wtd_coy) %>%
     mutate(Predator = gsub( " .*$", "", Interaction ),
            InterX = gsub(".* ", "", Interaction),
@@ -883,4 +959,14 @@
   ggsave("./Outputs/Figures/OccX_bear_coug_wolf_elk_moose_allot.tiff", pred_prey_allot_facet, 
          units = "in", width = 7, height = 6, dpi = 600, device = 'tiff', ) #, compression = 'lzw'
   
+  
+  sppX_coug_wtd.present <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Interaction == "cougar present" | sppX_coug_wtd_cattle$Interaction == "wtd present",]
+  sppX_coug_wtd.absent <- sppX_coug_wtd_cattle[sppX_coug_wtd_cattle$Interaction == "cougar absent" | sppX_coug_wtd_cattle$Interaction == "wtd absent",]
+  ggplot(sppX_coug_wtd.present, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_color_manual(values=c("#CC6666", "#9999CC")) +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_manual(values=c("#CC6666", "#9999CC")) +
+    ylim(0, 1) +
+    theme_bw()
   
