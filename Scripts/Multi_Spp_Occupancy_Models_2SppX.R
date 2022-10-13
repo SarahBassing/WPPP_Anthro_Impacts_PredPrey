@@ -113,6 +113,9 @@
   occFormulas_subglobal <- c("~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
                              "~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
                              "~1")
+  occFormulas_global_noX <- c("~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                          "~Study_Area + Elev + I(Elev^2) + PercForest + GrazingActivity + PublicGrazing", 
+                          "~0")
 
   
   ####  Cougar-Mule Deer Grazing Season  ####
@@ -216,6 +219,8 @@
   
   ####  Cougar-White-tailed Deer Grazing Season  ####
   (gs_cougwtd_global <- occuMulti(detFormulas_global, occFormulas_global, coug_wtd_grazing_UMF, silent = TRUE))
+  (gs_cougwtd_global_noX <- occuMulti(detFormulas_global, occFormulas_global_noX, coug_wtd_grazing_UMF, silent = TRUE))
+  
   
   (gs_cougwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_wtd_grazing_UMF, silent = TRUE))
   (gs_cougwtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coug_wtd_grazing_UMF, silent = TRUE))
@@ -804,6 +809,8 @@
   
   ####  Coyote-White-tailed Deer Grazing Season  ####
   (gs_coywtd_global <- occuMulti(detFormulas_global, occFormulas_global, coy_wtd_grazing_UMF, silent = TRUE))
+  (gs_coywtd_global_noX <- occuMulti(detFormulas_global, occFormulas_global_noX, coy_wtd_grazing_UMF, silent = TRUE))
+  
   
   (gs_coywtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_wtd_grazing_UMF, silent = TRUE))
   (gs_coywtd_graze2 <- occuMulti(detFormulas_graze, occFormulas_graze2, coy_wtd_grazing_UMF, silent = TRUE))
@@ -1017,6 +1024,9 @@
   occFormulas_subglobe <- c("~Study_Area + Elev + I(Elev^2) + PercForest", 
                            "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
                            "~HuntingActivity + Public")
+  occFormulas_subglobe1 <- c("~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity", 
+                            "~Study_Area + Elev + I(Elev^2) + PercForest + HuntingActivity + Public", 
+                            "~HuntingActivity + Public")
   
   
   ####  Cougar-Mule Deer Hunting Season  ####
