@@ -638,11 +638,13 @@
 
   #'  Summary stats on trap nights (active sites only)
   #'  Total number of trap nights (across camera sites)
-  trapnights_graze <- sum(Effort_graze1820, na.rm = T)
-  trapnights_hunt <- sum(Effort_hunt1820, na.rm = T)
+  trapnights_graze <- sum(Effort_graze1820, na.rm = T) #27359
+  trapnights_hunt <- sum(Effort_hunt1820, na.rm = T)   #18432
   #'  Remove rows of all NAs (inactive camera stations)
   eff_graze1820 <- Effort_graze1820[rowSums(is.na(Effort_graze1820)) != ncol(Effort_graze1820), ]
   eff_hunt1820 <- Effort_hunt1820[rowSums(is.na(Effort_hunt1820)) != ncol(Effort_hunt1820), ]
+  nrow(eff_graze1820) #349
+  nrow(eff_hunt1820)  #342
   #'  Average number of trap nights per sampling occasion & SE
   mean(eff_graze1820, na.rm = TRUE); sd(eff_graze1820, na.rm = TRUE)/length(eff_graze1820)
   mean(eff_hunt1820, na.rm = TRUE); sd(eff_hunt1820, na.rm = TRUE)/length(eff_hunt1820)
@@ -694,9 +696,19 @@
     summarise(n = n()) %>%
     ungroup()
   summary_dets <- group_by(ndet, Season) %>% 
-    summarize(mu_locs = mean(n), sd = sd(n), se_locs = sd(n)/sqrt(n())) %>% 
+    summarize(mu_dets = mean(n), sd = sd(n), se_dets = sd(n)/sqrt(n())) %>% 
     ungroup()
   
+  #'  Number of detections per species per season
+  ndet_by_spp <- CamTrap_Detections %>%
+    mutate(
+      Season2 = ifelse(grepl("Grazing", Season), "Grazing", "Hunting")
+    ) %>%
+    dplyr::select(CameraLocation, Species, Season, Season2) %>%
+    group_by(Species, Season2) %>%
+    summarise(ndet = n()) %>%
+    ungroup()
+  colnames(ndet_by_spp) <- c("Species", "Season", "Independent detections")
   
   #'  Percent of cameras where a species was detected
   #'  Based on number of active cameras in each study area and season
@@ -727,9 +739,11 @@
     ) %>%
     dplyr::select(-ncams)
   colnames(perc_cams) <- c("Species", "Season", "Percent of cameras")
+  
+  detection_summary_data <- full_join(ndet_by_spp, perc_cams, by = c("Species", "Season"))
 
   #'  Save
-  # write.csv(perc_cams, file = "./Outputs/Detection_Summary_Table.csv")
+  # write.csv(detection_summary_data, file = "./Outputs/Detection_Summary_Table.csv")
   
   
   
