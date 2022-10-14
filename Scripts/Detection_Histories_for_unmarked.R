@@ -635,7 +635,7 @@
   Effort_hunt1820 <- Effort_hunt1820[-c(16, 23, 25, 27, 29, 38, 85, 111, 119, 128, 129, 144, 146, 156, 162, 216, 274, 282, 283),]
   Effort_hunt1820_NE <- Effort_hunt1820[grepl("NE", row.names(Effort_hunt1820)),]
   Effort_hunt1820_OK <- Effort_hunt1820[grepl("OK", row.names(Effort_hunt1820)),]
-
+  
   #'  Summary stats on trap nights (active sites only)
   #'  Total number of trap nights (across camera sites)
   trapnights_graze <- sum(Effort_graze1820, na.rm = T) #27359
@@ -697,6 +697,11 @@
     ungroup()
   summary_dets <- group_by(ndet, Season) %>% 
     summarize(mu_dets = mean(n), sd = sd(n), se_dets = sd(n)/sqrt(n())) %>% 
+    ungroup() 
+  mean_dets <- ndet %>%
+    mutate(Anthro = ifelse(Season == "Grazing18" | Season == "Grazing19" | Season == "Grazing20", "Grazing", "Hunting")) %>%
+    group_by(Anthro) %>%
+    summarize(mu_des = mean(n), sd = sd(n), se_dets = sd(n)/sqrt(n())) %>%
     ungroup()
   
   #'  Number of detections per species per season
