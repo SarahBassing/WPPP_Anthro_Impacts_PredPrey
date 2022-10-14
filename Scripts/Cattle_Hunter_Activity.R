@@ -184,6 +184,22 @@
   OK_hunters20 <- filter(hunters2020, grepl("OK", CameraLocation))
   
   
+  #'  Save for data summary and making data available for publication
+  hunter_dets <- as.data.frame(rbind(hunters2018, hunters2019, hunters2020)) %>%
+    dplyr::select(-c(HumanActivity))
+  CowHunter_Detections <- as.data.frame(rbind(cattle2018, cattle2019, 
+                                              cattle2020, hunter_dets)) %>%
+    mutate(
+      Season = ifelse(Date < "2018-09-30", "Grazing18", "Grazing19"),
+      Season = ifelse(Date > "2020-01-01" & Date < "2020-09-30", "Grazing20", Season),
+      Season = ifelse(Date > "2018-09-30" & Date < "2018-11-30", "Hunt18", Season),
+      Season = ifelse(Date > "2019-09-30" & Date < "2019-11-30", "Hunt19", Season),
+      Season = ifelse(Date > "2020-09-30", "Hunt20", Season)
+    ) %>%
+    filter(Activity == "Bow_Rifle_Hunting" | Activity == "Grazing")
+  
+  # write.csv(CowHunter_Detections, paste0("./Outputs/CowHunter_Detections_", Sys.Date(), ".csv"))
+  
   ####  Camera Operation Table  ####
   #'  ------------------------------ 
   #'  Creates a matrix with each camera & dates it deployed
@@ -477,14 +493,13 @@
   ####  Summary Stats  ####
   #'  -----------------
   #'  Number of independent detections per season from camera traps
-  ndet <- CamTrap_Detections %>%
-    group_by(Season, Species) %>%
+  ndet <- CowHunter_Detections %>%
+    group_by(Season, Activity) %>%
     summarise(n = n()) %>%
     ungroup()
-  summary_dets <- group_by(ndet, Season) %>% 
+  summary_dets <- group_by(ndet, Activity) %>% 
     summarize(mu_locs = mean(n), sd = sd(n), se_locs = sd(n)/sqrt(n())) %>% 
     ungroup()
-  
   
   #'  Percent of cameras where a species was detected
   #'  Based on number of active cameras in each study area and season
@@ -495,29 +510,46 @@
   NEcams_hunt <- nrow(eff_hunt1820[grepl("NE", eff_hunt1820$CameraLocation),])
   OKcams_hunt <- nrow(eff_hunt1820[grepl("OK", eff_hunt1820$CameraLocation),])
   
-  perc_cams <- CamTrap_Detections %>%
-    mutate(
-      Season2 = ifelse(grepl("Grazing", Season), "Grazing", "Hunting")
-    ) %>%
-    dplyr::select(CameraLocation, Species, Season, Season2) %>%
-    group_by(Species, Season, CameraLocation) %>%
+  perc_cams <- CowHunter_Detections %>%
+    dplyr::select(CameraLocation, Season, Activity) %>%
+    group_by(Activity, CameraLocation) %>%
     filter(row_number(CameraLocation) == 1) %>%
     ungroup() %>%
-    group_by(Species, Season2) %>%
+    group_by(Activity) %>%
     summarise(ncams = n()) %>%
     ungroup() %>%
     mutate(
-      propcams = ifelse(Season2 == "Grazing", ncams/ncams_graze, ncams/ncams_hunt),
+      propcams = ifelse(Activity == "Grazing", ncams/ncams_graze, ncams/ncams_hunt),
       propcams = round(propcams, 2)
       #' #'  If I want to only focus on NE cameras for elk
       #' propcams = ifelse(Species == "Elk" & Season2 == "Grazing", ncams/NEcams_graze, propcams),
       #' propcams = ifelse(Species == "Elk" & Season2 == "Hunting", ncams/NEcams_hunt, propcams)
     ) %>%
     dplyr::select(-ncams)
-  colnames(perc_cams) <- c("Species", "Season", "Percent of cameras")
+  colnames(perc_cams) <- c("Activity", "Percent of cameras")
   
   #'  Save
-  # write.csv(perc_cams, file = "./Outputs/Detection_Summary_Table.csv")
+  # write.csv(perc_cams, file = "./Outputs/CattleHunter_Summary_Table.csv")
+  
+  graze_cams <- CowHunter_Detections %>%
+    filter(Activity == "Grazing") %>%
+    dplyr::select(CameraLocation, Season, Activity) %>%
+    group_by(Activity, CameraLocation) %>%
+    filter(row_number(CameraLocation) == 1) %>%
+    ungroup() 
+  nOKgraze_cams <- filter(graze_cams, grepl("OK", CameraLocation))
+  (percOKgraze_cams <- nrow(nOKgraze_cams)/nrow(graze_cams))
+  
+  hunter_cams <- CowHunter_Detections %>%
+    filter(Activity != "Grazing") %>%
+    dplyr::select(CameraLocation, Season, Activity) %>%
+    group_by(Activity, CameraLocation) %>%
+    filter(row_number(CameraLocation) == 1) %>%
+    ungroup() 
+  nOKhunter_cams <- filter(hunter_cams, grepl("OK", CameraLocation))
+  (percOKhunter_cams <- nrow(nOKhunter_cams)/nrow(hunter_cams))
+    
+  
   
   
   
