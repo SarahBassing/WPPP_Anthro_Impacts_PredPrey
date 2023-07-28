@@ -198,7 +198,7 @@
     
     return(sppX_df)
   }
-  #'  Predict cond. occupancy for each pairwise interaction over range of cattle activity
+  #'  Predict cond. occupancy for each pairwise interaction over range of hunter activity
   #'  NOTE: setting all other continuous variables to 0 (their mean value) and 
   #'  setting categorical variables as either 0 or 1
   #'  For elk, moose, & wtd study area = 0 (NE) vs md study area = 1 (OK) because 
@@ -262,13 +262,56 @@
   save(sppX_hunt_list, file = "./Outputs/sppX_hunter_for_visualizing.RData")
   
   
+  #'  Predict cond. occupancy for each pairwise interaction on public vs private land
+  #'  NOTE: setting all continuous variables to 0 (their mean value) and setting 
+  #'  categorical variables as either 0 or 1
+  #'  For elk, moose, & wtd study area = 0 (NE) vs md study area = 1 (OK) because 
+  #'  higher species-specific densities in the respective study areas
+  sppX_coug_md_pub <- spp_interactions_h(hs_cougmd_global, elev = 0, act = 0,
+                                          forest = 0, pub = 1, area = 1, spp1 = "cougar",
+                                          spp2 = "muledeer", cov = "Public")
+  sppX_coug_md_priv <- spp_interactions_h(hs_cougmd_global, elev = 0, act = 0,
+                                           forest = 0, pub = 0, area = 1, spp1 = "cougar",
+                                           spp2 = "muledeer", cov = "Private")
+  sppX_coug_wtd_pub <- spp_interactions_h(hs_cougwtd_global, elev = 0, act = 0,
+                                             forest = 0, pub = 1, area = 0, spp1 = "cougar",
+                                             spp2 = "wtd", cov = "Public")
+  sppX_coug_wtd_priv <- spp_interactions_h(hs_cougwtd_global, elev = 0, act = 0,
+                                          forest = 0, pub = 0, area = 0, spp1 = "cougar",
+                                          spp2 = "wtd", cov = "Private")
+  sppX_bob_wtd_pub <- spp_interactions_h(hs_bobwtd_global, elev = 0, act = 0,
+                                           forest = 0, pub = 1, area = 0, spp1 = "bobcat",
+                                           spp2 = "wtd", cov = "Public")
+  sppX_bob_wtd_priv <- spp_interactions_h(hs_bobwtd_global, elev = 0, act = 0,
+                                          forest = 0, pub = 0, area = 0, spp1 = "bobcat",
+                                          spp2 = "wtd", cov = "Private")
+  sppX_coy_wtd_pub <- spp_interactions_h(hs_coywtd_global, elev = 0, act = 0,
+                                         forest = 0, pub = 1, area = 0, spp1 = "coyote",
+                                         spp2 = "wtd", cov = "Public")
+  sppX_coy_wtd_priv <- spp_interactions_h(hs_coywtd_global, elev = 0, act = 0,
+                                          forest = 0, pub = 0, area = 0, spp1 = "coyote",
+                                          spp2 = "wtd", cov = "Private")
+  
+  #'  Save these since they take so long to generate!
+  sppX_coug_md_landownership <- rbind(sppX_coug_md_pub, sppX_coug_md_priv)
+  sppX_coug_wtd_landownership <- rbind(sppX_coug_wtd_pub, sppX_coug_wtd_priv)
+  sppX_bob_wtd_landownership <- rbind(sppX_bob_wtd_pub, sppX_bob_wtd_priv)
+  sppX_coy_wtd_landownership <- rbind(sppX_coy_wtd_pub, sppX_coy_wtd_priv)
+  
+  sppX_landownership_list <- list(sppX_coug_md_landownership, sppX_coug_wtd_landownership, sppX_bob_wtd_landownership, sppX_coy_wtd_landownership)
+  names(sppX_landownership_list) <- c("sppX_coug_md_landownership", "sppX_coug_wtd_landowner", "sppX_bob_wtd_landownership", "sppX_coy_wtd_landowner")
+  save(sppX_landownership_list, file = "./Outputs/sppX_landownership_for_visualizing.RData")
+  
+  
   #'  ------------------------------------
   ####  Visualize conditional occupancy  ####
   #'  ------------------------------------
   #'  Load predicted conditional occupancy
   load("./Outputs/sppX_cattle_for_visualizing.RData")
   load("./Outputs/sppX_hunter_for_visualizing.RData")
+  load("./Outputs/sppX_landownership_for_visualizing.RData")
   
+  #####  Cattle activity plots  ####
   #'  Cougar-wtd co-occurrence with cattle activity
   coug_wtd_data <- sppX_cattle_list$sppX_coug_wtd_cattle %>% 
     mutate(InterXSpp = gsub( " .*$", "", Interaction ),
@@ -290,11 +333,39 @@
     theme(legend.position="bottom") +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Effect of cattle activity on cougar - white-tailed deer co-occurrence")
+    ggtitle("Cougar - white-tailed deer co-occurrence, grazing season")
   coug_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coug_wtd_graze.tiff", coug_wtd_graze_facet, 
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  #'  Coyote-md co-occurrence with cattle activity
+  coy_md_data <- sppX_cattle_list$sppX_coy_md_cattle %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("mule_deer absent", "mule_deer present", "coyote absent", "coyote present")),
+           Interaction = gsub("_", " ", Interaction),
+           InterXSpp = gsub("_", " ", InterXSpp),
+           Species = gsub("_", " ", Species))
+  newlabs <- c("coyote" = "Coyote", "mule deer" = "Mule deer") 
+  coy_md_graze_facet <- ggplot(coy_md_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
+                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species Interaction") +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
+                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species Interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Cattle grazing activity (cattle detections/day)") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Coyote - mule deer co-occurrence, grazing season")
+  coy_md_graze_facet
+  
+  ggsave("./Outputs/Figures/OccX_coy_md_graze.tiff", coy_md_graze_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
   
   #'  Coyote-wtd co-occurrence with cattle activity
   coy_wtd_data <- sppX_cattle_list$sppX_coy_wtd_cattle %>% 
@@ -315,14 +386,116 @@
     theme(legend.position="bottom") +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Effect of cattle activity on coyote - white-tailed deer co-occurrence")
+    ggtitle("Coyote - white-tailed deer co-occurrence, grazing season")
   coy_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coy_wtd_graze.tiff", coy_wtd_graze_facet, 
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
   
+  ##### Land ownership plots ####
+  #'  Cougar-md co-occurrence on private vs public land
+  coug_md_land_data <- sppX_landownership_list$sppX_coug_md_landowner %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("muledeer absent", "muledeer present", "cougar absent", "cougar present")))
+  newlabs <- c("cougar" = "Cougar", "muledeer" = "Mule deer") 
+  coug_md_land_facet <- ggplot(coug_md_land_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_errorbar(aes(ymin=lower, ymax = upper, color = Interaction), width = 0, position = position_dodge(width = 0.4)) +
+    scale_fill_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present",
+                                 "muledeer absent" = "Mule deer absent", "muledeer present" = "Mule deer present"), name = "Species Interaction") +
+    geom_point(stat = "identity", aes(col = Interaction), size = 2.5, position = position_dodge(width = 0.4)) +
+    scale_colour_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present", 
+                                   "muledeer absent" = "Mule deer absent", "muledeer present" = "Mule deer present"), name = "Species Interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Land ownership") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Cougar - mule deer co-occurrence, hunting season")
+  coug_md_land_facet
+  
+  ggsave("./Outputs/Figures/OccX_coug_md_landownership.tiff", coug_md_land_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  #'  Cougar-wtd co-occurrence on private vs public land
+  coug_wtd_land_data <- sppX_landownership_list$sppX_coug_wtd_landowner %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "cougar absent", "cougar present"))) 
+  newlabs <- c("cougar" = "Cougar", "wtd" = "White-tailed deer") 
+  coug_wtd_land_facet <- ggplot(coug_wtd_land_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_errorbar(aes(ymin=lower, ymax = upper, color = Interaction), width = 0, position = position_dodge(width = 0.4)) +
+    scale_fill_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    geom_point(stat = "identity", aes(col = Interaction), size = 2.5, position = position_dodge(width = 0.4)) +
+    scale_colour_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Land ownership") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Cougar - white-tailed deer co-occurrence, hunting season")
+  coug_wtd_land_facet
+  
+  ggsave("./Outputs/Figures/OccX_coug_wtd_landownership.tiff", coug_wtd_land_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  #'  Bobcat-wtd co-occurrence on private vs public land
+  bob_wtd_land_data <- sppX_landownership_list$sppX_bob_wtd_landowner %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "bobcat absent", "bobcat present")))
+  newlabs <- c("bobcat" = "Bobcat", "wtd" = "White-tailed deer") 
+  bob_wtd_land_facet <- ggplot(bob_wtd_land_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_errorbar(aes(ymin=lower, ymax = upper, color = Interaction), width = 0, position = position_dodge(width = 0.4)) +
+    scale_fill_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    geom_point(stat = "identity", aes(col = Interaction), size = 2.5, position = position_dodge(width = 0.4)) +
+    scale_colour_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Land ownership") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Bobcat - white-tailed deer co-occurrence, hunting season")
+  bob_wtd_land_facet
+  
+  ggsave("./Outputs/Figures/OccX_bob_wtd_landownership.tiff", bob_wtd_land_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  #'  Coyote-wtd co-occurrence on private vs public land
+  coy_wtd_land_data <- sppX_landownership_list$sppX_coy_wtd_landowner %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "coyote absent", "coyote present")))
+  newlabs <- c("coyote" = "Coyote", "wtd" = "White-tailed deer") 
+  coy_wtd_land_facet <- ggplot(coy_wtd_land_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_errorbar(aes(ymin=lower, ymax = upper, color = Interaction), width = 0, position = position_dodge(width = 0.4)) +
+    scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    geom_point(stat = "identity", aes(col = Interaction), size = 2.5, position = position_dodge(width = 0.4)) +
+    scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom") +
+    xlab("Land ownership") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Coyote - white-tailed deer co-occurrence, hunting season")
+  coy_wtd_land_facet
+  
+  ggsave("./Outputs/Figures/OccX_coy_wtd_landownership.tiff", coy_wtd_land_facet, 
+         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+  
+  ##### Hunter activity plots ####
   #'  Coyote-wtd co-occurrence with hunter activity
-  coy_wtd_data <- sppX_hunt_list$sppX_coy_wtd_hunter %>% #rbind(sppX_coy_wtd, sppX_wtd_coy) %>%
+  coy_wtd_data <- sppX_hunt_list$sppX_coy_wtd_hunter %>% 
     mutate(InterXSpp = gsub( " .*$", "", Interaction ),
            InterX = gsub(".* ", "", Interaction),
            Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "coyote absent", "coyote present")))
@@ -340,14 +513,14 @@
     theme(legend.position="bottom") +
     xlab("Hunter activity (hunter detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Effect of hunter activity on coyote - white-tailed deer co-occurrence")
+    ggtitle("Coyote - white-tailed deer co-occurrence, hunting season")
   coy_wtd_hunt_facet
   
   ggsave("./Outputs/Figures/OccX_coy_wtd_hunt.tiff", coy_wtd_hunt_facet, 
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
   
   #'  Wolf-moose co-occurrence with hunter activity
-  wolf_moose_data <- sppX_hunt_list$sppX_wolf_moose_hunter %>% #rbind(sppX_wolf_moose, sppX_moose_wolf) %>%
+  wolf_moose_data <- sppX_hunt_list$sppX_wolf_moose_hunter %>% 
     mutate(InterXSpp = gsub( " .*$", "", Interaction ),
            InterX = gsub(".* ", "", Interaction),
            Interaction = factor(Interaction, levels = c("moose absent", "moose present", "wolf absent", "wolf present")),
@@ -366,20 +539,19 @@
     theme(legend.position="bottom") +
     xlab("Hunter activity (hunter detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Effect of hunter activity on wolf - moose co-occurrence")
+    ggtitle("Wolf - moose co-occurrence, hunting season")
   wolf_moose_hunt_facet
   
   ggsave("./Outputs/Figures/OccX_wolf_moose_hunt.tiff", wolf_moose_hunt_facet, 
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
   
-  
-  
+  ##### Patchwork plots together  ####
   coocc_patwork <- coug_wtd_graze_facet + coy_wtd_graze_facet + wolf_moose_hunt_facet + 
-    coy_wtd_hunt_facet + plot_layout(ncol = 2) + plot_annotation(tag_levels = 'a')
+    bob_wtd_land_facet + plot_layout(ncol = 2) + plot_annotation(tag_levels = 'a')
   coocc_patwork
   
   ggsave("./Outputs/Figures/OccX_pred-prey_cattl&hunter.tiff", coocc_patwork, 
-         units = "in", width = 15, height = 10, dpi = 600, device = 'tiff', compression = 'lzw')
+         units = "in", width = 15, height = 11, dpi = 600, device = 'tiff', compression = 'lzw')
   
   
   
