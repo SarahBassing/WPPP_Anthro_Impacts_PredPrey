@@ -547,7 +547,8 @@
   
   ##### Patchwork plots together  ####
   coocc_patwork <- coug_wtd_graze_facet + coy_wtd_graze_facet + wolf_moose_hunt_facet + 
-    bob_wtd_land_facet + plot_layout(ncol = 2) + plot_annotation(tag_levels = 'a')
+    bob_wtd_land_facet + plot_layout(ncol = 2) + 
+    plot_annotation(tag_levels = 'a') & theme(axis.title = element_text(size = 16))
   coocc_patwork
   
   ggsave("./Outputs/Figures/OccX_pred-prey_cattl&hunter.tiff", coocc_patwork, 
