@@ -86,9 +86,6 @@
     st_crop(st_bbox(dem_low))
   
   
-  ####  TRY MAPPING PUBLIC LANDS INSTEAD OF DEM FOR THIS FIGURE  ####
-  
-  
   ####  Map study area and camera locations  ####
   #'  ========================================
   #'  Read in camera locations
