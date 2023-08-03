@@ -60,6 +60,35 @@
   dem_p_df <- as.data.frame(dem_p_low)
   colnames(dem_p_df) <- c("x", "y", "value")
   
+  #'  Public land shapefiles
+  USFS <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "S_USA.RangerDistrict") %>%
+    st_transform(crs = sa_proj) %>%
+    st_crop(st_bbox(dem_low))
+  WADNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "WA_DNR_Managed_Land_Parcels") %>%
+    st_transform(crs = sa_proj) %>%
+    st_crop(st_bbox(dem_low))
+  # NE_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Colville_NF") %>%
+  #   st_transform(crs = sa_proj)
+  # OK_NF <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "Okanogan_NF") %>%
+  #   st_transform(crs = sa_proj)
+  # NE_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Northeast_DNR") %>%
+  #   st_transform(crs = sa_proj)
+  # OK_DNR <- st_read("./Shapefiles/WA_DNR_Managed_Land_Parcels", layer = "Okanogan_DNR") %>%
+  #   st_transform(crs = sa_proj)
+  WDFW <- st_read("./Shapefiles/WDFW_Wildlife_Areas", layer = "Wildlife_Areas") %>%
+    st_transform(crs = sa_proj) %>%
+    st_crop(st_bbox(dem_low))
+  NWR <- st_read("./Shapefiles/USFWS_National_Realty_Tracts_Simplified", layer = "FWSInterest_Simplified") %>%
+    st_transform(crs = sa_proj) %>%
+    st_crop(st_bbox(dem_low))
+  NPS <- st_read("./Shapefiles/National_Park_Service_Land_Resources_Division_Tract_and_Boundary_Service", layer = "National_Park_Service_Land_Resources_Division_Tract_and_Boundary_Service") %>%
+    st_transform(crs = sa_proj) %>%
+    st_crop(st_bbox(dem_low))
+  
+  
+  ####  TRY MAPPING PUBLIC LANDS INSTEAD OF DEM FOR THIS FIGURE  ####
+  
+  
   ####  Map study area and camera locations  ####
   #'  ========================================
   #'  Read in camera locations
@@ -71,6 +100,17 @@
   cams_reproj <- st_transform(cams, crs = sa_proj)
   cams_reproj <- mutate(cams_reproj, Year2 = ifelse(Year == "Year1", "2018", "2019"),
                         Year2 = ifelse(Year == "Year3", "2020", Year2 )) 
+  
+  #'  Remove Gebbers cameras from map
+  #OK7945_45, OK7658_43, OK5552_103, OK7165_90, OK7270_1, OK6597_41, OK7545_51, 
+  #OK7073_80, OK8127_125, OK8234_102, OK7470_45, OK5936_59
+  cams_reproj_nogebs <- cams_reproj %>%
+    filter(CameraLocation != "OK7945_45" & CameraLocation != "OK7658_43" & 
+             CameraLocation != "OK5552_103" & CameraLocation != "OK7165_90" & 
+             CameraLocation != "OK7270_1" & CameraLocation != "OK6597_41" & 
+             CameraLocation != "OK7545_51" & CameraLocation != "OK7073_80" & 
+             CameraLocation != "OK8127_125" & CameraLocation != "OK8234_102" & 
+             CameraLocation != "OK7470_45" & CameraLocation != "OK5936_59")
   
   #'  City locations
   city <- c("Chewelah, \n   WA", "Winthrop, \n   WA")
@@ -102,11 +142,16 @@
   
   #'  Plot study areas against DEM with camera locations
   cam_SA_map <- ggplot() +
-    geom_raster(data = dem_p_df, aes(x = x, y = y, fill = value, alpha = value), show.legend = FALSE) + 
-    #'  alpha adjusts transparency of the raster (can also just set it range = 0.7)
-    scale_alpha(range = c(0.3, 0.8)) +
-    #'  Change colors of the raster
-    scale_fill_gradient2(low = "grey95", high = "tan4") + #gray20
+    geom_sf(data = USFS, fill = alpha("lightgreen", 0.1), color = alpha("lightgreen", 0.1), size = 0.01) +
+    geom_sf(data = WADNR, fill = alpha("lightgreen", 0.1), color = alpha("lightgreen", 0.1), size = 0.01) +
+    geom_sf(data = WDFW, fill = alpha("lightgreen", 0.1), color = alpha("lightgreen", 0.1), size = 0.01) +
+    geom_sf(data = NWR, fill = alpha("lightgreen", 0.1), color = alpha("lightgreen", 0.1), size = 0.01) +
+    geom_sf(data = NPS, fill = alpha("lightgreen", 0.1), color = alpha("lightgreen", 0.1), size = 0.01) +
+    # geom_raster(data = dem_p_df, aes(x = x, y = y, fill = value, alpha = value), show.legend = FALSE) + 
+    #' #'  alpha adjusts transparency of the raster (can also just set it range = 0.7)
+    #' scale_alpha(range = c(0.3, 0.8)) +
+    #' #'  Change colors of the raster
+    #' scale_fill_gradient2(low = "grey95", high = "tan4") + #gray20
     #'  Add study area outlines and label with their names
     geom_sf(data = OK_SA, fill = NA, color="black", size = 0.80) +
     #'  Note the hjust & vjust need to change based on font size and coord_sf
@@ -117,7 +162,7 @@
     #'  Add camera locations and vary color by deployment year
     geom_sf(data = cams_reproj, aes(color = Year2), shape = 19, size = 2.5) +
     #'  Change camera data aesthetics (make sure it's colorblind friendly)
-    scale_color_viridis_d(alpha = 0.6) +
+    # scale_color_viridis_d(alpha = 0.7) +
     # geom_sf(data = city_sf, col = "black", shape = 1, size = 2.5) +
     # geom_sf_text(data = city_sf, aes(label = city, hjust = -0.05, vjust = 1), size = 3) +
     labs(colour = "Camera\nlocations") +
@@ -149,7 +194,7 @@
   #'  Use export option in Plot window and formatting holds
   # tiff(file = "./Outputs/Figures/Maps/StudyAreas_Cameras1820_05.31.22.tiff",
   #     width = 1000, height = 691) 
-  tiff(file = "./Outputs/Figures/StudyAreaMap_Cameras_2018-2020.tiff",
+  tiff(file = "./Outputs/Figures/StudyAreaMap_Cameras_2018-2020_updated.tiff",
        units="in", width=11, height=6.5, res=800, compression = 'lzw') 
   StudyArea_Map <- ggdraw(cam_SA_map) +
     draw_plot(
