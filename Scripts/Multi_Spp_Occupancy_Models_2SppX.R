@@ -118,7 +118,7 @@
                           "~0")
 
   
-  ####  Cougar-Mule Deer Grazing Season  ####
+  #####  Cougar-Mule Deer Grazing Season  #####
   (gs_cougmd_global <- occuMulti(detFormulas_global, occFormulas_global, coug_md_grazing_UMF, silent = TRUE))
   
   (gs_cougmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_md_grazing_UMF, silent = TRUE))
@@ -167,7 +167,7 @@
   #' summary(gs_cougmd_hab0)
   #' summary(gs_cougmd_hab1) # f12 not significant
   
-  ####  Cougar-ELK Grazing Season  ####
+  #####  Cougar-ELK Grazing Season  #####
   (gs_cougelk_global <- occuMulti(detFormulas_global, occFormulas_global, coug_elk_grazing_UMF, silent = TRUE))
   
   (gs_cougelk_allot0 <- occuMulti(detFormulas_allot, occFormulas_allot0, coug_elk_grazing_UMF, silent = TRUE))  
@@ -217,7 +217,7 @@
   #' summary(gs_cougelk_hab0)
   #' # summary(gs_cougelk_hab1) # f12 not significant
   
-  ####  Cougar-White-tailed Deer Grazing Season  ####
+  #####  Cougar-White-tailed Deer Grazing Season  #####
   (gs_cougwtd_global <- occuMulti(detFormulas_global, occFormulas_global, coug_wtd_grazing_UMF, silent = TRUE))
   (gs_cougwtd_global_noX <- occuMulti(detFormulas_global, occFormulas_global_noX, coug_wtd_grazing_UMF, silent = TRUE))
   
@@ -273,7 +273,7 @@
   #' summary(gs_cougwtd_graze0)
   #' # summary(gs_cougwtd_graze1) # f12 not significant
   
-  ####  Cougar-Moose Grazing Season  ####
+  #####  Cougar-Moose Grazing Season  #####
   (gs_cougmoose_global <- occuMulti(detFormulas_global, occFormulas_global, coug_moose_grazing_UMF, silent = TRUE))
   
   (gs_cougmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coug_moose_grazing_UMF, silent = TRUE))
@@ -327,7 +327,7 @@
   #' summary(gs_cougmoose_graze0)
   
   
-  ####  Wolf-Mule Deer Grazing Season  ####
+  #####  Wolf-Mule Deer Grazing Season  #####
   (gs_wolfmd_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_md_grazing_UMF, silent = TRUE))
   
   (gs_wolfmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_md_grazing_UMF, silent = TRUE))
@@ -379,7 +379,7 @@
   #' # summary(gs_wolfmd_hab1) # f12 not significant
   
   
-  ####  Wolf-Elk Grazing Season  ####
+  #####  Wolf-Elk Grazing Season  #####
   #(gs_wolfelk_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_elk_grazing_UMF, silent = TRUE)) # FAILS
   (gs_wolfelk_global <- occuMulti(detFormulas_global, occFormulas_subglobal, wolf_elk_grazing_UMF, silent = TRUE)) 
   
@@ -433,7 +433,7 @@
   #' summary(gs_wolfelk_graze0) # not adding any significant info
   #' summary(gs_wolfelk_hab1) # f1 not significant
   
-  ####  Wolf-White-tailed Deer Grazing Season  ####
+  #####  Wolf-White-tailed Deer Grazing Season  #####
   (gs_wolfwtd_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_wtd_grazing_UMF, silent = TRUE))
   
   (gs_wolfwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, wolf_wtd_grazing_UMF, silent = TRUE))
@@ -483,7 +483,7 @@
   #' summary(gs_wolfwtd_graze0)
   #' # summary(gs_wolfwtd_graze1) # f12 not significant
   
-  ####  Wolf-Moose Grazing Season  ####
+  #####  Wolf-Moose Grazing Season  #####
   # (gs_wolfmoose_global <- occuMulti(detFormulas_global, occFormulas_global, wolf_moose_grazing_UMF, silent = TRUE)) # FAIL
   (gs_wolfmoose_global <- occuMulti(detFormulas_global, occFormulas_subglobal, wolf_moose_grazing_UMF, silent = TRUE))
   
@@ -538,7 +538,7 @@
   
   
   
-  ####  Bear-Mule Deer Grazing Season  ####
+  #####  Bear-Mule Deer Grazing Season  #####
   (gs_bearmd_global <- occuMulti(detFormulas_global, occFormulas_global, bear_md_grazing_UMF, silent = TRUE))
   
   (gs_bearmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_md_grazing_UMF, silent = TRUE))
@@ -594,7 +594,7 @@
   #' # summary(gs_bearmd_hab1) # f12 not significant
   #' summary(gs_bearmd_hab0)
   
-  ####  Bear-Elk Grazing Season  ####
+  #####  Bear-Elk Grazing Season  #####
   (gs_bearelk_global <- occuMulti(detFormulas_global, occFormulas_global, bear_elk_grazing_UMF, silent = TRUE)) 
   
   (gs_bearelk_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_elk_grazing_UMF, silent = TRUE)) 
@@ -651,7 +651,7 @@
   #' # summary(gs_bearelk_hab1) # f12 not signigicant
   #' summary(gs_bearelk_hab0)
   
-  ####  Bear-White-tailed Deer Grazing Season  ####
+  #####  Bear-White-tailed Deer Grazing Season  #####
   (gs_bearwtd_global <- occuMulti(detFormulas_global, occFormulas_global, bear_wtd_grazing_UMF, silent = TRUE))
   
   (gs_bearwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_wtd_grazing_UMF, silent = TRUE))
@@ -704,7 +704,7 @@
   #' # summary(gs_bearwtd_graze1) # f12 not significant
   
   
-  ####  Bear-Moose Grazing Season  ####
+  #####  Bear-Moose Grazing Season  #####
   (gs_bearmoose_global <- occuMulti(detFormulas_global, occFormulas_subglobal, bear_moose_grazing_UMF, silent = TRUE)) 
   
   (gs_bearmoose_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bear_moose_grazing_UMF, silent = TRUE)) 
@@ -760,7 +760,7 @@
   
   
   
-  ####  Coyote-Mule Deer Grazing Season  ####
+  #####  Coyote-Mule Deer Grazing Season  #####
   (gs_coymd_global <- occuMulti(detFormulas_global, occFormulas_global, coy_md_grazing_UMF, silent = TRUE))
   
   (gs_coymd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, coy_md_grazing_UMF, silent = TRUE))
@@ -807,7 +807,7 @@
   #' modSel(gs_coymd_fl)
   #' summary(gs_coymd_graze2)
   
-  ####  Coyote-White-tailed Deer Grazing Season  ####
+  #####  Coyote-White-tailed Deer Grazing Season  #####
   (gs_coywtd_global <- occuMulti(detFormulas_global, occFormulas_global, coy_wtd_grazing_UMF, silent = TRUE))
   (gs_coywtd_global_noX <- occuMulti(detFormulas_global, occFormulas_global_noX, coy_wtd_grazing_UMF, silent = TRUE))
   
@@ -860,7 +860,7 @@
   #' summary(gs_coywtd_graze1)
   
   
-  ####  Bobcat-Mule Deer Grazing Season  ####
+  #####  Bobcat-Mule Deer Grazing Season  #####
   (gs_bobmd_global <- occuMulti(detFormulas_global, occFormulas_global, bob_md_grazing_UMF, silent = TRUE))
   
   (gs_bobmd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_md_grazing_UMF, silent = TRUE))
@@ -913,7 +913,7 @@
   #' # summary(gs_bobmd_graze2) # f12 not significant
   #' # summary(gs_bobmd_graze1) # f12 not significant
   
-  ####  Bobcat-White-tailed Deer Grazing Season  ####
+  #####  Bobcat-White-tailed Deer Grazing Season  #####
   (gs_bobwtd_global <- occuMulti(detFormulas_global, occFormulas_global, bob_wtd_grazing_UMF, silent = TRUE))
   
   (gs_bobwtd_allot2 <- occuMulti(detFormulas_allot, occFormulas_allot2, bob_wtd_grazing_UMF, silent = TRUE))
@@ -1029,14 +1029,14 @@
                             "~HuntingActivity + Public")
   
   
-  ####  Cougar-Mule Deer Hunting Season  ####
+  #####  Cougar-Mule Deer Hunting Season  #####
   (hs_cougmd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_md_hunting_UMF, silent = TRUE))
   
   (hs_cougmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_md_hunting_UMF, silent = TRUE))
-  (hs_cougmd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_md_hunting_UMF, silent = TRUE))
-  (hs_cougmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_md_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_cougmd_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coug_md_hunting_UMF, silent = TRUE))
+  (hs_cougmd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coug_md_hunting_UMF, silent = TRUE)) # FAIL with det_pub
   #' List of fitted models
-  hs_cougmd_fl <- fitList(hs_cougmd_pub2, hs_cougmd_hunt1) 
+  hs_cougmd_fl <- fitList(hs_cougmd_pub2, hs_cougmd_hunt2) 
   #' Model selection
   modSel(hs_cougmd_fl)
   summary(hs_cougmd_pub2)
@@ -1087,16 +1087,16 @@
   #' summary(hs_cougmd_hunt0)
   #' summary(hs_cougmd_hunt1)
 
-  ####  Cougar-Elk Hunting Season  ####
+  #####  Cougar-Elk Hunting Season  #####
   #(hs_cougelk_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_elk_hunting_UMF, silent = TRUE)) #FAIL
   (hs_cougelk_global <- occuMulti(detFormulas_globe, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # still not great on coug model
   
   (hs_cougelk_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_elk_hunting_UMF, silent = TRUE))
   (hs_cougelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
   (hs_cougelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_cougelk_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1 not converging well 
-  (hs_cougelk_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1not converging well
-  (hs_cougelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_cougelk_hunt0 <- occuMulti(detFormulas_hunt, occFormulas_hunt0, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1 not converging well with det_pub
+  (hs_cougelk_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coug_elk_hunting_UMF, silent = TRUE)) # HuntingActivity on f1not converging well, fails with det_hunt
+  (hs_cougelk_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coug_elk_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
   hs_cougelk_fl <- fitList(hs_cougelk_pub0, hs_cougelk_hunt0, hs_cougelk_hunt1) 
   #' Model selection
@@ -1143,13 +1143,14 @@
   #' modSel(hs_cougelk_fl)
   #' summary(hs_cougelk_pub0)
   
-  ####  Cougar-White-tailed Deer Hunting Season  ####
+  #####  Cougar-White-tailed Deer Hunting Season  #####
   (hs_cougwtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coug_wtd_hunting_UMF, silent = TRUE))
   
   (hs_cougwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_wtd_hunting_UMF, silent = TRUE))
-  (hs_cougwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_wtd_hunting_UMF, silent = TRUE))
+  (hs_cougwtd_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coug_wtd_hunting_UMF, silent = TRUE)) 
+  (hs_cougwtd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coug_wtd_hunting_UMF, silent = TRUE)) # FAILS with det_hunt
   #' List of fitted models
-  hs_cougwtd_fl <- fitList(hs_cougwtd_pub2, hs_cougwtd_hunt2) 
+  hs_cougwtd_fl <- fitList(hs_cougwtd_pub2, hs_cougwtd_hunt1, hs_cougwtd_hunt2) 
   #' Model selection
   modSel(hs_cougwtd_fl)
   summary(hs_cougwtd_pub2)
@@ -1195,16 +1196,16 @@
   #' summary(hs_cougwtd_pub2)
   #' summary(hs_cougwtd_pub0)
   
-  ####  Cougar-Moose Hunting Season  ####
+  #####  Cougar-Moose Hunting Season  ###E#
   #(hs_cougmoose_global <- occuMulti(detFormulas_globe, occFormulas_globe, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
   (hs_cougmoose_global <- occuMulti(detFormulas_globe, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE))
   
   (hs_cougmoose_pub0 <- occuMulti(detFormulas_pub, occFormulas_pubish0, coug_moose_hunting_UMF, silent = TRUE))
   (hs_cougmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pubish1, coug_moose_hunting_UMF, silent = TRUE)) # f2 & f12 intercepts not converging well
   (hs_cougmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pubish2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_cougmoose_hunt0 <- occuMulti(detFormulas_pub, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE)) # HuntingActivity f1 not converging well
-  (hs_cougmoose_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_cougmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_cougmoose_hunt0 <- occuMulti(detFormulas_hunt, occFormulas_hunt0, coug_moose_hunting_UMF, silent = TRUE)) # HuntingActivity f1 not converging well with pub_hunt
+  (hs_cougmoose_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_cougmoose_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coug_moose_hunting_UMF, silent = TRUE)) # FAIL
   #' List of fitted models
   hs_cougmoose_fl <- fitList(hs_cougmoose_pub0, hs_cougmoose_hunt0) 
   #' Model selection
@@ -1253,13 +1254,13 @@
   #' summary(hs_cougmoose_hunt0)
   
 
-  ####  Wolf-Mule Deer Hunting Season  ####
+  #####  Wolf-Mule Deer Hunting Season  #####
   #(hs_wolfmd_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_md_hunting_UMF, silent = TRUE)) # FAIL
   (hs_wolfmd_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
   
   (hs_wolfmd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_md_hunting_UMF, silent = TRUE))
   (hs_wolfmd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_md_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfmd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
+  (hs_wolfmd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, wolf_md_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_wolfmd_fl <- fitList(hs_wolfmd_pub1, hs_wolfmd_hunt2) 
   #' Model selection
@@ -1310,13 +1311,13 @@
   #' summary(hs_wolfmd_hunt2)
   
   
-  ####  Wolf-Elk Hunting Season  ####
+  #####  Wolf-Elk Hunting Season  #####
   #(hs_wolfelk_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_elk_hunting_UMF, silent = TRUE)) # FAIL
   (hs_wolfelk_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))  # human density on interaction is a bit wonky
   
   (hs_wolfelk_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_elk_hunting_UMF, silent = TRUE))
   (hs_wolfelk_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_elk_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfelk_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))
+  (hs_wolfelk_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, wolf_elk_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_wolfelk_fl <- fitList(hs_wolfelk_pub1, hs_wolfelk_hunt2) 
   #' Model selection
@@ -1363,13 +1364,13 @@
   #' modSel(hs_wolfelk_fl)
   #' summary(hs_wolfelk_hunt0)
   
-  ####  Wolf-White-tailed Deer Hunting Season  ####
+  #####  Wolf-White-tailed Deer Hunting Season  #####
   # (hs_wolfwtd_global <- occuMulti(detFormulas_subglobe, occFormulas_subglobe, wolf_wtd_hunting_UMF, silent = TRUE))  # FAIL
   (hs_wolfwtd_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))
   
   (hs_wolfwtd_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_wtd_hunting_UMF, silent = TRUE))
   (hs_wolfwtd_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_wtd_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfwtd_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))  
+  (hs_wolfwtd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, wolf_wtd_hunting_UMF, silent = TRUE))  
   #' List of fitted models
   hs_wolfwtd_fl <- fitList(hs_wolfwtd_pub1, hs_wolfwtd_hunt2) 
   #' Model selection
@@ -1416,12 +1417,12 @@
   #' modSel(hs_wolfwtd_fl)
   #' summary(hs_wolfwtd_hunt0)
   
-  ####  Wolf-Moose Hunting Season  ####
+  #####  Wolf-Moose Hunting Season  #####
   (hs_wolfmoose_global <- occuMulti(detFormulas_subglobe, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
   
   (hs_wolfmoose_pub1 <- occuMulti(detFormulas_pubish, occFormulas_pubish1, wolf_moose_hunting_UMF, silent = TRUE))
   (hs_wolfmoose_pub2 <- occuMulti(detFormulas_pubish, occFormulas_pubish2, wolf_moose_hunting_UMF, silent = TRUE)) # FAIL
-  (hs_wolfmoose_hunt2 <- occuMulti(detFormulas_pubish, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
+  (hs_wolfmoose_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, wolf_moose_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_wolfmoose_fl <- fitList(hs_wolfmoose_pub1, hs_wolfmoose_hunt2)
   #' Model selection
@@ -1469,11 +1470,11 @@
   #' summary(hs_wolfmoose_hunt2)
   
   
-  ####  Bear-Mule Deer Hunting Season  ####
+  #####  Bear-Mule Deer Hunting Season  #####
   (hs_bearmd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_md_hunting_UMF, silent = TRUE))
   
   (hs_bearmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_md_hunting_UMF, silent = TRUE))
-  (hs_bearmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_md_hunting_UMF, silent = TRUE))
+  (hs_bearmd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bear_md_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_bearmd_fl <- fitList(hs_bearmd_pub2, hs_bearmd_hunt2) 
   #' Model selection
@@ -1525,13 +1526,13 @@
   #' summary(hs_bearmd_hab0)
   #' summary(hs_bearmd_hab1)
   
-  ####  Bear-Elk Hunting Season  ####
+  #####  Bear-Elk Hunting Season  #####
   #(hs_bearelk_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_elk_hunting_UMF, silent = TRUE)) # FAIL
   (hs_bearelk_global <- occuMulti(detFormulas_globe, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE)) # human density effect on interaction a bit large w/ lots of uncertainty
   
   (hs_bearelk_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_elk_hunting_UMF, silent = TRUE))
   (hs_bearelk_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_elk_hunting_UMF, silent = TRUE)) #FAIL
-  (hs_bearelk_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE))
+  (hs_bearelk_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bear_elk_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_bearelk_fl <- fitList(hs_bearelk_pub1, hs_bearelk_hunt2)
   #' Model selection
@@ -1580,10 +1581,10 @@
   #' summary(hs_bearelk_hab1) # f12 not significant
   
   
-  ####  Bear-White-tailed Deer Hunting Season  ####
+  #####  Bear-White-tailed Deer Hunting Season  #####
   (hs_bearwtd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bear_wtd_hunting_UMF, silent = TRUE))
   
-  (hs_bearwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_wtd_hunting_UMF, silent = TRUE)) 
+  (hs_bearwtd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bear_wtd_hunting_UMF, silent = TRUE)) 
   (hs_bearwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_wtd_hunting_UMF, silent = TRUE))
   #' List of fitted models
   hs_bearwtd_fl <- fitList(hs_bearwtd_pub2, hs_bearwtd_hunt2) 
@@ -1633,10 +1634,10 @@
   #' summary(hs_bearwtd_pub0)
   #' summary(hs_bearwtd_hab0)
   
-  ####  Bear-Moose Hunting Season  ####
+  #####  Bear-Moose Hunting Season  #####
   (hs_bearmoose_global <- occuMulti(detFormulas_globe, occFormulas_pub1, bear_moose_hunting_UMF, silent = TRUE))
   
-  (hs_bearmoose_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bear_moose_hunting_UMF, silent = TRUE)) 
+  (hs_bearmoose_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bear_moose_hunting_UMF, silent = TRUE)) 
   (hs_bearmoose_pub1 <- occuMulti(detFormulas_pub, occFormulas_pub1, bear_moose_hunting_UMF, silent = TRUE))
   (hs_bearmoose_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bear_moose_hunting_UMF, silent = TRUE)) #FAIL
   #' List of fitted models
@@ -1687,15 +1688,15 @@
   #' summary(hs_bearmoose_hab0)
 
   
-  ####  Coyote-Mule Deer Hunting Season  ####
+  #####  Coyote-Mule Deer Hunting Season  #####
   # (hs_coymd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coy_md_hunting_UMF, silent = TRUE)) # FAIL
   (hs_coymd_global <- occuMulti(detFormulas_globe, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
   
   (hs_coymd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_md_hunting_UMF, silent = TRUE))
-  (hs_coymd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
-  (hs_coymd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_md_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_coymd_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coy_md_hunting_UMF, silent = TRUE))
+  (hs_coymd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coy_md_hunting_UMF, silent = TRUE)) # FAIL with det_pub
   #' List of fitted models
-  hs_coymd_fl <- fitList(hs_coymd_pub2, hs_coymd_hunt1)
+  hs_coymd_fl <- fitList(hs_coymd_pub2, hs_coymd_hunt1, hs_coymd_hunt2)
   #' Model selection
   modSel(hs_coymd_fl)
   summary(hs_coymd_hunt1)
@@ -1745,12 +1746,12 @@
   #' summary(hs_coymd_hunt0)
   #' summary(hs_coymd_hunt1)
   
-  ####  Coyote-White-tailed Deer Hunting Season  ####
+  #####  Coyote-White-tailed Deer Hunting Season  #####
   (hs_coywtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, coy_wtd_hunting_UMF, silent = TRUE))
   
   (hs_coywtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, coy_wtd_hunting_UMF, silent = TRUE))
-  (hs_coywtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, coy_wtd_hunting_UMF, silent = TRUE))
-  (hs_coywtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, coy_wtd_hunting_UMF, silent = TRUE)) # FAIL
+  (hs_coywtd_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, coy_wtd_hunting_UMF, silent = TRUE))
+  (hs_coywtd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, coy_wtd_hunting_UMF, silent = TRUE)) # FAIL with det_pub, don't trust it with det_hunt
   #' List of fitted models
   hs_coywtd_fl <- fitList(hs_coywtd_pub2, hs_coywtd_hunt1)
   #' Model selection
@@ -1798,11 +1799,11 @@
   #' summary(hs_coywtd_hunt1)
   
   
-  ####  Bobcat-Mule Deer Hunting Season  ####
+  #####  Bobcat-Mule Deer Hunting Season  #####
   (hs_bobmd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bob_md_hunting_UMF, silent = TRUE))
   
   (hs_bobmd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_md_hunting_UMF, silent = TRUE))
-  (hs_bobmd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_md_hunting_UMF, silent = TRUE)) 
+  (hs_bobmd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bob_md_hunting_UMF, silent = TRUE)) 
   #' List of fitted models
   hs_bobmd_fl <- fitList(hs_bobmd_pub2, hs_bobmd_hunt2)
   #' Model selection
@@ -1854,13 +1855,13 @@
   #' summary(hs_bobmd_pub0)
   
   
-  ####  Bobcat-White-tailed Deer Hunting Season  ####
+  #####  Bobcat-White-tailed Deer Hunting Season  #####
   # (hs_bobwtd_global <- occuMulti(detFormulas_globe, occFormulas_globe, bob_wtd_hunting_UMF, silent = TRUE)) # FAIL
   (hs_bobwtd_global <- occuMulti(detFormulas_globe, occFormulas_subglobe, bob_wtd_hunting_UMF, silent = TRUE))
   
   (hs_bobwtd_pub2 <- occuMulti(detFormulas_pub, occFormulas_pub2, bob_wtd_hunting_UMF, silent = TRUE))
-  (hs_bobwtd_hunt1 <- occuMulti(detFormulas_pub, occFormulas_hunt1, bob_wtd_hunting_UMF, silent = TRUE))
-  (hs_bobwtd_hunt2 <- occuMulti(detFormulas_pub, occFormulas_hunt2, bob_wtd_hunting_UMF, silent = TRUE)) # HunterActivity not converging well
+  (hs_bobwtd_hunt1 <- occuMulti(detFormulas_hunt, occFormulas_hunt1, bob_wtd_hunting_UMF, silent = TRUE))
+  (hs_bobwtd_hunt2 <- occuMulti(detFormulas_hunt, occFormulas_hunt2, bob_wtd_hunting_UMF, silent = TRUE)) # HunterActivity not converging well
   #' List of fitted models
   hs_bobwtd_fl <- fitList(hs_bobwtd_pub2, hs_bobwtd_hunt1)
   #' Model selection
@@ -1945,84 +1946,160 @@
   }
   
   #'  Run each model through function
-  #'  Grazing season models
-  occ_cougmd_grazing <- occ_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
-  occ_cougelk_grazing <- occ_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
-  occ_cougwtd_grazing <- occ_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
-  occ_cougmoose_grazing <- occ_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
-  occ_wolfmd_grazing <- occ_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
-  occ_wolfelk_grazing <- occ_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
-  occ_wolfwtd_grazing <- occ_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
-  occ_wolfmoose_grazing <- occ_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
-  occ_bearmd_grazing <- occ_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
-  occ_bearelk_grazing <- occ_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
-  occ_bearwtd_grazing <- occ_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
-  occ_bearmoose_grazing <- occ_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
-  occ_coymd_grazing <- occ_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
-  occ_coyelk_grazing <- occ_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
-  occ_bobwtd_grazing <- occ_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
-  occ_bobmoose_grazing <- occ_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
-  #'  Hunting season models
-  occ_cougmd_hunting <- occ_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
-  occ_cougelk_hunting <- occ_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
-  occ_cougwtd_hunting <- occ_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
-  occ_cougmoose_hunting <- occ_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
-  occ_wolfmd_hunting <- occ_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
-  occ_wolfelk_hunting <- occ_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
-  occ_wolfwtd_hunting <- occ_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
-  occ_wolfmoose_hunting <- occ_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
-  occ_bearmd_hunting <- occ_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
-  occ_bearelk_hunting <- occ_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
-  occ_bearwtd_hunting <- occ_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
-  occ_bearmoose_hunting <- occ_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
-  occ_coymd_hunting <- occ_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
-  occ_coyelk_hunting <- occ_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
-  occ_bobwtd_hunting <- occ_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
-  occ_bobmoose_hunting <- occ_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
+  #####  Grazing season models - psi  #####
+  occ_cougmd_grazing_allot <- occ_out(gs_cougmd_allot2, "Cougar", "Mule Deer", "Grazing")
+  occ_cougmd_grazing_cattle <- occ_out(gs_cougmd_graze2, "Cougar", "Mule Deer", "Grazing")
+  occ_cougelk_grazing_allot <- occ_out(gs_cougelk_allot0, "Cougar", "Elk", "Grazing")
+  occ_cougelk_grazing_cattle <- occ_out(gs_cougelk_graze2, "Cougar", "Elk", "Grazing")
+  occ_cougwtd_grazing_allot <- occ_out(gs_cougwtd_allot2, "Cougar", "White-tailed Deer", "Grazing")
+  occ_cougwtd_grazing_cattle <- occ_out(gs_cougwtd_graze2, "Cougar", "White-tailed Deer", "Grazing")
+  occ_cougmoose_grazing_allot <- occ_out(gs_cougmoose_allot2, "Cougar", "Moose", "Grazing")
+  occ_cougmoose_grazing_cattle <- occ_out(gs_cougmoose_graze2, "Cougar", "Moose", "Grazing")
+  occ_wolfmd_grazing_allot <- occ_out(gs_wolfmd_allot2, "Wolf", "Mule Deer", "Grazing")
+  occ_wolfmd_grazing_cattle <- occ_out(gs_wolfmd_graze2, "Wolf", "Mule Deer", "Grazing")
+  occ_wolfelk_grazing_allot <- occ_out(gs_wolfelk_allot1, "Wolf", "Elk", "Grazing")
+  occ_wolfelk_grazing_cattle <- occ_out(gs_wolfelk_graze1, "Wolf", "Elk", "Grazing")
+  occ_wolfwtd_grazing_allot <- occ_out(gs_wolfwtd_allot2, "Wolf", "White-tailed Deer", "Grazing")
+  occ_wolfwtd_grazing_cattle <- occ_out(gs_wolfwtd_graze2, "Wolf", "White-tailed Deer", "Grazing")
+  occ_wolfmoose_grazing_allot <- occ_out(gs_wolfmoose_allot2, "Wolf", "Moose", "Grazing")
+  occ_wolfmoose_grazing_cattle <- occ_out(gs_wolfmoose_graze2, "Wolf", "Moose", "Grazing")
+  occ_bearmd_grazing_allot <- occ_out(gs_bearmd_allot2, "Black Bear", "Mule Deer", "Grazing")
+  occ_bearmd_grazing_cattle <- occ_out(gs_bearmd_graze2, "Black Bear", "Mule Deer", "Grazing")
+  occ_bearelk_grazing_allot <- occ_out(gs_bearelk_allot2, "Black Bear", "Elk", "Grazing")
+  occ_bearelk_grazing_cattle <- occ_out(gs_bearelk_graze1, "Black Bear", "Elk", "Grazing")
+  occ_bearwtd_grazing_allot <- occ_out(gs_bearwtd_allot2, "Black Bear", "White-tailed Deer", "Grazing")
+  occ_bearwtd_grazing_cattle <- occ_out(gs_bearwtd_graze2, "Black Bear", "White-tailed Deer", "Grazing")
+  occ_bearmoose_grazing_allot <- occ_out(gs_bearmoose_allot2, "Black Bear", "Moose", "Grazing")
+  occ_bearmoose_grazing_cattle <- occ_out(gs_bearmoose_graze1, "Black Bear", "Moose", "Grazing")
+  occ_coymd_grazing_allot <- occ_out(gs_coymd_allot2, "Coyote", "Mule Deer", "Grazing")
+  occ_coymd_grazing_cattle <- occ_out(gs_coymd_graze2, "Coyote", "Mule Deer", "Grazing")
+  occ_coywtd_grazing_allot <- occ_out(gs_coywtd_allot2, "Coyote", "White-tailed Deer", "Grazing")
+  occ_coywtd_grazing_cattle <- occ_out(gs_coywtd_graze2, "Coyote", "White-tailed Deer", "Grazing")
+  occ_bobmd_grazing_allot <- occ_out(gs_bobmd_allot2, "Bobcat", "Mule Deer Deer", "Grazing")
+  occ_bobmd_grazing_cattle <- occ_out(gs_bobmd_graze2, "Bobcat", "Mule Deer Deer", "Grazing")
+  occ_bobwtd_grazing_allot <- occ_out(gs_bobwtd_allot2, "Bobcat", "White-tailed Deer", "Grazing")
+  occ_bobwtd_grazing_cattle <- occ_out(gs_bobwtd_graze2, "Bobcat", "White-tailed Deer", "Grazing")
+  #####  Hunting season models - psi  #####
+  occ_cougmd_hunting_hunt <- occ_out(hs_cougmd_hunt2, "Cougar", "Mule Deer", "Hunting")
+  occ_cougmd_hunting_pub <- occ_out(hs_cougmd_pub2, "Cougar", "Mule Deer", "Hunting")
+  occ_cougelk_hunting_hunt <- occ_out(hs_cougelk_hunt0, "Cougar", "Elk", "Hunting")
+  occ_cougelk_hunting_pub <- occ_out(hs_cougelk_pub0, "Cougar", "Elk", "Hunting")
+  occ_cougwtd_hunting_hunt <- occ_out(hs_cougwtd_hunt1, "Cougar", "White-tailed Deer", "Hunting")
+  occ_cougwtd_hunting_pub <- occ_out(hs_cougwtd_pub2, "Cougar", "White-tailed Deer", "Hunting")
+  occ_cougmoose_hunting_hunt <- occ_out(hs_cougmoose_hunt0, "Cougar", "Moose", "Hunting")
+  occ_cougmoose_hunting_pub <- occ_out(hs_cougmoose_pub0, "Cougar", "Moose", "Hunting")
+  occ_wolfmd_hunting_hunt <- occ_out(hs_wolfmd_hunt2, "Wolf", "Mule Deer", "Hunting")
+  occ_wolfmd_hunting_pub <- occ_out(hs_wolfmd_pub1, "Wolf", "Mule Deer", "Hunting")
+  occ_wolfelk_hunting_hunt <- occ_out(hs_wolfelk_hunt2, "Wolf", "Elk", "Hunting")
+  occ_wolfelk_hunting_pub <- occ_out(hs_wolfelk_pub1, "Wolf", "Elk", "Hunting")
+  occ_wolfwtd_hunting_hunt <- occ_out(hs_wolfwtd_hunt2, "Wolf", "White-tailed Deer", "Hunting")
+  occ_wolfwtd_hunting_pub <- occ_out(hs_wolfwtd_pub1, "Wolf", "White-tailed Deer", "Hunting")
+  occ_wolfmoose_hunting_hunt <- occ_out(hs_wolfmoose_hunt2, "Wolf", "Moose", "Hunting")
+  occ_wolfmoose_hunting_pub <- occ_out(hs_wolfmoose_pub1, "Wolf", "Moose", "Hunting")
+  occ_bearmd_hunting_hunt <- occ_out(hs_bearmd_hunt2, "Black Bear", "Mule Deer", "Hunting")
+  occ_bearmd_hunting_pub <- occ_out(hs_bearmd_pub2, "Black Bear", "Mule Deer", "Hunting")
+  occ_bearelk_hunting_hunt <- occ_out(hs_bearelk_hunt2, "Black Bear", "Elk", "Hunting")
+  occ_bearelk_hunting_pub <- occ_out(hs_bearelk_pub1, "Black Bear", "Elk", "Hunting")
+  occ_bearwtd_hunting_hunt <- occ_out(hs_bearwtd_hunt2, "Black Bear", "White-tailed Deer", "Hunting")
+  occ_bearwtd_hunting_pub <- occ_out(hs_bearwtd_pub2, "Black Bear", "White-tailed Deer", "Hunting")
+  occ_bearmoose_hunting_hunt <- occ_out(hs_bearmoose_hunt2, "Black Bear", "Moose", "Hunting")
+  occ_bearmoose_hunting_pub <- occ_out(hs_bearmoose_pub1, "Black Bear", "Moose", "Hunting")
+  occ_coymd_hunting_hunt <- occ_out(hs_coymd_hunt2, "Coyote", "Mule Deer", "Hunting")
+  occ_coymd_hunting_pub <- occ_out(hs_coymd_pub2, "Coyote", "Mule Deer", "Hunting")
+  occ_coywtd_hunting_hunt <- occ_out(hs_coywtd_hunt1, "Coyote", "White-tailed Deer", "Hunting")
+  occ_coywtd_hunting_pub <- occ_out(hs_coywtd_pub2, "Coyote", "White-tailed Deer", "Hunting")
+  occ_bobmd_hunting_hunt <- occ_out(hs_bobmd_hunt2, "Bobcat", "Mule Deer Deer", "Hunting")
+  occ_bobmd_hunting_pub <- occ_out(hs_bobmd_pub2, "Bobcat", "Mule Deer Deer", "Hunting")
+  occ_bobwtd_hunting_hunt <- occ_out(hs_bobwtd_hunt1, "Bobcat", "White-tailed Deer", "Hunting")
+  occ_bobwtd_hunting_pub <- occ_out(hs_bobwtd_pub2, "Bobcat", "White-tailed Deer", "Hunting")
   
   #'  Merge into larger data frames for easy comparison
   #'  Full models
-  graze_results <- rbind(occ_cougmd_grazing, occ_cougelk_grazing, occ_cougwtd_grazing, occ_cougmoose_grazing,
-                     occ_wolfmd_grazing, occ_wolfelk_grazing, occ_wolfwtd_grazing, occ_wolfmoose_grazing,
-                     occ_bearmd_grazing, occ_bearelk_grazing, occ_bearwtd_grazing, occ_bearmoose_grazing,
-                     occ_coymd_grazing, occ_coyelk_grazing, occ_bobwtd_grazing, occ_bobmoose_grazing)
-  hunt_results <- rbind(occ_cougmd_hunting, occ_cougelk_hunting, occ_cougwtd_hunting, occ_cougmoose_hunting,
-                    occ_wolfmd_hunting, occ_wolfelk_hunting, occ_wolfwtd_hunting, occ_wolfmoose_hunting,
-                    occ_bearmd_hunting, occ_bearelk_hunting, occ_bearwtd_hunting, occ_bearmoose_hunting,
-                    occ_coymd_hunting, occ_coyelk_hunting, occ_bobwtd_hunting, occ_bobmoose_hunting)
+  graze_allot_results <- rbind(occ_cougmd_grazing_allot, occ_cougelk_grazing_allot, occ_cougwtd_grazing_allot, occ_cougmoose_grazing_allot,
+                         occ_wolfmd_grazing_allot, occ_wolfelk_grazing_allot, occ_wolfwtd_grazing_allot, occ_wolfmoose_grazing_allot,
+                         occ_bearmd_grazing_allot, occ_bearelk_grazing_allot, occ_bearwtd_grazing_allot, occ_bearmoose_grazing_allot,
+                         occ_coymd_grazing_allot, occ_coywtd_grazing_allot, occ_bobmd_grazing_allot, occ_bobwtd_grazing_allot)
+  graze_cattle_results <- rbind(occ_cougmd_grazing_cattle, occ_cougelk_grazing_cattle, occ_cougwtd_grazing_cattle, occ_cougmoose_grazing_cattle,
+                         occ_wolfmd_grazing_cattle, occ_wolfelk_grazing_cattle, occ_wolfwtd_grazing_cattle, occ_wolfmoose_grazing_cattle,
+                         occ_bearmd_grazing_cattle, occ_bearelk_grazing_cattle, occ_bearwtd_grazing_cattle, occ_bearmoose_grazing_cattle,
+                         occ_coymd_grazing_cattle, occ_coywtd_grazing_cattle, occ_bobmd_grazing_cattle, occ_bobwtd_grazing_cattle)
+  hunt_hunt_results <- rbind(occ_cougmd_hunting_hunt, occ_cougelk_hunting_hunt, occ_cougwtd_hunting_hunt, occ_cougmoose_hunting_hunt,
+                        occ_wolfmd_hunting_hunt, occ_wolfelk_hunting_hunt, occ_wolfwtd_hunting_hunt, occ_wolfmoose_hunting_hunt,
+                        occ_bearmd_hunting_hunt, occ_bearelk_hunting_hunt, occ_bearwtd_hunting_hunt, occ_bearmoose_hunting_hunt,
+                        occ_coymd_hunting_hunt, occ_coywtd_hunting_hunt, occ_bobmd_hunting_hunt, occ_bobwtd_hunting_hunt)
+  hunt_pub_results <- rbind(occ_cougmd_hunting_pub, occ_cougelk_hunting_pub, occ_cougwtd_hunting_pub, occ_cougmoose_hunting_pub,
+                        occ_wolfmd_hunting_pub, occ_wolfelk_hunting_pub, occ_wolfwtd_hunting_pub, occ_wolfmoose_hunting_pub,
+                        occ_bearmd_hunting_pub, occ_bearelk_hunting_pub, occ_bearwtd_hunting_pub, occ_bearmoose_hunting_pub,
+                        occ_coymd_hunting_pub, occ_coywtd_hunting_pub, occ_bobmd_hunting_pub, occ_bobwtd_hunting_pub)
   
   #'  Spread this out so the coefficient effects are easier to compare across species
+  format_se <- function(out) {
+    reformat_results <- out %>%  
+      dplyr::select(-z) %>%
+      mutate(SE = round(SE, 2),
+             SE = paste0("(", SE, ")")) 
+    return(reformat_results)
+  }
+  results_graze_allot <- format_se(graze_allot_results)
+  results_graze_cattle <- format_se(graze_cattle_results)
+  results_hunt_hunt <- format_se(hunt_hunt_results)
+  results_hunt_pub <- format_se(hunt_pub_results)
+  
+  #'  Convert results to wide format
+  format_wide <- function(out) {
+    wide_results <- out %>%
+      unite(Est_SE, Estimate, SE, sep = " ") %>%
+      unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
+      #'  Change species names to general classes
+      mutate(
+        Parameter = gsub("cougar", "Species 1", Parameter),
+        Parameter = gsub("wolf", "Species 1", Parameter),
+        Parameter = gsub("blackbear", "Species 1", Parameter),
+        Parameter = gsub("coyote", "Species 1", Parameter),
+        Parameter = gsub("bobcat", "Species 1", Parameter),
+        Parameter = gsub("muledeer", "Species 2", Parameter),
+        Parameter = gsub("mule_deer", "Species 2", Parameter),
+        Parameter = gsub("elk", "Species 2", Parameter),
+        Parameter = gsub("wtd", "Species 2", Parameter),
+        Parameter = gsub("moose", "Species 2", Parameter)
+      ) %>%
+      spread(Parameter, Est_SE_Pval)
+    return(wide_results)
+  }
+  wideresults_graze_allot <- format_wide(results_graze_allot)
+  wideresults_graze_cattle <- format_wide(results_graze_cattle)
+  wideresults_hunt_hunt <- format_wide(results_hunt_hunt)
+  wideresults_hunt_pub <- format_wide(results_hunt_pub)
+  
   #'  Grazing results tables
-  results_graze <- graze_results %>%  
-    dplyr::select(-z) %>%
-    mutate(
-      SE = round(SE, 2),
-      SE = paste0("(", SE, ")")
-    ) 
-  results_graze_wide <- results_graze %>%
-    unite(Est_SE, Estimate, SE, sep = " ") %>%
-    unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
-    #'  Change species names to general classes
-    mutate(
-      Parameter = gsub("cougar", "Species 1", Parameter),
-      Parameter = gsub("wolf", "Species 1", Parameter),
-      Parameter = gsub("blackbear", "Species 1", Parameter),
-      Parameter = gsub("coyote", "Species 1", Parameter),
-      Parameter = gsub("bobcat", "Species 1", Parameter),
-      Parameter = gsub("muledeer", "Species 2", Parameter),
-      Parameter = gsub("mule_deer", "Species 2", Parameter),
-      Parameter = gsub("elk", "Species 2", Parameter),
-      Parameter = gsub("wtd", "Species 2", Parameter),
-      Parameter = gsub("moose", "Species 2", Parameter)
-    ) %>%
-    spread(Parameter, Est_SE_Pval) %>%
+  results_graze_allot_wide <- wideresults_graze_allot %>%
     relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
-    relocate("[Species 1:Species 2] GrazingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
-    relocate("[Species 1:Species 2] PublicGrazing1", .after = "[Species 1:Species 2] GrazingActivity") %>%
+    relocate("[Species 1:Species 2] PublicGrazing1", .after = "[Species 1:Species 2] (Intercept)") %>%
     relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
     relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
-    relocate("[Species 1] PublicGrazing1", .after = "[Species 1] GrazingActivity") %>%
-    relocate("[Species 2] PublicGrazing1", .after = "[Species 2] GrazingActivity") %>%
+    relocate("[Species 1] PublicGrazing1", .after = "[Species 1] I(Elev^2)") %>%
+    relocate("[Species 2] PublicGrazing1", .after = "[Species 2] I(Elev^2)") %>%
+    separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+    separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1] Elev", c("[Species 1] Elevation (SE)", "[Species 1] Elevation Pval"), sep = "_") %>%
+    separate("[Species 2] Elev", c("[Species 2] Elevation (SE)", "[Species 2] Elevation Pval"), sep = "_") %>%
+    separate("[Species 1] I(Elev^2)", c("[Species 1] Elevation^2 (SE)", "[Species 1] Elevation^2 Pval"), sep = "_") %>%
+    separate("[Species 2] I(Elev^2)", c("[Species 2] Elevation^2 (SE)", "[Species 2] Elevation^2 Pval"), sep = "_") %>%
+    separate("[Species 1] PercForest", c("[Species 1] PercentForest (SE)", "[Species 1] PercentForest Pval"), sep = "_") %>%
+    separate("[Species 2] PercForest", c("[Species 2] PercentForest (SE)", "[Species 2] PercentForest Pval"), sep = "_") %>%
+    separate("[Species 1] Study_AreaOK", c("[Species 1] Study_AreaOK (SE)", "[Species 1] Study_AreaOK Pval"), sep = "_") %>%
+    separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
+    separate("[Species 1] PublicGrazing1", c("[Species 1] GrazingAllotment (SE)", "[Species 1] GrazingAllotment Pval"), sep = "_") %>%
+    separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] PublicGrazing1", c("[Species 1:Species 2] GrazingAllotment (SE)", "[Species 1:Species 2] GrazingAllotment Pval"), sep = "_") %>%
+    arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  
+  results_graze_cattle_wide <- wideresults_graze_cattle %>%
+    relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
+    relocate("[Species 1:Species 2] GrazingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
+    relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
+    relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
     separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
     separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1] Elev", c("[Species 1] Elevation (SE)", "[Species 1] Elevation Pval"), sep = "_") %>%
@@ -2035,40 +2112,14 @@
     separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
     separate("[Species 1] GrazingActivity", c("[Species 1] GrazingActivity (SE)", "[Species 1] GrazingActivity Pval"), sep = "_") %>%
     separate("[Species 2] GrazingActivity", c("[Species 2] GrazingActivity (SE)", "[Species 2] GrazingActivity Pval"), sep = "_") %>%
-    separate("[Species 1] PublicGrazing1", c("[Species 1] GrazingAllotment (SE)", "[Species 1] GrazingAllotment Pval"), sep = "_") %>%
-    separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] GrazingActivity", c("[Species 1:Species 2] GrazingActivity (SE)", "[Species 1:Species 2] GrazingActivity Pval"), sep = "_") %>%
-    separate("[Species 1:Species 2] PublicGrazing1", c("[Species 1:Species 2] GrazingAllotment (SE)", "[Species 1:Species 2] GrazingAllotment Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
-    
+  
   #'  Hunting results tables
-  results_hunt <- hunt_results %>%  
-    dplyr::select(-z) %>%
-    mutate(
-      SE = round(SE, 2),
-      SE = paste0("(", SE, ")")
-    ) 
-  results_hunt_wide <- results_hunt %>%
-    unite(Est_SE, Estimate, SE, sep = " ") %>%
-    unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
-    #'  Change species names to general classes
-    mutate(
-      Parameter = gsub("cougar", "Species 1", Parameter),
-      Parameter = gsub("wolf", "Species 1", Parameter),
-      Parameter = gsub("blackbear", "Species 1", Parameter),
-      Parameter = gsub("coyote", "Species 1", Parameter),
-      Parameter = gsub("bobcat", "Species 1", Parameter),
-      Parameter = gsub("muledeer", "Species 2", Parameter),
-      Parameter = gsub("mule_deer", "Species 2", Parameter),
-      Parameter = gsub("elk", "Species 2", Parameter),
-      Parameter = gsub("wtd", "Species 2", Parameter),
-      Parameter = gsub("moose", "Species 2", Parameter)
-    ) %>%
-    spread(Parameter, Est_SE_Pval) %>%
+  results_hunt_hunt_wide <- wideresults_hunt_hunt %>%
     relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
     relocate("[Species 1:Species 2] HuntingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
-    relocate("[Species 1:Species 2] Public1", .after = "[Species 1:Species 2] HuntingActivity") %>%
     relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
     relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
     separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
@@ -2083,20 +2134,42 @@
     separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
     separate("[Species 1] HuntingActivity", c("[Species 1] HuntingActivity (SE)", "[Species 1] HuntingActivity Pval"), sep = "_") %>%
     separate("[Species 2] HuntingActivity", c("[Species 2] HuntingActivity (SE)", "[Species 2] HuntingActivity Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1:Species 2] HuntingActivity", c("[Species 1:Species 2] HuntingActivity (SE)", "[Species 1:Species 2] HuntingActivity Pval"), sep = "_") %>%
+    arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  
+  results_hunt_pub_wide <- wideresults_hunt_pub %>%
+    relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
+    relocate("[Species 1:Species 2] Public1", .after = "[Species 1:Species 2] (Intercept)") %>%
+    relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
+    relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
+    separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+    separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1] Elev", c("[Species 1] Elevation (SE)", "[Species 1] Elevation Pval"), sep = "_") %>%
+    separate("[Species 2] Elev", c("[Species 2] Elevation (SE)", "[Species 2] Elevation Pval"), sep = "_") %>%
+    separate("[Species 1] I(Elev^2)", c("[Species 1] Elevation^2 (SE)", "[Species 1] Elevation^2 Pval"), sep = "_") %>%
+    separate("[Species 2] I(Elev^2)", c("[Species 2] Elevation^2 (SE)", "[Species 2] Elevation^2 Pval"), sep = "_") %>%
+    separate("[Species 1] PercForest", c("[Species 1] PercentForest (SE)", "[Species 1] PercentForest Pval"), sep = "_") %>%
+    separate("[Species 2] PercForest", c("[Species 2] PercentForest (SE)", "[Species 2] PercentForest Pval"), sep = "_") %>%
+    separate("[Species 1] Study_AreaOK", c("[Species 1] Study_AreaOK (SE)", "[Species 1] Study_AreaOK Pval"), sep = "_") %>%
+    separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
     separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
     separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
-    separate("[Species 1:Species 2] HuntingActivity", c("[Species 1:Species 2] HuntingActivity (SE)", "[Species 1:Species 2] HuntingActivity Pval"), sep = "_") %>%
     separate("[Species 1:Species 2] Public1", c("[Species 1:Species 2] PublicLand (SE)", "[Species 1:Species 2] PublicLand Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
   
   #'  Save!
-  write.csv(results_graze, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_", Sys.Date(), ".csv"))  
-  write.csv(results_graze_wide, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_wide_", Sys.Date(), ".csv"))
-  write.csv(results_hunt, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_", Sys.Date(), ".csv"))  
-  write.csv(results_hunt_wide, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_wide_", Sys.Date(), ".csv"))
+  write.csv(results_graze_allot, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_Allotment_", Sys.Date(), ".csv"))  
+  write.csv(results_graze_allot_wide, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_Allotment_wide_", Sys.Date(), ".csv"))
+  write.csv(results_graze_cattle, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_CattleAct_", Sys.Date(), ".csv"))  
+  write.csv(results_graze_cattle_wide, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_CattleAct_wide_", Sys.Date(), ".csv"))
+  write.csv(results_hunt_hunt, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_HunterAct_", Sys.Date(), ".csv"))  
+  write.csv(results_hunt_hunt_wide, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_HunterAct_wide_", Sys.Date(), ".csv"))
+  write.csv(results_hunt_pub, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_Public_", Sys.Date(), ".csv"))  
+  write.csv(results_hunt_pub_wide, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_Public_wide_", Sys.Date(), ".csv"))
   
- 
+  
   #'  Function to save detection results
   det_out <- function(mod, spp1, spp2, season) {
     out <- summary(mod@estimates)$det %>%
@@ -2118,117 +2191,134 @@
     return(out)
   }
   
-  
-  #'  Run each model through detection function
-  #'  Grazing season models
-  det_cougmd_grazing <- det_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
-  det_cougelk_grazing <- det_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
-  det_cougwtd_grazing <- det_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
-  det_cougmoose_grazing <- det_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
-  det_wolfmd_grazing <- det_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
-  det_wolfelk_grazing <- det_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
-  det_wolfwtd_grazing <- det_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
-  det_wolfmoose_grazing <- det_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
-  det_bearmd_grazing <- det_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
-  det_bearelk_grazing <- det_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
-  det_bearwtd_grazing <- det_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
-  det_bearmoose_grazing <- det_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
-  det_coymd_grazing <- det_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
-  det_coyelk_grazing <- det_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
-  det_bobwtd_grazing <- det_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
-  det_bobmoose_grazing <- det_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
-  #'  Hunting season models
-  det_cougmd_hunting <- det_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
-  det_cougelk_hunting <- det_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
-  det_cougwtd_hunting <- det_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
-  det_cougmoose_hunting <- det_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
-  det_wolfmd_hunting <- det_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
-  det_wolfelk_hunting <- det_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
-  det_wolfwtd_hunting <- det_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
-  det_wolfmoose_hunting <- det_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
-  det_bearmd_hunting <- det_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
-  det_bearelk_hunting <- det_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
-  det_bearwtd_hunting <- det_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
-  det_bearmoose_hunting <- det_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
-  det_coymd_hunting <- det_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
-  det_coyelk_hunting <- det_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
-  det_bobwtd_hunting <- det_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
-  det_bobmoose_hunting <- det_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
-
+  #'  Run each model through function
+  #####  Grazing season models - psi  #####
+  det_cougmd_grazing_allot <- det_out(gs_cougmd_allot2, "Cougar", "Mule Deer", "Grazing")
+  det_cougmd_grazing_cattle <- det_out(gs_cougmd_graze2, "Cougar", "Mule Deer", "Grazing")
+  det_cougelk_grazing_allot <- det_out(gs_cougelk_allot0, "Cougar", "Elk", "Grazing")
+  det_cougelk_grazing_cattle <- det_out(gs_cougelk_graze2, "Cougar", "Elk", "Grazing")
+  det_cougwtd_grazing_allot <- det_out(gs_cougwtd_allot2, "Cougar", "White-tailed Deer", "Grazing")
+  det_cougwtd_grazing_cattle <- det_out(gs_cougwtd_graze2, "Cougar", "White-tailed Deer", "Grazing")
+  det_cougmoose_grazing_allot <- det_out(gs_cougmoose_allot2, "Cougar", "Moose", "Grazing")
+  det_cougmoose_grazing_cattle <- det_out(gs_cougmoose_graze2, "Cougar", "Moose", "Grazing")
+  det_wolfmd_grazing_allot <- det_out(gs_wolfmd_allot2, "Wolf", "Mule Deer", "Grazing")
+  det_wolfmd_grazing_cattle <- det_out(gs_wolfmd_graze2, "Wolf", "Mule Deer", "Grazing")
+  det_wolfelk_grazing_allot <- det_out(gs_wolfelk_allot1, "Wolf", "Elk", "Grazing")
+  det_wolfelk_grazing_cattle <- det_out(gs_wolfelk_graze1, "Wolf", "Elk", "Grazing")
+  det_wolfwtd_grazing_allot <- det_out(gs_wolfwtd_allot2, "Wolf", "White-tailed Deer", "Grazing")
+  det_wolfwtd_grazing_cattle <- det_out(gs_wolfwtd_graze2, "Wolf", "White-tailed Deer", "Grazing")
+  det_wolfmoose_grazing_allot <- det_out(gs_wolfmoose_allot2, "Wolf", "Moose", "Grazing")
+  det_wolfmoose_grazing_cattle <- det_out(gs_wolfmoose_graze2, "Wolf", "Moose", "Grazing")
+  det_bearmd_grazing_allot <- det_out(gs_bearmd_allot2, "Black Bear", "Mule Deer", "Grazing")
+  det_bearmd_grazing_cattle <- det_out(gs_bearmd_graze2, "Black Bear", "Mule Deer", "Grazing")
+  det_bearelk_grazing_allot <- det_out(gs_bearelk_allot2, "Black Bear", "Elk", "Grazing")
+  det_bearelk_grazing_cattle <- det_out(gs_bearelk_graze1, "Black Bear", "Elk", "Grazing")
+  det_bearwtd_grazing_allot <- det_out(gs_bearwtd_allot2, "Black Bear", "White-tailed Deer", "Grazing")
+  det_bearwtd_grazing_cattle <- det_out(gs_bearwtd_graze2, "Black Bear", "White-tailed Deer", "Grazing")
+  det_bearmoose_grazing_allot <- det_out(gs_bearmoose_allot2, "Black Bear", "Moose", "Grazing")
+  det_bearmoose_grazing_cattle <- det_out(gs_bearmoose_graze1, "Black Bear", "Moose", "Grazing")
+  det_coymd_grazing_allot <- det_out(gs_coymd_allot2, "Coyote", "Mule Deer", "Grazing")
+  det_coymd_grazing_cattle <- det_out(gs_coymd_graze2, "Coyote", "Mule Deer", "Grazing")
+  det_coywtd_grazing_allot <- det_out(gs_coywtd_allot2, "Coyote", "White-tailed Deer", "Grazing")
+  det_coywtd_grazing_cattle <- det_out(gs_coywtd_graze2, "Coyote", "White-tailed Deer", "Grazing")
+  det_bobmd_grazing_allot <- det_out(gs_bobmd_allot2, "Bobcat", "Mule Deer Deer", "Grazing")
+  det_bobmd_grazing_cattle <- det_out(gs_bobmd_graze2, "Bobcat", "Mule Deer Deer", "Grazing")
+  det_bobwtd_grazing_allot <- det_out(gs_bobwtd_allot2, "Bobcat", "White-tailed Deer", "Grazing")
+  det_bobwtd_grazing_cattle <- det_out(gs_bobwtd_graze2, "Bobcat", "White-tailed Deer", "Grazing")
+  #####  Hunting season models - psi  #####
+  det_cougmd_hunting_hunt <- det_out(hs_cougmd_hunt2, "Cougar", "Mule Deer", "Hunting")
+  det_cougmd_hunting_pub <- det_out(hs_cougmd_pub2, "Cougar", "Mule Deer", "Hunting")
+  det_cougelk_hunting_hunt <- det_out(hs_cougelk_hunt0, "Cougar", "Elk", "Hunting")
+  det_cougelk_hunting_pub <- det_out(hs_cougelk_pub0, "Cougar", "Elk", "Hunting")
+  det_cougwtd_hunting_hunt <- det_out(hs_cougwtd_hunt1, "Cougar", "White-tailed Deer", "Hunting")
+  det_cougwtd_hunting_pub <- det_out(hs_cougwtd_pub2, "Cougar", "White-tailed Deer", "Hunting")
+  det_cougmoose_hunting_hunt <- det_out(hs_cougmoose_hunt0, "Cougar", "Moose", "Hunting")
+  det_cougmoose_hunting_pub <- det_out(hs_cougmoose_pub0, "Cougar", "Moose", "Hunting")
+  det_wolfmd_hunting_hunt <- det_out(hs_wolfmd_hunt2, "Wolf", "Mule Deer", "Hunting")
+  det_wolfmd_hunting_pub <- det_out(hs_wolfmd_pub1, "Wolf", "Mule Deer", "Hunting")
+  det_wolfelk_hunting_hunt <- det_out(hs_wolfelk_hunt2, "Wolf", "Elk", "Hunting")
+  det_wolfelk_hunting_pub <- det_out(hs_wolfelk_pub1, "Wolf", "Elk", "Hunting")
+  det_wolfwtd_hunting_hunt <- det_out(hs_wolfwtd_hunt2, "Wolf", "White-tailed Deer", "Hunting")
+  det_wolfwtd_hunting_pub <- det_out(hs_wolfwtd_pub1, "Wolf", "White-tailed Deer", "Hunting")
+  det_wolfmoose_hunting_hunt <- det_out(hs_wolfmoose_hunt2, "Wolf", "Moose", "Hunting")
+  det_wolfmoose_hunting_pub <- det_out(hs_wolfmoose_pub1, "Wolf", "Moose", "Hunting")
+  det_bearmd_hunting_hunt <- det_out(hs_bearmd_hunt2, "Black Bear", "Mule Deer", "Hunting")
+  det_bearmd_hunting_pub <- det_out(hs_bearmd_pub2, "Black Bear", "Mule Deer", "Hunting")
+  det_bearelk_hunting_hunt <- det_out(hs_bearelk_hunt2, "Black Bear", "Elk", "Hunting")
+  det_bearelk_hunting_pub <- det_out(hs_bearelk_pub1, "Black Bear", "Elk", "Hunting")
+  det_bearwtd_hunting_hunt <- det_out(hs_bearwtd_hunt2, "Black Bear", "White-tailed Deer", "Hunting")
+  det_bearwtd_hunting_pub <- det_out(hs_bearwtd_pub2, "Black Bear", "White-tailed Deer", "Hunting")
+  det_bearmoose_hunting_hunt <- det_out(hs_bearmoose_hunt2, "Black Bear", "Moose", "Hunting")
+  det_bearmoose_hunting_pub <- det_out(hs_bearmoose_pub1, "Black Bear", "Moose", "Hunting")
+  det_coymd_hunting_hunt <- det_out(hs_coymd_hunt2, "Coyote", "Mule Deer", "Hunting")
+  det_coymd_hunting_pub <- det_out(hs_coymd_pub2, "Coyote", "Mule Deer", "Hunting")
+  det_coywtd_hunting_hunt <- det_out(hs_coywtd_hunt1, "Coyote", "White-tailed Deer", "Hunting")
+  det_coywtd_hunting_pub <- det_out(hs_coywtd_pub2, "Coyote", "White-tailed Deer", "Hunting")
+  det_bobmd_hunting_hunt <- det_out(hs_bobmd_hunt2, "Bobcat", "Mule Deer Deer", "Hunting")
+  det_bobmd_hunting_pub <- det_out(hs_bobmd_pub2, "Bobcat", "Mule Deer Deer", "Hunting")
+  det_bobwtd_hunting_hunt <- det_out(hs_bobwtd_hunt1, "Bobcat", "White-tailed Deer", "Hunting")
+  det_bobwtd_hunting_pub <- det_out(hs_bobwtd_pub2, "Bobcat", "White-tailed Deer", "Hunting")
   
   #'  Merge into larger data frames for easy comparison
   #'  Full models
-  graze_det_results <- rbind(det_cougmd_grazing, det_cougelk_grazing, det_cougwtd_grazing, det_cougmoose_grazing,
-                         det_wolfmd_grazing, det_wolfelk_grazing, det_wolfwtd_grazing, det_wolfmoose_grazing,
-                         det_bearmd_grazing, det_bearelk_grazing, det_bearwtd_grazing, det_bearmoose_grazing,
-                         det_coymd_grazing, det_coyelk_grazing, det_bobwtd_grazing, det_bobmoose_grazing)
-  hunt_det_results <- rbind(det_cougmd_hunting, det_cougelk_hunting, det_cougwtd_hunting, det_cougmoose_hunting,
-                        det_wolfmd_hunting, det_wolfelk_hunting, det_wolfwtd_hunting, det_wolfmoose_hunting,
-                        det_bearmd_hunting, det_bearelk_hunting, det_bearwtd_hunting, det_bearmoose_hunting,
-                        det_coymd_hunting, det_coyelk_hunting, det_bobwtd_hunting, det_bobmoose_hunting)
-
-  #'  Round so numbers are a little easier to interpret
-  results_det_graze <- graze_det_results %>%
-    dplyr::select(-z) %>%
-    mutate(
-      SE = round(SE, 2),
-      SE = paste0("(", SE, ")")
-    )
-  #'  Spread this out so the coefficient effects are easier to compare across species
-  results_det_graze_wide <- results_det_graze %>% 
-    unite(Est_SE, Estimate, SE, sep = " ") %>%
-    unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
-    #'  Change species names to general classes
-    mutate(
-      Parameter = gsub("cougar", "Species 1", Parameter),
-      Parameter = gsub("wolf", "Species 1", Parameter),
-      Parameter = gsub("blackbear", "Species 1", Parameter),
-      Parameter = gsub("coyote", "Species 1", Parameter),
-      Parameter = gsub("bobcat", "Species 1", Parameter),
-      Parameter = gsub("muledeer", "Species 2", Parameter),
-      Parameter = gsub("mule_deer", "Species 2", Parameter),
-      Parameter = gsub("elk", "Species 2", Parameter),
-      Parameter = gsub("wtd", "Species 2", Parameter),
-      Parameter = gsub("moose", "Species 2", Parameter)
-    ) %>%
-    spread(Parameter, Est_SE_Pval) %>%
+  graze_det_allot_results <- rbind(det_cougmd_grazing_allot, det_cougelk_grazing_allot, det_cougwtd_grazing_allot, det_cougmoose_grazing_allot,
+                               det_wolfmd_grazing_allot, det_wolfelk_grazing_allot, det_wolfwtd_grazing_allot, det_wolfmoose_grazing_allot,
+                               det_bearmd_grazing_allot, det_bearelk_grazing_allot, det_bearwtd_grazing_allot, det_bearmoose_grazing_allot,
+                               det_coymd_grazing_allot, det_coywtd_grazing_allot, det_bobmd_grazing_allot, det_bobwtd_grazing_allot)
+  graze_det_cattle_results <- rbind(det_cougmd_grazing_cattle, det_cougelk_grazing_cattle, det_cougwtd_grazing_cattle, det_cougmoose_grazing_cattle,
+                                det_wolfmd_grazing_cattle, det_wolfelk_grazing_cattle, det_wolfwtd_grazing_cattle, det_wolfmoose_grazing_cattle,
+                                det_bearmd_grazing_cattle, det_bearelk_grazing_cattle, det_bearwtd_grazing_cattle, det_bearmoose_grazing_cattle,
+                                det_coymd_grazing_cattle, det_coywtd_grazing_cattle, det_bobmd_grazing_cattle, det_bobwtd_grazing_cattle)
+  hunt_det_hunt_results <- rbind(det_cougmd_hunting_hunt, det_cougelk_hunting_hunt, det_cougwtd_hunting_hunt, det_cougmoose_hunting_hunt,
+                             det_wolfmd_hunting_hunt, det_wolfelk_hunting_hunt, det_wolfwtd_hunting_hunt, det_wolfmoose_hunting_hunt,
+                             det_bearmd_hunting_hunt, det_bearelk_hunting_hunt, det_bearwtd_hunting_hunt, det_bearmoose_hunting_hunt,
+                             det_coymd_hunting_hunt, det_coywtd_hunting_hunt, det_bobmd_hunting_hunt, det_bobwtd_hunting_hunt)
+  hunt_det_pub_results <- rbind(det_cougmd_hunting_pub, det_cougelk_hunting_pub, det_cougwtd_hunting_pub, det_cougmoose_hunting_pub,
+                            det_wolfmd_hunting_pub, det_wolfelk_hunting_pub, det_wolfwtd_hunting_pub, det_wolfmoose_hunting_pub,
+                            det_bearmd_hunting_pub, det_bearelk_hunting_pub, det_bearwtd_hunting_pub, det_bearmoose_hunting_pub,
+                            det_coymd_hunting_pub, det_coywtd_hunting_pub, det_bobmd_hunting_pub, det_bobwtd_hunting_pub)
+  
+  results_graze_det_allot <- format_se(graze_det_allot_results)
+  results_graze_det_cattle <- format_se(graze_det_cattle_results)
+  results_hunt_det_hunt <- format_se(hunt_det_hunt_results)
+  results_hunt_det_pub <- format_se(hunt_det_pub_results)
+  
+  wideresults_graze_det_allot <- format_wide(results_graze_det_allot)
+  wideresults_graze_det_cattle <- format_wide(results_graze_det_cattle)
+  wideresults_hunt_det_hunt <- format_wide(results_hunt_det_hunt)
+  wideresults_hunt_det_pub <- format_wide(results_hunt_det_pub)
+  
+  results_det_graze_allot_wide <- wideresults_graze_det_allot %>%
     relocate("[Species 1] PublicGrazing1", .after = "[Species 1] TrailDirt road") %>%
     relocate("[Species 2] PublicGrazing1", .after = "[Species 2] TrailDirt road") %>%
     separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
     separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
     separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
     separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
-    separate("[Species 1] WeeklyGrazing", c("[Species 1] WeeklyGrazing (SE)", "[Species 1] WeeklyGrazing Pval"), sep = "_") %>%
-    separate("[Species 2] WeeklyGrazing", c("[Species 2] WeeklyGrazing (SE)", "[Species 2] WeeklyGrazing Pval"), sep = "_") %>%
     separate("[Species 1] PublicGrazing1", c("[Species 1] GrazingAllotment (SE)", "[Species 1] GrazingAllotment Pval"), sep = "_") %>%
     separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
-
-  #'  Hunting season detection results
-  results_det_hunt <- hunt_det_results %>%
-    dplyr::select(-z) %>%
-    mutate(
-      SE = round(SE, 2),
-      SE = paste0("(", SE, ")")
-    )
-  #'  Spread this out so the coefficient effects are easier to compare across species
-  results_det_hunt_wide <- results_det_hunt %>% 
-    unite(Est_SE, Estimate, SE, sep = " ") %>%
-    unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
-    #'  Change species names to general classes
-    mutate(
-      Parameter = gsub("cougar", "Species 1", Parameter),
-      Parameter = gsub("wolf", "Species 1", Parameter),
-      Parameter = gsub("blackbear", "Species 1", Parameter),
-      Parameter = gsub("coyote", "Species 1", Parameter),
-      Parameter = gsub("bobcat", "Species 1", Parameter),
-      Parameter = gsub("muledeer", "Species 2", Parameter),
-      Parameter = gsub("mule_deer", "Species 2", Parameter),
-      Parameter = gsub("elk", "Species 2", Parameter),
-      Parameter = gsub("wtd", "Species 2", Parameter),
-      Parameter = gsub("moose", "Species 2", Parameter)
-    ) %>%
-    spread(Parameter, Est_SE_Pval) %>%
+  results_det_graze_cattle_wide <- wideresults_graze_det_cattle %>%
+    relocate("[Species 1] WeeklyGrazing", .after = "[Species 1] TrailDirt road") %>%
+    relocate("[Species 2] WeeklyGrazing", .after = "[Species 2] TrailDirt road") %>%
+    separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+    separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
+    separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
+    separate("[Species 1] WeeklyGrazing", c("[Species 1] WeeklyGrazing (SE)", "[Species 1] WeeklyGrazing Pval"), sep = "_") %>%
+    separate("[Species 2] WeeklyGrazing", c("[Species 2] WeeklyGrazing (SE)", "[Species 2] WeeklyGrazing Pval"), sep = "_") %>%
+    arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  results_det_hunt_hunt_wide <- wideresults_hunt_det_hunt %>%
+    relocate("[Species 1] WeeklyHunting", .after = "[Species 1] TrailDirt road") %>%
+    relocate("[Species 2] WeeklyHunting", .after = "[Species 2] TrailDirt road") %>%
+    separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+    separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+    separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
+    separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
+    separate("[Species 1] WeeklyHunting", c("[Species 1] WeeklyHunting (SE)", "[Species 1] WeeklyHunting Pval"), sep = "_") %>%
+    separate("[Species 2] WeeklyHunting", c("[Species 2] WeeklyHunting (SE)", "[Species 2] WeeklyHunting Pval"), sep = "_") %>%
+    arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  results_det_hunt_pub_wide <- wideresults_hunt_det_pub %>%
     relocate("[Species 1] Public1", .after = "[Species 1] TrailDirt road") %>%
     relocate("[Species 2] Public1", .after = "[Species 2] TrailDirt road") %>%
     separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
@@ -2237,15 +2327,322 @@
     separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
     separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
     separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
-    separate("[Species 1] WeeklyHunting", c("[Species 1] WeeklyHunting (SE)", "[Species 1] WeeklyHunting Pval"), sep = "_") %>%
-    separate("[Species 2] WeeklyHunting", c("[Species 2] WeeklyHunting (SE)", "[Species 2] WeeklyHunting Pval"), sep = "_") %>%
     arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+    
+    #'  Save!
+    write.csv(results_graze_det_allot, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_Allotment_", Sys.Date(), ".csv"))  
+    write.csv(results_det_graze_allot_wide, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_Allotment_wide", Sys.Date(), ".csv"))
+    write.csv(results_graze_det_cattle, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_CattleAct_", Sys.Date(), ".csv"))  
+    write.csv(results_det_graze_cattle_wide, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_CattleAct_wide", Sys.Date(), ".csv"))
+    write.csv(results_hunt_det_hunt, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_HunterAct_", Sys.Date(), ".csv"))  
+    write.csv(results_det_hunt_hunt_wide, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_HunterAct_wide", Sys.Date(), ".csv"))
+    write.csv(results_hunt_det_pub, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_Public_", Sys.Date(), ".csv"))  
+    write.csv(results_det_hunt_pub_wide, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_Public_wide", Sys.Date(), ".csv"))
+    
   
-  #'  Save!
-  write.csv(results_det_graze, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_", Sys.Date(), ".csv"))  
-  write.csv(results_det_graze_wide, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_wide", Sys.Date(), ".csv"))
-  write.csv(results_det_hunt, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_", Sys.Date(), ".csv"))  
-  write.csv(results_det_hunt_wide, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_wide", Sys.Date(), ".csv"))
+  
+  
+  #' #'  Grazing season models
+  #' occ_cougmd_grazing <- occ_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
+  #' occ_cougelk_grazing <- occ_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
+  #' occ_cougwtd_grazing <- occ_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
+  #' occ_cougmoose_grazing <- occ_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
+  #' occ_wolfmd_grazing <- occ_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
+  #' occ_wolfelk_grazing <- occ_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
+  #' occ_wolfwtd_grazing <- occ_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
+  #' occ_wolfmoose_grazing <- occ_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
+  #' occ_bearmd_grazing <- occ_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
+  #' occ_bearelk_grazing <- occ_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
+  #' occ_bearwtd_grazing <- occ_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
+  #' occ_bearmoose_grazing <- occ_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
+  #' occ_coymd_grazing <- occ_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
+  #' occ_coywtd_grazing <- occ_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
+  #' occ_bobmd_grazing <- occ_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
+  #' occ_bobwtd_grazing <- occ_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
+  #' #'  Hunting season models
+  #' occ_cougmd_hunting <- occ_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
+  #' occ_cougelk_hunting <- occ_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
+  #' occ_cougwtd_hunting <- occ_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
+  #' occ_cougmoose_hunting <- occ_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
+  #' occ_wolfmd_hunting <- occ_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
+  #' occ_wolfelk_hunting <- occ_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
+  #' occ_wolfwtd_hunting <- occ_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
+  #' occ_wolfmoose_hunting <- occ_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
+  #' occ_bearmd_hunting <- occ_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
+  #' occ_bearelk_hunting <- occ_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
+  #' occ_bearwtd_hunting <- occ_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
+  #' occ_bearmoose_hunting <- occ_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
+  #' occ_coymd_hunting <- occ_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
+  #' occ_coywtd_hunting <- occ_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
+  #' occ_bobmd_hunting <- occ_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
+  #' occ_bobwtd_hunting <- occ_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
+  #' 
+  #' #'  Merge into larger data frames for easy comparison
+  #' #'  Full models
+  #' graze_results <- rbind(occ_cougmd_grazing, occ_cougelk_grazing, occ_cougwtd_grazing, occ_cougmoose_grazing,
+  #'                    occ_wolfmd_grazing, occ_wolfelk_grazing, occ_wolfwtd_grazing, occ_wolfmoose_grazing,
+  #'                    occ_bearmd_grazing, occ_bearelk_grazing, occ_bearwtd_grazing, occ_bearmoose_grazing,
+  #'                    occ_coymd_grazing, occ_coywtd_grazing, occ_bobmd_grazing, occ_bobwtd_grazing)
+  #' hunt_results <- rbind(occ_cougmd_hunting, occ_cougelk_hunting, occ_cougwtd_hunting, occ_cougmoose_hunting,
+  #'                   occ_wolfmd_hunting, occ_wolfelk_hunting, occ_wolfwtd_hunting, occ_wolfmoose_hunting,
+  #'                   occ_bearmd_hunting, occ_bearelk_hunting, occ_bearwtd_hunting, occ_bearmoose_hunting,
+  #'                   occ_coymd_hunting, occ_coywtd_hunting, occ_bobmd_hunting, occ_bobwtd_hunting)
+  #' 
+  #' #'  Spread this out so the coefficient effects are easier to compare across species
+  #' #'  Grazing results tables
+  #' results_graze <- graze_results %>%  
+  #'   dplyr::select(-z) %>%
+  #'   mutate(
+  #'     SE = round(SE, 2),
+  #'     SE = paste0("(", SE, ")")
+  #'   ) 
+  #' results_graze_wide <- results_graze %>%
+  #'   unite(Est_SE, Estimate, SE, sep = " ") %>%
+  #'   unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
+  #'   #'  Change species names to general classes
+  #'   mutate(
+  #'     Parameter = gsub("cougar", "Species 1", Parameter),
+  #'     Parameter = gsub("wolf", "Species 1", Parameter),
+  #'     Parameter = gsub("blackbear", "Species 1", Parameter),
+  #'     Parameter = gsub("coyote", "Species 1", Parameter),
+  #'     Parameter = gsub("bobcat", "Species 1", Parameter),
+  #'     Parameter = gsub("muledeer", "Species 2", Parameter),
+  #'     Parameter = gsub("mule_deer", "Species 2", Parameter),
+  #'     Parameter = gsub("elk", "Species 2", Parameter),
+  #'     Parameter = gsub("wtd", "Species 2", Parameter),
+  #'     Parameter = gsub("moose", "Species 2", Parameter)
+  #'   ) %>%
+  #'   spread(Parameter, Est_SE_Pval) %>%
+  #'   relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
+  #'   relocate("[Species 1:Species 2] GrazingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
+  #'   relocate("[Species 1:Species 2] PublicGrazing1", .after = "[Species 1:Species 2] GrazingActivity") %>%
+  #'   relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
+  #'   relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
+  #'   relocate("[Species 1] PublicGrazing1", .after = "[Species 1] GrazingActivity") %>%
+  #'   relocate("[Species 2] PublicGrazing1", .after = "[Species 2] GrazingActivity") %>%
+  #'   separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Elev", c("[Species 1] Elevation (SE)", "[Species 1] Elevation Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Elev", c("[Species 2] Elevation (SE)", "[Species 2] Elevation Pval"), sep = "_") %>%
+  #'   separate("[Species 1] I(Elev^2)", c("[Species 1] Elevation^2 (SE)", "[Species 1] Elevation^2 Pval"), sep = "_") %>%
+  #'   separate("[Species 2] I(Elev^2)", c("[Species 2] Elevation^2 (SE)", "[Species 2] Elevation^2 Pval"), sep = "_") %>%
+  #'   separate("[Species 1] PercForest", c("[Species 1] PercentForest (SE)", "[Species 1] PercentForest Pval"), sep = "_") %>%
+  #'   separate("[Species 2] PercForest", c("[Species 2] PercentForest (SE)", "[Species 2] PercentForest Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Study_AreaOK", c("[Species 1] Study_AreaOK (SE)", "[Species 1] Study_AreaOK Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
+  #'   separate("[Species 1] GrazingActivity", c("[Species 1] GrazingActivity (SE)", "[Species 1] GrazingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 2] GrazingActivity", c("[Species 2] GrazingActivity (SE)", "[Species 2] GrazingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 1] PublicGrazing1", c("[Species 1] GrazingAllotment (SE)", "[Species 1] GrazingAllotment Pval"), sep = "_") %>%
+  #'   separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] GrazingActivity", c("[Species 1:Species 2] GrazingActivity (SE)", "[Species 1:Species 2] GrazingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] PublicGrazing1", c("[Species 1:Species 2] GrazingAllotment (SE)", "[Species 1:Species 2] GrazingAllotment Pval"), sep = "_") %>%
+  #'   arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  #'   
+  #' #'  Hunting results tables
+  #' results_hunt <- hunt_results %>%  
+  #'   dplyr::select(-z) %>%
+  #'   mutate(
+  #'     SE = round(SE, 2),
+  #'     SE = paste0("(", SE, ")")
+  #'   ) 
+  #' results_hunt_wide <- results_hunt %>%
+  #'   unite(Est_SE, Estimate, SE, sep = " ") %>%
+  #'   unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
+  #'   #'  Change species names to general classes
+  #'   mutate(
+  #'     Parameter = gsub("cougar", "Species 1", Parameter),
+  #'     Parameter = gsub("wolf", "Species 1", Parameter),
+  #'     Parameter = gsub("blackbear", "Species 1", Parameter),
+  #'     Parameter = gsub("coyote", "Species 1", Parameter),
+  #'     Parameter = gsub("bobcat", "Species 1", Parameter),
+  #'     Parameter = gsub("muledeer", "Species 2", Parameter),
+  #'     Parameter = gsub("mule_deer", "Species 2", Parameter),
+  #'     Parameter = gsub("elk", "Species 2", Parameter),
+  #'     Parameter = gsub("wtd", "Species 2", Parameter),
+  #'     Parameter = gsub("moose", "Species 2", Parameter)
+  #'   ) %>%
+  #'   spread(Parameter, Est_SE_Pval) %>%
+  #'   relocate("[Species 1:Species 2] (Intercept)", .after = "[Species 2] Study_AreaOK") %>%
+  #'   relocate("[Species 1:Species 2] HuntingActivity", .after = "[Species 1:Species 2] (Intercept)") %>%
+  #'   relocate("[Species 1:Species 2] Public1", .after = "[Species 1:Species 2] HuntingActivity") %>%
+  #'   relocate("[Species 1] I(Elev^2)", .after = "[Species 1] Elev") %>%
+  #'   relocate("[Species 2] I(Elev^2)", .after = "[Species 2] Elev") %>%
+  #'   separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Elev", c("[Species 1] Elevation (SE)", "[Species 1] Elevation Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Elev", c("[Species 2] Elevation (SE)", "[Species 2] Elevation Pval"), sep = "_") %>%
+  #'   separate("[Species 1] I(Elev^2)", c("[Species 1] Elevation^2 (SE)", "[Species 1] Elevation^2 Pval"), sep = "_") %>%
+  #'   separate("[Species 2] I(Elev^2)", c("[Species 2] Elevation^2 (SE)", "[Species 2] Elevation^2 Pval"), sep = "_") %>%
+  #'   separate("[Species 1] PercForest", c("[Species 1] PercentForest (SE)", "[Species 1] PercentForest Pval"), sep = "_") %>%
+  #'   separate("[Species 2] PercForest", c("[Species 2] PercentForest (SE)", "[Species 2] PercentForest Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Study_AreaOK", c("[Species 1] Study_AreaOK (SE)", "[Species 1] Study_AreaOK Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Study_AreaOK", c("[Species 2] Study_AreaOK (SE)", "[Species 2] Study_AreaOK Pval"), sep = "_") %>%
+  #'   separate("[Species 1] HuntingActivity", c("[Species 1] HuntingActivity (SE)", "[Species 1] HuntingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 2] HuntingActivity", c("[Species 2] HuntingActivity (SE)", "[Species 2] HuntingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] (Intercept)", c("[Species 1:Species 2] Intercept (SE)", "[Species 1:Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] HuntingActivity", c("[Species 1:Species 2] HuntingActivity (SE)", "[Species 1:Species 2] HuntingActivity Pval"), sep = "_") %>%
+  #'   separate("[Species 1:Species 2] Public1", c("[Species 1:Species 2] PublicLand (SE)", "[Species 1:Species 2] PublicLand Pval"), sep = "_") %>%
+  #'   arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  #' 
+  #' #'  Save!
+  #' write.csv(results_graze, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_", Sys.Date(), ".csv"))  
+  #' write.csv(results_graze_wide, paste0("./Outputs/Tables/CoOcc_OccProb_GrazingResults_wide_", Sys.Date(), ".csv"))
+  #' write.csv(results_hunt, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_", Sys.Date(), ".csv"))  
+  #' write.csv(results_hunt_wide, paste0("./Outputs/Tables/CoOcc_OccProb_HuntingResults_wide_", Sys.Date(), ".csv"))
+  #' 
+  #' 
+  #' #'  Function to save detection results
+  #' det_out <- function(mod, spp1, spp2, season) {
+  #'   out <- summary(mod@estimates)$det %>%
+  #'     mutate(
+  #'       Parameter = row.names(summary(mod@estimates)$det),
+  #'       Species1 = rep(spp1, nrow(.)),
+  #'       Species2 = rep(spp2, nrow(.)),
+  #'       Season = rep(season, nrow(.)),
+  #'       Estimate = round(Estimate, 2),
+  #'       SE = round(SE, 2),
+  #'       z = round(z, 2),
+  #'       Pval = round(`P(>|z|)`, 2)
+  #'     ) %>%
+  #'     dplyr::select(-`P(>|z|)`) %>%
+  #'     relocate(Parameter, .before = Estimate) %>%
+  #'     relocate(Species1, .before = Parameter) %>%
+  #'     relocate(Species2, .before = Parameter) %>%
+  #'     relocate(Season, .before = Parameter) 
+  #'   return(out)
+  #' }
+  #' 
+  #' 
+  #' #'  Run each model through detection function
+  #' #'  Grazing season models
+  #' det_cougmd_grazing <- det_out(gs_cougmd_global, "Cougar", "Mule Deer", "Grazing")
+  #' det_cougelk_grazing <- det_out(gs_cougelk_global, "Cougar", "Elk", "Grazing")
+  #' det_cougwtd_grazing <- det_out(gs_cougwtd_global, "Cougar", "White-tailed Deer", "Grazing")
+  #' det_cougmoose_grazing <- det_out(gs_cougmoose_global, "Cougar", "Moose", "Grazing")
+  #' det_wolfmd_grazing <- det_out(gs_wolfmd_global, "Wolf", "Mule Deer", "Grazing")
+  #' det_wolfelk_grazing <- det_out(gs_wolfelk_global, "Wolf", "Elk", "Grazing")
+  #' det_wolfwtd_grazing <- det_out(gs_wolfwtd_global, "Wolf", "White-tailed Deer", "Grazing")
+  #' det_wolfmoose_grazing <- det_out(gs_wolfmoose_global, "Wolf", "Moose", "Grazing")
+  #' det_bearmd_grazing <- det_out(gs_bearmd_global, "Black Bear", "Mule Deer", "Grazing")
+  #' det_bearelk_grazing <- det_out(gs_bearelk_global, "Black Bear", "Elk", "Grazing")
+  #' det_bearwtd_grazing <- det_out(gs_bearwtd_global, "Black Bear", "White-tailed Deer", "Grazing")
+  #' det_bearmoose_grazing <- det_out(gs_bearmoose_global, "Black Bear", "Moose", "Grazing")
+  #' det_coymd_grazing <- det_out(gs_coymd_global, "Coyote", "Mule Deer", "Grazing")
+  #' det_coyelk_grazing <- det_out(gs_coywtd_global, "Coyote", "White-tailed Deer", "Grazing")
+  #' det_bobwtd_grazing <- det_out(gs_bobmd_global, "Bobcat", "Mule Deer Deer", "Grazing")
+  #' det_bobmoose_grazing <- det_out(gs_bobwtd_global, "Bobcat", "White-tailed Deer", "Grazing")
+  #' #'  Hunting season models
+  #' det_cougmd_hunting <- det_out(hs_cougmd_global, "Cougar", "Mule Deer", "Hunting")
+  #' det_cougelk_hunting <- det_out(hs_cougelk_global, "Cougar", "Elk", "Hunting")
+  #' det_cougwtd_hunting <- det_out(hs_cougwtd_global, "Cougar", "White-tailed Deer", "Hunting")
+  #' det_cougmoose_hunting <- det_out(hs_cougmoose_global, "Cougar", "Moose", "Hunting")
+  #' det_wolfmd_hunting <- det_out(hs_wolfmd_global, "Wolf", "Mule Deer", "Hunting")
+  #' det_wolfelk_hunting <- det_out(hs_wolfelk_global, "Wolf", "Elk", "Hunting")
+  #' det_wolfwtd_hunting <- det_out(hs_wolfwtd_global, "Wolf", "White-tailed Deer", "Hunting")
+  #' det_wolfmoose_hunting <- det_out(hs_wolfmoose_global, "Wolf", "Moose", "Hunting")
+  #' det_bearmd_hunting <- det_out(hs_bearmd_global, "Black Bear", "Mule Deer", "Hunting")
+  #' det_bearelk_hunting <- det_out(hs_bearelk_global, "Black Bear", "Elk", "Hunting")
+  #' det_bearwtd_hunting <- det_out(hs_bearwtd_global, "Black Bear", "White-tailed Deer", "Hunting")
+  #' det_bearmoose_hunting <- det_out(hs_bearmoose_global, "Black Bear", "Moose", "Hunting")
+  #' det_coymd_hunting <- det_out(hs_coymd_global, "Coyote", "Mule Deer", "Hunting")
+  #' det_coyelk_hunting <- det_out(hs_coywtd_global, "Coyote", "White-tailed Deer", "Hunting")
+  #' det_bobwtd_hunting <- det_out(hs_bobmd_global, "Bobcat", "Mule Deer Deer", "Hunting")
+  #' det_bobmoose_hunting <- det_out(hs_bobwtd_global, "Bobcat", "White-tailed Deer", "Hunting")
+  #' 
+  #' 
+  #' #'  Merge into larger data frames for easy comparison
+  #' #'  Full models
+  #' graze_det_results <- rbind(det_cougmd_grazing, det_cougelk_grazing, det_cougwtd_grazing, det_cougmoose_grazing,
+  #'                        det_wolfmd_grazing, det_wolfelk_grazing, det_wolfwtd_grazing, det_wolfmoose_grazing,
+  #'                        det_bearmd_grazing, det_bearelk_grazing, det_bearwtd_grazing, det_bearmoose_grazing,
+  #'                        det_coymd_grazing, det_coyelk_grazing, det_bobwtd_grazing, det_bobmoose_grazing)
+  #' hunt_det_results <- rbind(det_cougmd_hunting, det_cougelk_hunting, det_cougwtd_hunting, det_cougmoose_hunting,
+  #'                       det_wolfmd_hunting, det_wolfelk_hunting, det_wolfwtd_hunting, det_wolfmoose_hunting,
+  #'                       det_bearmd_hunting, det_bearelk_hunting, det_bearwtd_hunting, det_bearmoose_hunting,
+  #'                       det_coymd_hunting, det_coyelk_hunting, det_bobwtd_hunting, det_bobmoose_hunting)
+  #' 
+  #' #'  Round so numbers are a little easier to interpret
+  #' results_det_graze <- graze_det_results %>%
+  #'   dplyr::select(-z) %>%
+  #'   mutate(
+  #'     SE = round(SE, 2),
+  #'     SE = paste0("(", SE, ")")
+  #'   )
+  #' #'  Spread this out so the coefficient effects are easier to compare across species
+  #' results_det_graze_wide <- results_det_graze %>% 
+  #'   unite(Est_SE, Estimate, SE, sep = " ") %>%
+  #'   unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
+  #'   #'  Change species names to general classes
+  #'   mutate(
+  #'     Parameter = gsub("cougar", "Species 1", Parameter),
+  #'     Parameter = gsub("wolf", "Species 1", Parameter),
+  #'     Parameter = gsub("blackbear", "Species 1", Parameter),
+  #'     Parameter = gsub("coyote", "Species 1", Parameter),
+  #'     Parameter = gsub("bobcat", "Species 1", Parameter),
+  #'     Parameter = gsub("muledeer", "Species 2", Parameter),
+  #'     Parameter = gsub("mule_deer", "Species 2", Parameter),
+  #'     Parameter = gsub("elk", "Species 2", Parameter),
+  #'     Parameter = gsub("wtd", "Species 2", Parameter),
+  #'     Parameter = gsub("moose", "Species 2", Parameter)
+  #'   ) %>%
+  #'   spread(Parameter, Est_SE_Pval) %>%
+  #'   relocate("[Species 1] PublicGrazing1", .after = "[Species 1] TrailDirt road") %>%
+  #'   relocate("[Species 2] PublicGrazing1", .after = "[Species 2] TrailDirt road") %>%
+  #'   separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
+  #'   separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
+  #'   separate("[Species 1] WeeklyGrazing", c("[Species 1] WeeklyGrazing (SE)", "[Species 1] WeeklyGrazing Pval"), sep = "_") %>%
+  #'   separate("[Species 2] WeeklyGrazing", c("[Species 2] WeeklyGrazing (SE)", "[Species 2] WeeklyGrazing Pval"), sep = "_") %>%
+  #'   separate("[Species 1] PublicGrazing1", c("[Species 1] GrazingAllotment (SE)", "[Species 1] GrazingAllotment Pval"), sep = "_") %>%
+  #'   separate("[Species 2] PublicGrazing1", c("[Species 2] GrazingAllotment (SE)", "[Species 2] GrazingAllotment Pval"), sep = "_") %>%
+  #'   arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  #' 
+  #' #'  Hunting season detection results
+  #' results_det_hunt <- hunt_det_results %>%
+  #'   dplyr::select(-z) %>%
+  #'   mutate(
+  #'     SE = round(SE, 2),
+  #'     SE = paste0("(", SE, ")")
+  #'   )
+  #' #'  Spread this out so the coefficient effects are easier to compare across species
+  #' results_det_hunt_wide <- results_det_hunt %>% 
+  #'   unite(Est_SE, Estimate, SE, sep = " ") %>%
+  #'   unite(Est_SE_Pval, Est_SE, Pval, sep = "_") %>%
+  #'   #'  Change species names to general classes
+  #'   mutate(
+  #'     Parameter = gsub("cougar", "Species 1", Parameter),
+  #'     Parameter = gsub("wolf", "Species 1", Parameter),
+  #'     Parameter = gsub("blackbear", "Species 1", Parameter),
+  #'     Parameter = gsub("coyote", "Species 1", Parameter),
+  #'     Parameter = gsub("bobcat", "Species 1", Parameter),
+  #'     Parameter = gsub("muledeer", "Species 2", Parameter),
+  #'     Parameter = gsub("mule_deer", "Species 2", Parameter),
+  #'     Parameter = gsub("elk", "Species 2", Parameter),
+  #'     Parameter = gsub("wtd", "Species 2", Parameter),
+  #'     Parameter = gsub("moose", "Species 2", Parameter)
+  #'   ) %>%
+  #'   spread(Parameter, Est_SE_Pval) %>%
+  #'   relocate("[Species 1] Public1", .after = "[Species 1] TrailDirt road") %>%
+  #'   relocate("[Species 2] Public1", .after = "[Species 2] TrailDirt road") %>%
+  #'   separate("[Species 1] (Intercept)", c("[Species 1] Intercept (SE)", "[Species 1] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 2] (Intercept)", c("[Species 2] Intercept (SE)", "[Species 2] Intercept Pval"), sep = "_") %>%
+  #'   separate("[Species 1] TrailDirt road", c("[Species 1] Dirt road (SE)", "[Species 1] Dirt road Pval"), sep = "_") %>%
+  #'   separate("[Species 2] TrailDirt road", c("[Species 2] Dirt road (SE)", "[Species 2] Dirt road Pval"), sep = "_") %>%
+  #'   separate("[Species 1] Public1", c("[Species 1] PublicLand (SE)", "[Species 1] PublicLand Pval"), sep = "_") %>%
+  #'   separate("[Species 2] Public1", c("[Species 2] PublicLand (SE)", "[Species 2] PublicLand Pval"), sep = "_") %>%
+  #'   separate("[Species 1] WeeklyHunting", c("[Species 1] WeeklyHunting (SE)", "[Species 1] WeeklyHunting Pval"), sep = "_") %>%
+  #'   separate("[Species 2] WeeklyHunting", c("[Species 2] WeeklyHunting (SE)", "[Species 2] WeeklyHunting Pval"), sep = "_") %>%
+  #'   arrange(match(Species1, c("Black Bear", "Bobcat", "Cougar", "Coyote", "Wolf"))) 
+  #' 
+  #' #'  Save!
+  #' write.csv(results_det_graze, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_", Sys.Date(), ".csv"))  
+  #' write.csv(results_det_graze_wide, paste0("./Outputs/Tables/CoOcc_DetProb_GrazingResults_wide", Sys.Date(), ".csv"))
+  #' write.csv(results_det_hunt, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_", Sys.Date(), ".csv"))  
+  #' write.csv(results_det_hunt_wide, paste0("./Outputs/Tables/CoOcc_DetProb_HuntingResults_wide", Sys.Date(), ".csv"))
   
 
   
