@@ -60,6 +60,10 @@
   dem_p_df <- as.data.frame(dem_p_low)
   colnames(dem_p_df) <- c("x", "y", "value")
   
+  
+  ####  TRY MAPPING PUBLIC LANDS INSTEAD OF DEM FOR THIS FIGURE  ####
+  
+  
   ####  Map study area and camera locations  ####
   #'  ========================================
   #'  Read in camera locations
@@ -71,6 +75,17 @@
   cams_reproj <- st_transform(cams, crs = sa_proj)
   cams_reproj <- mutate(cams_reproj, Year2 = ifelse(Year == "Year1", "2018", "2019"),
                         Year2 = ifelse(Year == "Year3", "2020", Year2 )) 
+  
+  #'  Remove Gebbers cameras from map
+  #OK7945_45, OK7658_43, OK5552_103, OK7165_90, OK7270_1, OK6597_41, OK7545_51, 
+  #OK7073_80, OK8127_125, OK8234_102, OK7470_45, OK5936_59
+  cams_reproj_nogebs <- cams_reproj %>%
+    filter(CameraLocation != "OK7945_45" & CameraLocation != "OK7658_43" & 
+             CameraLocation != "OK5552_103" & CameraLocation != "OK7165_90" & 
+             CameraLocation != "OK7270_1" & CameraLocation != "OK6597_41" & 
+             CameraLocation != "OK7545_51" & CameraLocation != "OK7073_80" & 
+             CameraLocation != "OK8127_125" & CameraLocation != "OK8234_102" & 
+             CameraLocation != "OK7470_45" & CameraLocation != "OK5936_59")
   
   #'  City locations
   city <- c("Chewelah, \n   WA", "Winthrop, \n   WA")
