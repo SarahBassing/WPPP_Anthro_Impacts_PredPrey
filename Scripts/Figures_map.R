@@ -60,10 +60,7 @@
   dem_p_df <- as.data.frame(dem_p_low)
   colnames(dem_p_df) <- c("x", "y", "value")
   
-<<<<<<< HEAD
-  
   ####  TRY MAPPING PUBLIC LANDS INSTEAD OF DEM FOR THIS FIGURE  ####
-=======
   #'  Public land shapefiles
   USFS <- st_read("./Shapefiles/S_USA.RangerDistrict", layer = "S_USA.RangerDistrict") %>%
     st_transform(crs = sa_proj) %>%
@@ -88,8 +85,7 @@
   NPS <- st_read("./Shapefiles/National_Park_Service_Land_Resources_Division_Tract_and_Boundary_Service", layer = "National_Park_Service_Land_Resources_Division_Tract_and_Boundary_Service") %>%
     st_transform(crs = sa_proj) %>%
     st_crop(st_bbox(dem_low))
->>>>>>> 6370f391db0e8412008a2452000c64aaab1a43f1
-  
+
   
   ####  Map study area and camera locations  ####
   #'  ========================================
