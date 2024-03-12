@@ -921,17 +921,17 @@
   #'  -----------------------------------------------------------
   #'  Make one single facet_grid plot by grouped by ungulate species
   cattle_overlap_tbl$prey <- factor(cattle_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
-  overlap_grazing_effect <- ggplot(cattle_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Grazing.activity)) +   
+  overlap_grazing_effect <- ggplot(cattle_overlap_tbl, aes(x = predator, y = Dhat, group = Grazing.activity)) +   
     geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = prey, shape = Grazing.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    geom_point(stat = 'identity', aes(col = prey, shape = Grazing.activity), size = 3.25, position = position_dodge(width = 0.4)) + 
     scale_colour_bright() +
     ylim(0,1) + theme_bw() +
     theme(text = element_text(size = 22)) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
-    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
+    # theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
+    # theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
     guides(color = "none", shape = guide_legend(title = "Cattle activity")) + 
-    # ggtitle("Cattle activity") +
+    ggtitle("Effect of cattle activity on temporal overlap") +
     xlab(NULL) + ylab("Coefficient of overlap (Dhat)") +
     facet_grid(~prey, scales = "free", space = "free") 
   overlap_grazing_effect
@@ -940,15 +940,15 @@
   #'  Make one single facet_grid plot by grouped by ungulate species
   allotment_overlap_tbl$prey <- factor(allotment_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
   allotment_overlap_tbl$Public_Grazing <- factor(allotment_overlap_tbl$Public_Grazing, levels = c("Permitted", "Not permitted"))
-  overlap_allot_effect <- ggplot(allotment_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Public_Grazing)) +   
+  overlap_allot_effect <- ggplot(allotment_overlap_tbl, aes(x = predator, y = Dhat, group = Public_Grazing)) +   
     geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = prey, shape = Public_Grazing), size = 2.75, position = position_dodge(width = 0.4)) + 
+    geom_point(stat = 'identity', aes(col = prey, shape = Public_Grazing), size = 3.25, position = position_dodge(width = 0.4)) + 
     scale_colour_bright() +
     ylim(0,1) + theme_bw() +
     theme(text = element_text(size = 22)) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
-    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
+    # theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
+    # theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
     guides(color = "none", shape = guide_legend(title = "Public grazing")) + 
     # ggtitle("Grazing allotments") +
     xlab(NULL) + ylab(NULL) +
@@ -958,49 +958,52 @@
   
   #'  Make one single facet_grid plot by grouped by ungulate species
   hunter_overlap_tbl$prey <- factor(hunter_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
-  overlap_hunting_effect <- ggplot(hunter_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = Hunter.activity)) +   
+  overlap_hunting_effect <- ggplot(hunter_overlap_tbl, aes(x = predator, y = Dhat, group = Hunter.activity)) +   
     geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = prey, shape = Hunter.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    geom_point(stat = 'identity', aes(col = prey, shape = Hunter.activity), size = 3.25, position = position_dodge(width = 0.4)) + 
     scale_colour_bright() +
     ylim(0,1) + theme_bw() +
     theme(text = element_text(size = 22)) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
-    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
-    guides(color = "none", shape = guide_legend(title = "Hunter activity")) + 
-    # ggtitle("Hunter activity") +
-    xlab("Predator-prey  pairing") + ylab("Coefficient of overlap (Dhat)") +
+    # theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
+    # theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
+    guides(color = "none", shape = guide_legend(title = "Hunter activity")) +
+    ggtitle("Effect of hunter activity on temporal overlap") +
+    xlab("Predator species") + ylab("Coefficient of overlap (Dhat)") +
     facet_grid(~prey, scales = "free", space = "free") 
   overlap_hunting_effect
   # ggsave(overlap_hunting_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Hunter_Effect_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   #'  Make one single facet_grid plot by grouped by ungulate species
   public_overlap_tbl$prey <- factor(public_overlap_tbl$prey, levels = c("Moose", "Mule Deer", "White-tailed Deer", "Elk"))
-  overlap_public_effect <- ggplot(public_overlap_tbl, aes(x = `Species.pair`, y = Dhat, group = PublicLand.activity)) +   
+  overlap_public_effect <- ggplot(public_overlap_tbl, aes(x = predator, y = Dhat, group = PublicLand.activity)) +   
     geom_errorbar(aes(ymin = l95, ymax = u95, col = prey), width = 0.3, position = position_dodge(width = 0.4)) +
-    geom_point(stat = 'identity', aes(col = prey, shape = PublicLand.activity), size = 2.75, position = position_dodge(width = 0.4)) + 
+    geom_point(stat = 'identity', aes(col = prey, shape = PublicLand.activity), size = 3.25, position = position_dodge(width = 0.4)) + 
     scale_colour_bright() +
     ylim(0,1) + theme_bw() +
     theme(text = element_text(size = 22)) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
-    theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
+    # theme(plot.margin = unit(c(0.01, 0.01, 0.01, 0.01), "null")) +
+    # theme(legend.position="top", legend.justification="left", legend.margin=margin(0,0,0,0), legend.box.margin=margin(0,-10,-5,0)) +
     guides(color = "none", shape = guide_legend(title = "Property Ownership")) + 
     # ggtitle("Land ownership") +
-    xlab("Predator-prey pairing") + ylab(NULL) +
+    xlab("Predator species") + ylab(NULL) +
     facet_grid(~prey, scales = "free", space = "free") 
   overlap_public_effect
   # ggsave(overlap_public_effect, filename = "./Outputs/Temporal Overlap/Figures/Overlap_PublicVPrivate_Effect_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
   
   #'  Patchwork figure
-  predprey_overlap <- overlap_grazing_effect + overlap_allot_effect + overlap_hunting_effect + overlap_public_effect +
-    plot_layout(ncol = 2) + plot_annotation(tag_levels = 'a') +
-    plot_annotation(
-      title = "Livestock grazing and hunting effects on predator-prey diel activity overlap",
-      theme = theme(plot.title = element_text(size = 24)))
+  # predprey_overlap <- overlap_grazing_effect + overlap_allot_effect + overlap_hunting_effect + overlap_public_effect +
+  #   plot_layout(ncol = 2) + plot_annotation(tag_levels = 'a') +
+  #   plot_annotation(
+  #     title = "Livestock grazing and hunting effects on predator-prey diel activity overlap",
+  #     theme = theme(plot.title = element_text(size = 24)))
+  predprey_overlap <- overlap_grazing_effect / overlap_hunting_effect +
+    plot_annotation(tag_levels = 'a') +
+    plot_annotation(theme = theme(plot.title = element_text(size = 24)))
   predprey_overlap
-  ggsave("./Outputs/Temporal Overlap/Figures/Overlap_All_Covs_Pred-Prey.tiff", predprey_overlap, 
-         units = "in", width = 18, height = 15, dpi = 600, device = 'tiff', compression = 'lzw')
+  ggsave("./Outputs/Temporal Overlap/Figures/Overlap_All_Covs_Pred-Prey_updated_031224.tiff", predprey_overlap, 
+         units = "in", width = 12, height = 15, dpi = 600, device = 'tiff', compression = 'lzw')
   
   
   ####  Overlap plots  ####
