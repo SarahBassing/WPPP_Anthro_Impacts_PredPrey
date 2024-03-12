@@ -15,7 +15,7 @@
   library(patchwork)
   
   #'  Read in models
-  load(file = "./Outputs/MultiSpp_CoOcc_Models_2spp.RData")
+  load(file = "./Outputs/MultiSpp_CoOcc_Models_2spp_updated_031224.RData")
   
   scale_cov <- function(cov) {
     #'  Identify range of covariate of interest
@@ -39,11 +39,11 @@
   ####  Covariate effects on cattle - species interaction term  ####
   #'  ----------------------------------------------------------
   #'  Function to predict species interactions in response to covariate of interest
-  spp_interactions_g <- function(mod, elev, act, forest, pub, area, spp1, spp2, cov) {
+  spp_interactions_g <- function(mod, elev, act, forest, area, spp1, spp2, cov) { #pub, 
     #'  Create data frame using the scaled covariate of interest while holding
     #'  all others at their mean (0 when scaled) or desired category (0 or 1)
     cov_df <- data.frame(Elev = elev, GrazingActivity = act, PercForest = forest,
-                         PublicGrazing = pub, Study_Area = area)
+                         Study_Area = area) #PublicGrazing = pub, 
     #Public = factor(pub, levels = c(0, 1)), Study_Area = factor(area, levels = c(0, 1)))
     #'  Create characters for each species that include a "-", necessary for cond 
     #'  argument in predict when species is not present
@@ -91,61 +91,28 @@
   #'  For md, wtd, and moose, study area = 1 (OK) b/c that is where the bulk of
   #'  cattle activity occurred and there were sufficient detections of these species
   #'  "pub" variable set to active grazing allotments (1)
-  # sppX_coug_md_cattle <- spp_interactions_g(gs_cougmd_global, elev = 0, act = scaled_graze[,2], 
-  #                                          forest = 0, pub = 1, area = 1, spp1 = "cougar", 
-  #                                          spp2 = "muledeer", cov = scaled_graze[,1])
-  # sppX_coug_elk_cattle <- spp_interactions_g(gs_cougelk_global, elev = 0, act = scaled_graze[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "cougar", 
-  #                                            spp2 = "elk", cov = scaled_graze[,1])
-  sppX_coug_wtd_cattle <- spp_interactions_g(gs_cougwtd_global, elev = 0, act = scaled_graze[,2], 
-                                             forest = 0, pub = 1, area = 1, spp1 = "cougar", 
+  sppX_coug_wtd_cattle <- spp_interactions_g(gs_cougwtd_graze2, elev = 0, act = scaled_graze[,2], 
+                                             forest = 0, area = 1, spp1 = "cougar", #pub = 1, 
                                              spp2 = "wtd", cov = scaled_graze[,1])
-  # sppX_coug_moose_cattle <- spp_interactions_g(gs_cougmoose_global, elev = 0, act = scaled_graze[,2], 
-  #                                            forest = 0, pub = 1, area = 1, spp1 = "cougar", 
-  #                                            spp2 = "moose", cov = scaled_graze[,1])
-  # sppX_wolf_md_cattle <- spp_interactions_g(gs_wolfmd_global, elev = 0, act = scaled_graze[,2], 
-  #                                           forest = 0, pub = 1, area = 1, spp1 = "wolf", 
-  #                                           spp2 = "muledeer", cov = scaled_graze[,1])
-  # sppX_wolf_elk_cattle <- spp_interactions_g(gs_wolfelk_global, elev = 0, act = scaled_graze[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "wolf", 
-  #                                            spp2 = "elk", cov = scaled_graze[,1])
-  sppX_wolf_wtd_cattle <- spp_interactions_g(gs_wolfwtd_global, elev = 0, act = scaled_graze[,2], 
-                                             forest = 0, pub = 1, area = 1, spp1 = "wolf", 
-                                             spp2 = "wtd", cov = scaled_graze[,1])
-  # sppX_wolf_moose_cattle <- spp_interactions_g(gs_wolfmoose_global, elev = 0, act = scaled_graze[,2], 
-  #                                              forest = 0, pub = 1, area = 1, spp1 = "wolf", 
-  #                                              spp2 = "moose", cov = scaled_graze[,1])
-  # sppX_bear_md_cattle <- spp_interactions_g(gs_bearmd_global, elev = 0, act = scaled_graze[,2], 
-  #                                           forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
-  #                                           spp2 = "muledeer", cov = scaled_graze[,1])
-  # sppX_bear_elk_cattle <- spp_interactions_g(gs_bearelk_global, elev = 0, act = scaled_graze[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
-  #                                            spp2 = "elk", cov = scaled_graze[,1])
-  # sppX_bear_wtd_cattle <- spp_interactions_g(gs_bearwtd_global, elev = 0, act = scaled_graze[,2], 
-  #                                            forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
-  #                                            spp2 = "wtd", cov = scaled_graze[,1])
-  # sppX_bear_moose_cattle <- spp_interactions_g(gs_bearmoose_global, elev = 0, act = scaled_graze[,2], 
-  #                                              forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
-  #                                              spp2 = "moose", cov = scaled_graze[,1])
-  sppX_bob_md_cattle <- spp_interactions_g(gs_bobmd_global, elev = 0, act = scaled_graze[,2], 
-                                           forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
+  sppX_bob_md_cattle <- spp_interactions_g(gs_bobmd_graze2, elev = 0, act = scaled_graze[,2], 
+                                           forest = 0, area = 1, spp1 = "bobcat", #pub = 1, 
                                            spp2 = "mule_deer", cov = scaled_graze[,1])
-  sppX_bob_wtd_cattle <- spp_interactions_g(gs_bobwtd_global, elev = 0, act = scaled_graze[,2], 
-                                            forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
-                                            spp2 = "wtd", cov = scaled_graze[,1])
-  sppX_coy_md_cattle <- spp_interactions_g(gs_coymd_global, elev = 0, act = scaled_graze[,2], 
-                                           forest = 0, pub = 1, area = 1, spp1 = "coyote", 
-                                           spp2 = "mule_deer", cov = scaled_graze[,1])
-  sppX_coy_wtd_cattle <- spp_interactions_g(gs_coywtd_global, elev = 0, act = scaled_graze[,2], 
-                                            forest = 0, pub = 1, area = 1, spp1 = "coyote", 
-                                            spp2 = "wtd", cov = scaled_graze[,1])
+  sppX_bob_wtd_cattle <- spp_interactions_g(gs_bobwtd_graze2, elev = 0, act = scaled_graze[,2], 
+                                            forest = 0, area = 1, spp1 = "bobcat", 
+                                            spp2 = "wtd", cov = scaled_graze[,1]) #pub = 1,
+  sppX_coy_md_cattle <- spp_interactions_g(gs_coymd_graze2, elev = 0, act = scaled_graze[,2], 
+                                           forest = 0, area = 1, spp1 = "coyote", 
+                                           spp2 = "mule_deer", cov = scaled_graze[,1]) #pub = 1,
+  sppX_coy_wtd_cattle <- spp_interactions_g(gs_coywtd_graze2, elev = 0, act = scaled_graze[,2], 
+                                            forest = 0, area = 1, spp1 = "coyote", 
+                                            spp2 = "wtd", cov = scaled_graze[,1]) #pub = 1,
   
   #'  Save these since they take so long to generate!
-  sppX_cattle_list <- list(sppX_coug_wtd_cattle, sppX_wolf_wtd_cattle, sppX_bob_md_cattle, 
-                           sppX_bob_wtd_cattle, sppX_coy_md_cattle, sppX_coy_wtd_cattle)
-  names(sppX_cattle_list) <- c("sppX_coug_wtd_cattle", "sppX_wolf_wtd_cattle", "sppX_bob_md_cattle", 
-                               "sppX_bob_wtd_cattle", "sppX_coy_md_cattle", "sppX_coy_wtd_cattle")
-  save(sppX_cattle_list, file = "./Outputs/sppX_cattle_for_visualizing.RData")
+  sppX_cattle_list <- list(sppX_coug_wtd_cattle, sppX_bob_md_cattle, sppX_bob_wtd_cattle, 
+                           sppX_coy_md_cattle, sppX_coy_wtd_cattle)
+  names(sppX_cattle_list) <- c("sppX_coug_wtd_cattle", "sppX_bob_md_cattle", "sppX_bob_wtd_cattle", 
+                               "sppX_coy_md_cattle", "sppX_coy_wtd_cattle")
+  save(sppX_cattle_list, file = "./Outputs/sppX_cattle_for_visualizing_updated_031224.RData")
   
   
   
@@ -153,11 +120,11 @@
   ####  Covariate effects on hunter - species interaction term  ####
   #'  -----------------------------------------------------------
   #'  Function to predict species interactions in response to covariate of interest
-  spp_interactions_h <- function(mod, elev, act, forest, pub, area, spp1, spp2, cov) {
+  spp_interactions_h <- function(mod, elev, act, forest, area, spp1, spp2, cov) { #pub, 
     #'  Create data frame using the scaled covariate of interest while holding
     #'  all others at their mean (0 when scaled) or desired category (0 or 1)
     cov_df <- data.frame(Elev = elev, HuntingActivity = act, PercForest = forest,
-                         Public = pub, Study_Area = area)
+                         Study_Area = area) #Public = pub, 
     #Public = factor(pub, levels = c(0, 1)), Study_Area = factor(area, levels = c(0, 1)))
     #'  Create characters for each species that include a "-", necessary for cond 
     #'  argument in predict when species is not present
@@ -204,62 +171,16 @@
   #'  For elk, moose, & wtd study area = 0 (NE) vs md study area = 1 (OK) because 
   #'  higher species-specific densities in the respective study areas
   #'  For all species, pub = 1
-  sppX_coug_md_hunter <- spp_interactions_h(hs_cougmd_global, elev = 0, act = scaled_hunt[,2],
-                                            forest = 0, pub = 1, area = 1, spp1 = "cougar",
-                                            spp2 = "muledeer", cov = scaled_hunt[,1])
-  # sppX_coug_elk_hunter <- spp_interactions_h(hs_cougelk_global, elev = 0, act = scaled_hunt[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "cougar", 
-  #                                            spp2 = "elk", cov = scaled_hunt[,1])
-  sppX_coug_wtd_hunter <- spp_interactions_h(hs_cougwtd_global, elev = 0, act = scaled_hunt[,2],
-                                             forest = 0, pub = 1, area = 0, spp1 = "cougar",
-                                             spp2 = "wtd", cov = scaled_hunt[,1])
-  # sppX_coug_moose_hunter <- spp_interactions_h(hs_cougmoose_global, elev = 0, act = scaled_hunt[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "cougar", 
-  #                                            spp2 = "moose", cov = scaled_hunt[,1])
-  # sppX_wolf_md_hunter <- spp_interactions_h(hs_wolfmd_global, elev = 0, act = scaled_hunt[,2],
-  #                                          forest = 0, pub = 1, area = 1, spp1 = "wolf",
-  #                                          spp2 = "muledeer", cov = scaled_hunt[,1])
-  # sppX_wolf_elk_hunter <- spp_interactions_h(hs_wolfelk_global, elev = 0, act = scaled_hunt[,2],
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "wolf",
-  #                                            spp2 = "elk", cov = scaled_hunt[,1])
-  # sppX_wolf_wtd_hunter <- spp_interactions_h(hs_wolfwtd_global, elev = 0, act = scaled_hunt[,2],
-  #                                           forest = 0, pub = 1, area = 0, spp1 = "wolf",
-  #                                           spp2 = "wtd", cov = scaled_hunt[,1])
   sppX_wolf_moose_hunter <- spp_interactions_h(hs_wolfmoose_global, elev = 0, act = scaled_hunt[,2], 
-                                               forest = 0, pub = 1, area = 0, spp1 = "wolf", 
+                                               forest = 0, area = 0, spp1 = "wolf",  #pub = 1, 
                                                spp2 = "moose", cov = scaled_hunt[,1])
-  # sppX_bear_md_hunter <- spp_interactions_h(hs_bearmd_global, elev = 0, act = scaled_hunt[,2], 
-  #                                           forest = 0, pub = 1, area = 1, spp1 = "blackbear", 
-  #                                           spp2 = "muledeer", cov = scaled_hunt[,1])
-  # sppX_bear_elk_hunter <- spp_interactions_h(hs_bearelk_global, elev = 0, act = scaled_hunt[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
-  #                                            spp2 = "elk", cov = scaled_hunt[,1])
-  # sppX_bear_wtd_hunter <- spp_interactions_h(hs_bearwtd_global, elev = 0, act = scaled_hunt[,2], 
-  #                                            forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
-  #                                            spp2 = "wtd", cov = scaled_hunt[,1])
-  # sppX_bear_moose_hunter <- spp_interactions_h(hs_bearmoose_global, elev = 0, act = scaled_hunt[,2], 
-  #                                              forest = 0, pub = 1, area = 0, spp1 = "blackbear", 
-  #                                              spp2 = "moose", cov = scaled_hunt[,1])
-  # sppX_bob_md_hunter <- spp_interactions_h(hs_bobmd_global, elev = 0, act = scaled_hunt[,2], 
-  #                                          forest = 0, pub = 1, area = 1, spp1 = "bobcat", 
-  #                                          spp2 = "mule_deer", cov = scaled_hunt[,1])
-  sppX_bob_wtd_hunter <- spp_interactions_h(hs_bobwtd_global, elev = 0, act = scaled_hunt[,2],
-                                            forest = 0, pub = 1, area = 0, spp1 = "bobcat",
-                                            spp2 = "wtd", cov = scaled_hunt[,1])
-  # sppX_coy_md_hunter <- spp_interactions_h(hs_coymd_global, elev = 0, act = scaled_hunt[,2], 
-  #                                          forest = 0, pub = 1, area = 1, spp1 = "coyote", 
-  #                                          spp2 = "mule_deer", cov = scaled_hunt[,1])
-  sppX_coy_wtd_hunter <- spp_interactions_h(hs_coywtd_global, elev = 0, act = scaled_hunt[,2],
-                                            forest = 0, pub = 0, area = 0, spp1 = "coyote",
-                                            spp2 = "wtd", cov = scaled_hunt[,1]) #note this is estimated for on private land!
-  
   
   #'  Save these since they take so long to generate!
-  sppX_hunt_list <- list(sppX_coug_md_hunter, sppX_coug_wtd_hunter, sppX_wolf_moose_hunter, 
-                         sppX_bob_wtd_hunter, sppX_coy_wtd_hunter)
-  names(sppX_hunt_list) <- c("sppX_coug_md_hunter", "sppX_coug_wtd_hunter", "sppX_wolf_moose_hunter", 
-                             "sppX_bob_wtd_hunter", "sppX_coy_wtd_hunter")
-  save(sppX_hunt_list, file = "./Outputs/sppX_hunter_for_visualizing.RData")
+  # sppX_hunt_list <- list(sppX_coug_md_hunter, sppX_coug_wtd_hunter, sppX_wolf_moose_hunter, 
+  #                        sppX_bob_wtd_hunter, sppX_coy_wtd_hunter)
+  # names(sppX_hunt_list) <- c("sppX_coug_md_hunter", "sppX_coug_wtd_hunter", "sppX_wolf_moose_hunter", 
+  #                            "sppX_bob_wtd_hunter", "sppX_coy_wtd_hunter")
+  save(sppX_wolf_moose_hunter, file = "./Outputs/sppX_hunter_for_visualizing_updated_031224.RData")
   
   
   #'  Predict cond. occupancy for each pairwise interaction on public vs private land
@@ -307,7 +228,7 @@
   ####  Visualize conditional occupancy  ####
   #'  ------------------------------------
   #'  Load predicted conditional occupancy
-  load("./Outputs/sppX_cattle_for_visualizing.RData")
+  load("./Outputs/sppX_cattle_for_visualizing_updated_031224.RData")
   load("./Outputs/sppX_hunter_for_visualizing.RData")
   load("./Outputs/sppX_landownership_for_visualizing.RData")
   
@@ -321,23 +242,24 @@
   coug_wtd_graze_facet <- ggplot(coug_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
     scale_colour_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present", 
-                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     #scale_color_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
     scale_fill_bright(labels = c("cougar absent" = "Cougar absent", "cougar present" = "Cougar present",
-                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     #scale_fill_manual(values=c("wtd absent" = "#CC6666", "wtd present" = "#9999CC"), labels = c("Absent", "Present"), name = "White-tailed deer") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
-    theme(legend.position="bottom") +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
     ggtitle("Cougar - white-tailed deer co-occurrence, grazing season")
   coug_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coug_wtd_graze.tiff", coug_wtd_graze_facet, 
-         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw') 
   
   #'  Coyote-md co-occurrence with cattle activity
   coy_md_data <- sppX_cattle_list$sppX_coy_md_cattle %>% 
@@ -351,21 +273,22 @@
   coy_md_graze_facet <- ggplot(coy_md_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
     scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
-                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species Interaction") +
+                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
     scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
-                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species Interaction") +
+                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
-    theme(legend.position="bottom") +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
     ggtitle("Coyote - mule deer co-occurrence, grazing season")
   coy_md_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coy_md_graze.tiff", coy_md_graze_facet, 
-         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw')
   
   #'  Coyote-wtd co-occurrence with cattle activity
   coy_wtd_data <- sppX_cattle_list$sppX_coy_wtd_cattle %>% 
@@ -376,21 +299,77 @@
   coy_wtd_graze_facet <- ggplot(coy_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
     scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
-                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
     scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
-                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
-    theme(legend.position="bottom") +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
     ggtitle("Coyote - white-tailed deer co-occurrence, grazing season")
   coy_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coy_wtd_graze.tiff", coy_wtd_graze_facet, 
-         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw') 
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw')
+  
+  #'  Bobcat-md co-occurrence with cattle activity
+  bob_md_data <- sppX_cattle_list$sppX_bob_md_cattle %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("mule_deer absent", "mule_deer present", "bobcat absent", "bobcat present")),
+           Interaction = gsub("_", " ", Interaction),
+           InterXSpp = gsub("_", " ", InterXSpp),
+           Species = gsub("_", " ", Species))
+  newlabs <- c("bobcat" = "Bobcat", "mule deer" = "Mule deer") 
+  bob_md_graze_facet <- ggplot(bob_md_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_colour_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present", 
+                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present",
+                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
+    xlab("Cattle grazing activity (cattle detections/day)") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Bobcat - mule deer co-occurrence, grazing season")
+  bob_md_graze_facet
+  
+  ggsave("./Outputs/Figures/OccX_bob_md_graze.tiff", bob_md_graze_facet, 
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw')
+  
+  #'  Bobcat-wtd co-occurrence with cattle activity
+  bob_wtd_data <- sppX_cattle_list$sppX_bob_wtd_cattle %>% 
+    mutate(InterXSpp = gsub( " .*$", "", Interaction ),
+           InterX = gsub(".* ", "", Interaction),
+           Interaction = factor(Interaction, levels = c("wtd absent", "wtd present", "bobcat absent", "bobcat present")))
+  newlabs <- c("bobcat" = "Bobcat", "wtd" = "White-tailed deer") 
+  bob_wtd_graze_facet <- ggplot(bob_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
+    geom_line(size = 1) +
+    scale_colour_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present", 
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
+    geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
+    scale_fill_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present",
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
+    ylim(0, 1) +
+    theme_bw() +
+    facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
+    xlab("Cattle grazing activity (cattle detections/day)") + 
+    ylab("Conditional occupancy") +
+    ggtitle("Bobcat - white-tailed deer co-occurrence, grazing season")
+  bob_wtd_graze_facet
+  
+  ggsave("./Outputs/Figures/OccX_bob_wtd_graze.tiff", bob_wtd_graze_facet, 
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw')
   
   ##### Land ownership plots ####
   #'  Cougar-md co-occurrence on private vs public land
@@ -503,10 +482,10 @@
   coy_wtd_hunt_facet <- ggplot(coy_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
     scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
-                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                   "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
     scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
-                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species Interaction") +
+                                 "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
@@ -520,7 +499,7 @@
          units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
   
   #'  Wolf-moose co-occurrence with hunter activity
-  wolf_moose_data <- sppX_hunt_list$sppX_wolf_moose_hunter %>% 
+  wolf_moose_data <-  sppX_wolf_moose_hunter %>%  #sppX_hunt_list$sppX_wolf_moose_hunter
     mutate(InterXSpp = gsub( " .*$", "", Interaction ),
            InterX = gsub(".* ", "", Interaction),
            Interaction = factor(Interaction, levels = c("moose absent", "moose present", "wolf absent", "wolf present")),
@@ -529,30 +508,33 @@
   wolf_moose_hunt_facet <- ggplot(wolf_moose_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
     scale_colour_bright(labels = c("wolf absent" = "Wolf absent", "wolf present" = "Wolf present", 
-                                   "moose absent" = "Moose absent", "moose present" = "Moose present"), name = "Species Interaction") +
+                                   "moose absent" = "Moose absent", "moose present" = "Moose present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
     scale_fill_bright(labels = c("wolf absent" = "Wolf absent", "wolf present" = "Wolf present", 
-                                 "moose absent" = "Moose absent", "moose present" = "Moose present"), name = "Species Interaction") +
+                                 "moose absent" = "Moose absent", "moose present" = "Moose present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
-    theme(legend.position="bottom") +
+    theme(legend.position="bottom",
+          text = element_text(size = 14)) +
     xlab("Hunter activity (hunter detections/day)") + 
     ylab("Conditional occupancy") +
     ggtitle("Wolf - moose co-occurrence, hunting season")
   wolf_moose_hunt_facet
   
   ggsave("./Outputs/Figures/OccX_wolf_moose_hunt.tiff", wolf_moose_hunt_facet, 
-         units = "in", width = 7, height = 5, dpi = 600, device = 'tiff', compression = 'lzw')
+         units = "in", width = 8, height = 6, dpi = 600, device = 'tiff', compression = 'lzw')
   
   ##### Patchwork plots together  ####
-  coocc_patwork <- coug_wtd_graze_facet + coy_wtd_graze_facet + wolf_moose_hunt_facet + 
-    bob_wtd_land_facet + plot_layout(ncol = 2) + 
-    plot_annotation(tag_levels = 'a') & theme(axis.title = element_text(size = 16))
+  # coocc_patwork <- coug_wtd_graze_facet + coy_wtd_graze_facet + wolf_moose_hunt_facet + 
+  #   bob_wtd_land_facet + plot_layout(ncol = 2) + 
+  #   plot_annotation(tag_levels = 'a') & theme(axis.title = element_text(size = 16))
+  coocc_patwork <- coug_wtd_graze_facet / wolf_moose_hunt_facet + 
+    plot_annotation(tag_levels = 'a') & theme(text = element_text(size = 22))
   coocc_patwork
   
   ggsave("./Outputs/Figures/OccX_pred-prey_cattl&hunter.tiff", coocc_patwork, 
-         units = "in", width = 15, height = 11, dpi = 600, device = 'tiff', compression = 'lzw')
+         units = "in", width = 12, height = 16, dpi = 600, device = 'tiff', compression = 'lzw')
   
   
   
