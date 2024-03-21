@@ -272,11 +272,11 @@
   newlabs <- c("coyote" = "Coyote", "mule deer" = "Mule deer") 
   coy_md_graze_facet <- ggplot(coy_md_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
-    scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
-                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    scale_colour_bright(labels = c("coyote absent" = "Coyote \nabsent", "coyote present" = "Coyote \npresent", 
+                                   "mule deer absent" = "Mule deer \nabsent", "mule deer present" = "Mule deer \npresent"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
-    scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
-                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    scale_fill_bright(labels = c("coyote absent" = "Coyote \nabsent", "coyote present" = "Coyote \npresent",
+                                 "mule deer absent" = "Mule deer \nabsent", "mule deer present" = "Mule deer \npresent"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
@@ -284,7 +284,7 @@
           text = element_text(size = 14)) +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Coyote - mule deer co-occurrence, grazing season")
+    ggtitle("Coyote - mule deer co-occurrence")
   coy_md_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coy_md_graze.tiff", coy_md_graze_facet, 
@@ -298,10 +298,10 @@
   newlabs <- c("coyote" = "Coyote", "wtd" = "White-tailed deer") 
   coy_wtd_graze_facet <- ggplot(coy_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
-    scale_colour_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present", 
+    scale_colour_bright(labels = c("coyote absent" = "Coyote \nabsent", "coyote present" = "Coyote \npresent", 
                                    "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
-    scale_fill_bright(labels = c("coyote absent" = "Coyote absent", "coyote present" = "Coyote present",
+    scale_fill_bright(labels = c("coyote absent" = "Coyote \nabsent", "coyote present" = "Coyote \npresent",
                                  "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
@@ -310,7 +310,7 @@
           text = element_text(size = 14)) +
     xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Coyote - white-tailed deer co-occurrence, grazing season")
+    ggtitle("Coyote - white-tailed deer co-occurrence")
   coy_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_coy_wtd_graze.tiff", coy_wtd_graze_facet, 
@@ -327,19 +327,22 @@
   newlabs <- c("bobcat" = "Bobcat", "mule deer" = "Mule deer") 
   bob_md_graze_facet <- ggplot(bob_md_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
-    scale_colour_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present", 
-                                   "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    scale_colour_bright(labels = c("bobcat absent" = "Bobcat \nabsent", "bobcat present" = "Bobcat \npresent", 
+                                   "mule deer absent" = "Mule deer \nabsent", "mule deer present" = "Mule deer \npresent"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
-    scale_fill_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present",
-                                 "mule deer absent" = "Mule deer absent", "mule deer present" = "Mule deer present"), name = "Species interaction") +
+    scale_fill_bright(labels = c("bobcat absent" = "Bobcat \nabsent", "bobcat present" = "Bobcat \npresent",
+                                 "mule deer absent" = "Mule deer \nabsent", "mule deer present" = "Mule deer \npresent"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
     theme(legend.position="bottom",
-          text = element_text(size = 14)) +
-    xlab("Cattle grazing activity (cattle detections/day)") + 
+          text = element_text(size = 14),
+          axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank()) +
+    # xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Bobcat - mule deer co-occurrence, grazing season")
+    ggtitle("Bobcat - mule deer co-occurrence")
   bob_md_graze_facet
   
   ggsave("./Outputs/Figures/OccX_bob_md_graze.tiff", bob_md_graze_facet, 
@@ -353,19 +356,22 @@
   newlabs <- c("bobcat" = "Bobcat", "wtd" = "White-tailed deer") 
   bob_wtd_graze_facet <- ggplot(bob_wtd_data, aes(x = Cov, y = Predicted, group = Interaction, colour = Interaction)) +
     geom_line(size = 1) +
-    scale_colour_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present", 
+    scale_colour_bright(labels = c("bobcat absent" = "Bobcat \nabsent", "bobcat present" = "Bobcat \npresent", 
                                    "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     geom_ribbon(aes(ymin=lower, ymax = upper, fill = Interaction), linetype = 0, alpha =0.5) +
-    scale_fill_bright(labels = c("bobcat absent" = "Bobcat absent", "bobcat present" = "Bobcat present",
+    scale_fill_bright(labels = c("bobcat absent" = "Bobcat \nabsent", "bobcat present" = "Bobcat \npresent",
                                  "wtd absent" = "White-tailed \ndeer absent", "wtd present" = "White-tailed \ndeer present"), name = "Species interaction") +
     ylim(0, 1) +
     theme_bw() +
     facet_wrap(~Species, scales = "free_y", labeller = as_labeller(newlabs)) +
     theme(legend.position="bottom",
-          text = element_text(size = 14)) +
-    xlab("Cattle grazing activity (cattle detections/day)") + 
+          text = element_text(size = 14),
+          axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank()) +
+    # xlab("Cattle grazing activity (cattle detections/day)") + 
     ylab("Conditional occupancy") +
-    ggtitle("Bobcat - white-tailed deer co-occurrence, grazing season")
+    ggtitle("Bobcat - white-tailed deer co-occurrence")
   bob_wtd_graze_facet
   
   ggsave("./Outputs/Figures/OccX_bob_wtd_graze.tiff", bob_wtd_graze_facet, 
@@ -532,8 +538,18 @@
   coocc_patwork <- coug_wtd_graze_facet / wolf_moose_hunt_facet + 
     plot_annotation(tag_levels = 'a') & theme(text = element_text(size = 22))
   coocc_patwork
+  coocc_patwork_meso_wtd <- bob_wtd_graze_facet / coy_wtd_graze_facet + 
+    plot_annotation(tag_levels = 'a') & theme(text = element_text(size = 22))
+  coocc_patwork_meso_wtd
+  coocc_patwork_meso_md <- bob_md_graze_facet / coy_md_graze_facet + 
+    plot_annotation(tag_levels = 'a') & theme(text = element_text(size = 22))
+  coocc_patwork_meso_md
   
   ggsave("./Outputs/Figures/OccX_pred-prey_cattl&hunter.tiff", coocc_patwork, 
+         units = "in", width = 12, height = 16, dpi = 600, device = 'tiff', compression = 'lzw')
+  ggsave("./Outputs/Figures/OccX_meso-wtd_cattle.tiff", coocc_patwork_meso_wtd, 
+         units = "in", width = 12, height = 16, dpi = 600, device = 'tiff', compression = 'lzw')
+  ggsave("./Outputs/Figures/OccX_meso-md_cattle.tiff", coocc_patwork_meso_md, 
          units = "in", width = 12, height = 16, dpi = 600, device = 'tiff', compression = 'lzw')
   
   
