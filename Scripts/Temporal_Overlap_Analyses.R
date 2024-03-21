@@ -1009,12 +1009,12 @@
   ####  Overlap plots  ####
   #'  ------------------
   #'  Plot temporal overlap when cattle and hunter activity are present vs absent
-  overlap_anthro_activity_plots <- function(dat, name1, name2, name3, dhat, y_up) {
+  overlap_anthro_activity_plots <- function(dat, name1, name2, name3, dhat, y_up, overlapcolor, curvecolor1, curvecolor2) {
     #'  Sample sizes for predators[1] and prey[2] when cattle/hunters are [p]resent or [a]bsent
     n1p <- dat[[7]]; n1a <- dat[[9]]
     n2p <- dat[[8]]; n2a <- dat[[10]]
-    spp1p <- paste0(name1, ", n = ", n1p); spp1a <- paste0(name1, " (n = ", n1a, ")")
-    spp2p <- paste0(name2, ", n = ", n2p); spp2a <- paste0(name2, " (n = ", n2a, ")")
+    spp1p <- paste0(name1, " (n = ", n1p, ")"); spp1a <- paste0(name1, " (n = ", n1a, ")")
+    spp2p <- paste0(name2, " (n = ", n2p, ")"); spp2a <- paste0(name2, " (n = ", n2a, ")")
     #'  Temporal overlap between predators and prey when cattle/hunters are present[1] or absent[2]
     dhatp <- dhat[1,5]; dhatpl <- dhat[1,6]; dhatpu<- dhat[1,7]
     dhata <- dhat[2,5]; dhatal <- dhat[2,6]; dhatau<- dhat[2,7]
@@ -1028,37 +1028,37 @@
       geom_line(lwd = 0.75) + 
       geom_line(aes(x, densityB, colour = Species.y), lwd = 0.75) +  
       geom_area(aes(y = pmin(densityA, densityB)),
-                alpha = 0.3, color = NA) +
+                alpha = 0.3, color = NA, fill = overlapcolor) +
       geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 0.75) +  
       scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
                          labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
       geom_vline(xintercept = pi/2, linetype="dotted") +
       geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
       theme_bw() +
-      theme(text = element_text(size = 16)) +
+      theme(text = element_text(size = 20)) +
       theme(legend.background = element_rect(fill = "transparent"),
             legend.key = element_rect(colour = NA, fill = NA)) +
       ylim(0, y_up) +
       labs(x = "Time of day", y = "Density", color = paste0("\u0394 = ", dhatp, " (", dhatpl, " - ", dhatpu, ")"), title = paste0(name3, " present")) + 
-      scale_color_manual(labels = c(name3, spp1p, spp2p), values = c("black", "red", "blue")) 
+      scale_color_manual(labels = c(name3, spp1p, spp2p), values = curvecolor1) 
     plot(overlap_p)
     
     overlap_a <- ggplot(abs, aes(x, densityA, colour = Species.x)) +
       geom_line(lwd = 0.75) + 
       geom_line(aes(x, densityB, colour = Species.y), lwd = 0.75) +  
       geom_area(aes(y = pmin(densityA, densityB)),
-                alpha = 0.3, color = NA) +
+                alpha = 0.3, color = NA, fill = overlapcolor) +
       scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
                          labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
       geom_vline(xintercept = pi/2, linetype="dotted") +
       geom_vline(xintercept = (3*pi)/2, linetype="dotted") +
       theme_bw() +
-      theme(text = element_text(size = 16)) +
+      theme(text = element_text(size = 20)) +
       theme(legend.background = element_rect(fill = "transparent"),
             legend.key = element_rect(colour = NA, fill = NA)) +
       ylim(0, y_up) +
       labs(x = "Time of day", y = "Density", color = paste0("\u0394 = ", dhata, " (", dhatal, " - ", dhatau, ")"), title = paste0(name3, " absent")) + 
-      scale_color_manual(labels = c(spp1a, spp2a), values = c("red", "blue"))  
+      scale_color_manual(labels = c(spp1a, spp2a), values = curvecolor2)  
     plot(overlap_a)
     
     plots <- list(overlap_p, overlap_a)
@@ -1067,86 +1067,233 @@
   ####  Cattle Activity Overlap Plots  ####
   #'  Keep track of list positions when dhat1 and dhat4 are being combined
   #'  Dhat1 for sample sizes <50, Dhat4 for sample sizes >50, fig [[1]] = present, fig [[2]] = absent
-  coug_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[1]], name1 = "Cougar", name2 = "Mule deer", name3 = "Cattle", dhat = coug_md_graze_out, y_up = 0.6)
-  (coug_md_graze_overlap_plot <- coug_md_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_md_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(coug_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_md_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coug_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[2]], name1 = "Cougar", name2 = "White-tailed deer", name3 = "Cattle", dhat = coug_wtd_graze_out, y_up = 0.7)
-  (coug_wtd_graze_overlap_plot<- coug_wtd_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_wtd_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(coug_wtd_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_wtd_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coug_moose_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[3]], name1 = "Cougar", name2 = "Moose", name3 = "Cattle", dhat = coug_moose_graze_out, y_up = 0.6)
-  (coug_moose_graze_overlap_plot<- coug_moose_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_moose_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(coug_moose_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_moose_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[4]], name1 = "Black bear", name2 = "Mule deer", name3 = "Cattle", dhat = bear_md_graze_out, y_up = 0.6)
-  (bear_md_graze_overlap_plot <- bear_md_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_md_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(bear_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_md_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[5]], name1 = "Black bear", name2 = "White-tailed deer", name3 = "Cattle", dhat = bear_wtd_graze_out, y_up = 0.6)
-  (bear_wtd_graze_overlap_plot <- bear_wtd_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_wtd_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(bear_wtd_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_wtd_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
+  coug_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[1]], name1 = "Cougar", name2 = "Mule deer", name3 = "Cattle", 
+                                                      dhat = coug_md_graze_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (coug_md_graze_overlap_plot <- coug_md_overPlot_g[[2]] + theme(legend.position = c(0.30, 0.88)) + coug_md_overPlot_g[[1]] + theme(legend.position = c(0.30, 0.86)))
+  ggsave(coug_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_md_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
+  coug_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[2]], name1 = "Cougar", name2 = "White-tailed deer", name3 = "Cattle", 
+                                                       dhat = coug_wtd_graze_out, y_up = 0.7, overlapcolor = "forestgreen", 
+                                                       curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (coug_wtd_graze_overlap_plot<- coug_wtd_overPlot_g[[2]] + theme(legend.position = c(0.35, 0.88)) + coug_wtd_overPlot_g[[1]] + theme(legend.position = c(0.35, 0.86)))
+  ggsave(coug_wtd_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_wtd_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
+  coug_moose_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[3]], name1 = "Cougar", name2 = "Moose", name3 = "Cattle", 
+                                                         dhat = coug_moose_graze_out, y_up = 0.6, overlapcolor = "skyblue3", 
+                                                         curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  (coug_moose_graze_overlap_plot<- coug_moose_overPlot_g[[2]] + theme(legend.position = c(0.32, 0.88)) + coug_moose_overPlot_g[[1]] + theme(legend.position = c(0.32, 0.86)))
+  ggsave(coug_moose_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_moose_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
+  bear_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[4]], name1 = "Black bear", name2 = "Mule deer", name3 = "Cattle", 
+                                                      dhat = bear_md_graze_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (bear_md_graze_overlap_plot <- bear_md_overPlot_g[[2]] + theme(legend.position = c(0.35, 0.88)) + bear_md_overPlot_g[[1]] + theme(legend.position = c(0.35, 0.86)))
+  ggsave(bear_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_md_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
+  bear_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[5]], name1 = "Black bear", name2 = "White-tailed deer", name3 = "Cattle", 
+                                                       dhat = bear_wtd_graze_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                       curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (bear_wtd_graze_overlap_plot <- bear_wtd_overPlot_g[[2]] + theme(legend.position = c(0.35, 0.88)) + bear_wtd_overPlot_g[[1]] + theme(legend.position = c(0.35, 0.86)))
+  ggsave(bear_wtd_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_wtd_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
   #'  bear-moose: cattle present both n>50, cattle absent moose n<50
-  bear_moose_overPlot_g1 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[6]], name1 = "Black bear", name2 = "Moose", name3 = "Cattle", dhat = bear_moose_graze_out1dhat, y_up = 0.6)
-  bear_moose_overPlot_g4 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[7]], name1 = "Black bear", name2 = "Moose", name3 = "Cattle", dhat = bear_moose_graze_out4dhat, y_up = 0.6)
-  (bear_moose_graze_overlap_plot <- bear_moose_overPlot_g1[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_moose_overPlot_g4[[1]] + theme(legend.position = c(0.29, 0.895)))
-  ggsave(bear_moose_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_moose_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
+  bear_moose_overPlot_g1 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[6]], name1 = "Black bear", name2 = "Moose", name3 = "Cattle", 
+                                                          dhat = bear_moose_graze_out1dhat, y_up = 0.6, overlapcolor = "skyblue3", 
+                                                          curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  bear_moose_overPlot_g4 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[7]], name1 = "Black bear", name2 = "Moose", name3 = "Cattle", 
+                                                          dhat = bear_moose_graze_out4dhat, y_up = 0.6, overlapcolor = "skyblue3", 
+                                                          curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  (bear_moose_graze_overlap_plot <- bear_moose_overPlot_g1[[2]] + theme(legend.position = c(0.30, 0.88)) + bear_moose_overPlot_g4[[1]] + theme(legend.position = c(0.30, 0.86)))
+  ggsave(bear_moose_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_moose_cattle.tiff", width = 10, height = 6, dpi = 600, units = "in", device='tiff')
   #'  bob-md: cattle present both n>50, cattle absent bobcat n<50
-  bob_md_overPlot_g1 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[8]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Cattle", dhat = bob_md_graze_out1dhat, y_up = 0.6)
-  bob_md_overPlot_g4 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[9]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Cattle", dhat = bob_md_graze_out4dhat, y_up = 0.6)
-  (bob_md_graze_overlap_plot <- bob_md_overPlot_g1[[2]] + theme(legend.position = c(0.29, 0.92)) + bob_md_overPlot_g4[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bob_md_overPlot_g1 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[8]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Cattle", 
+                                                      dhat = bob_md_graze_out1dhat, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  bob_md_overPlot_g4 <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[9]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Cattle", 
+                                                      dhat = bob_md_graze_out4dhat, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (bob_md_graze_overlap_plot <- bob_md_overPlot_g1[[2]] + theme(legend.position = c(0.30, 0.88)) + bob_md_overPlot_g4[[1]] + theme(legend.position = c(0.30, 0.86)))
   ggsave(bob_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bob_md_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[10]], name1 = "Coyote", name2 = "Mule deer", name3 = "Cattle", dhat = coy_md_graze_out, y_up = 0.6)
-  (coy_md_graze_overlap_plot <- coy_md_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + coy_md_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coy_md_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[10]], name1 = "Coyote", name2 = "Mule deer", name3 = "Cattle", 
+                                                     dhat = coy_md_graze_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                     curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (coy_md_graze_overlap_plot <- coy_md_overPlot_g[[2]] + theme(legend.position = c(0.30, 0.88)) + coy_md_overPlot_g[[1]] + theme(legend.position = c(0.30, 0.86)))
   ggsave(coy_md_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coy_md_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[11]], name1 = "Coyote", name2 = "White-tailed \ndeer", name3 = "Cattle", dhat = coy_wtd_graze_out, y_up = 0.6)
-  (coy_wtd_graze_overlap_plot <- coy_wtd_overPlot_g[[2]] + theme(legend.position = c(0.29, 0.92)) + coy_wtd_overPlot_g[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coy_wtd_overPlot_g <- overlap_anthro_activity_plots(pred_prey_graze_overlap[[11]], name1 = "Coyote", name2 = "White-tailed deer", name3 = "Cattle", 
+                                                      dhat = coy_wtd_graze_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                      curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (coy_wtd_graze_overlap_plot <- coy_wtd_overPlot_g[[2]] + theme(legend.position = c(0.35, 0.88)) + coy_wtd_overPlot_g[[1]] + theme(legend.position = c(0.35, 0.86)))
   ggsave(coy_wtd_graze_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coy_wtd_cattle.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
   
   ####  Hunter Activity Overlap Plots  ####
-  coug_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[1]], name1 = "Cougar", name2 = "Mule deer", name3 = "Hunters", dhat = coug_md_hunt_out, y_up = 0.6)
-  (coug_md_hunt_overlap_plot <- coug_md_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_md_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coug_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[1]], name1 = "Cougar", name2 = "Mule deer", name3 = "Hunters", 
+                                                      dhat = coug_md_hunt_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (coug_md_hunt_overlap_plot <- coug_md_overPlot_h[[2]] + theme(legend.position = c(0.35, 0.88)) + coug_md_overPlot_h[[1]] + theme(legend.position = c(0.35, 0.86)))
   ggsave(coug_md_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_md_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coug_elk_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[2]], name1 = "Cougar", name2 = "Elk", name3 = "Hunters", dhat = coug_elk_hunt_out, y_up = 0.6)
-  (coug_elk_hunt_overlap_plot <- coug_elk_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_elk_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coug_elk_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[2]], name1 = "Cougar", name2 = "Elk", name3 = "Hunters", 
+                                                       dhat = coug_elk_hunt_out, y_up = 0.6, overlapcolor = "darkgoldenrod1", 
+                                                       curvecolor1 = c("black", "darkgoldenrod2", "gold"), curvecolor2 = c("darkgoldenrod2", "gold"))
+  (coug_elk_hunt_overlap_plot <- coug_elk_overPlot_h[[2]] + theme(legend.position = c(0.32, 0.88)) + coug_elk_overPlot_h[[1]] + theme(legend.position = c(0.32, 0.86)))
   ggsave(coug_elk_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_elk_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coug_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[3]], name1 = "Cougar", name2 = "White-tailed deer", name3 = "Hunters", dhat = coug_wtd_hunt_out, y_up = 0.6)
-  (coug_wtd_hunt_overlap_plot <- coug_wtd_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_wtd_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coug_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[3]], name1 = "Cougar", name2 = "White-tailed deer", name3 = "Hunters", 
+                                                       dhat = coug_wtd_hunt_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                       curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (coug_wtd_hunt_overlap_plot <- coug_wtd_overPlot_h[[2]] + theme(legend.position = c(0.40, 0.88)) + coug_wtd_overPlot_h[[1]] + theme(legend.position = c(0.40, 0.86)))
   ggsave(coug_wtd_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_wtd_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coug_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[4]], name1 = "Cougar", name2 = "Moose", name3 = "Hunters", dhat = coug_moose_hunt_out, y_up = 0.6)
-  (coug_moose_hunt_overlap_plot <- coug_moose_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coug_moose_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coug_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[4]], name1 = "Cougar", name2 = "Moose", name3 = "Hunters", 
+                                                         dhat = coug_moose_hunt_out, y_up = 0.6, overlapcolor = "skyblue3", 
+                                                         curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  (coug_moose_hunt_overlap_plot <- coug_moose_overPlot_h[[2]] + theme(legend.position = c(0.30, 0.88)) + coug_moose_overPlot_h[[1]] + theme(legend.position = c(0.30, 0.86)))
   ggsave(coug_moose_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coug_moose_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  wolf_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[5]], name1 = "Wolf", name2 = "Mule deer", name3 = "Hunters", dhat = wolf_md_hunt_out, y_up = 0.6)
-  (wolf_md_hunt_overlap_plot <- wolf_md_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + wolf_md_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  wolf_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[5]], name1 = "Wolf", name2 = "Mule deer", name3 = "Hunters", 
+                                                      dhat = wolf_md_hunt_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                      curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (wolf_md_hunt_overlap_plot <- wolf_md_overPlot_h[[2]] + theme(legend.position = c(0.30, 0.88)) + wolf_md_overPlot_h[[1]] + theme(legend.position = c(0.32, 0.86)))
   ggsave(wolf_md_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_wolf_md_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  wolf_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[6]], name1 = "Wolf", name2 = "White-tailed deer", name3 = "Hunters", dhat = wolf_wtd_hunt_out, y_up = 0.7)
-  (wolf_wtd_hunt_overlap_plot <- wolf_wtd_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + wolf_wtd_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  wolf_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[6]], name1 = "Wolf", name2 = "White-tailed deer", name3 = "Hunters", 
+                                                       dhat = wolf_wtd_hunt_out, y_up = 0.7, overlapcolor = "forestgreen", 
+                                                       curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (wolf_wtd_hunt_overlap_plot <- wolf_wtd_overPlot_h[[2]] + theme(legend.position = c(0.40, 0.88)) + wolf_wtd_overPlot_h[[1]] + theme(legend.position = c(0.40, 0.86)))
   ggsave(wolf_wtd_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_wolf_wtd_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  wolf_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[7]], name1 = "Wolf", name2 = "Moose", name3 = "Hunters", dhat = wolf_moose_hunt_out, y_up = 0.7)
-  (wolf_moose_hunt_overlap_plot <- wolf_moose_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + wolf_moose_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  wolf_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[7]], name1 = "Wolf", name2 = "Moose", name3 = "Hunters", 
+                                                         dhat = wolf_moose_hunt_out, y_up = 0.7, overlapcolor = "skyblue3", 
+                                                         curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  (wolf_moose_hunt_overlap_plot <- wolf_moose_overPlot_h[[2]] + theme(legend.position = c(0.35, 0.88)) + wolf_moose_overPlot_h[[1]] + theme(legend.position = c(0.35, 0.86)))
   ggsave(wolf_moose_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_wolf_moose_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
   # bear-md: hunter present bear n<50, hunter absent both n>50
-  bear_md_overPlot_h1 <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[8]], name1 = "Black bear", name2 = "Mule deer", name3 = "Hunters", dhat = bear_md_hunt_out1dhat, y_up = 0.6)
-  bear_md_overPlot_h4 <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[9]], name1 = "Black bear", name2 = "Mule deer", name3 = "Hunters", dhat = bear_md_hunt_out4dhat, y_up = 0.6)
-  (bear_md_hunt_overlap_plot <- bear_md_overPlot_h4[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_md_overPlot_h1[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bear_md_overPlot_h1 <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[8]], name1 = "Black bear", name2 = "Mule deer", name3 = "Hunters", 
+                                                       dhat = bear_md_hunt_out1dhat, y_up = 0.6, overlapcolor = "hotpink", 
+                                                       curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  bear_md_overPlot_h4 <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[9]], name1 = "Black bear", name2 = "Mule deer", name3 = "Hunters", 
+                                                       dhat = bear_md_hunt_out4dhat, y_up = 0.6, overlapcolor = "hotpink", 
+                                                       curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (bear_md_hunt_overlap_plot <- bear_md_overPlot_h4[[2]] + theme(legend.position = c(0.25, 0.88)) + bear_md_overPlot_h1[[1]] + theme(legend.position = c(0.25, 0.86)))
   ggsave(bear_md_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_md_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_elk_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[10]], name1 = "Black bear", name2 = "Elk", name3 = "Hunters", dhat = bear_elk_hunt_out, y_up = 0.6)
-  (bear_elk_hunt_overlap_plot <- bear_elk_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_elk_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bear_elk_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[10]], name1 = "Black bear", name2 = "Elk", name3 = "Hunters", 
+                                                       dhat = bear_elk_hunt_out, y_up = 0.6, overlapcolor = "darkgoldenrod1", 
+                                                       curvecolor1 = c("black", "darkgoldenrod2", "gold"), curvecolor2 = c("darkgoldenrod2", "gold"))
+  (bear_elk_hunt_overlap_plot <- bear_elk_overPlot_h[[2]] + theme(legend.position = c(0.32, 0.88)) + bear_elk_overPlot_h[[1]] + theme(legend.position = c(0.32, 0.86)))
   ggsave(bear_elk_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_elk_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[11]], name1 = "Black bear", name2 = "White-tailed deer", name3 = "Hunters", dhat = bear_wtd_hunt_out, y_up = 0.6)
-  (bear_wtd_hunt_overlap_plot <- bear_wtd_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_wtd_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bear_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[11]], name1 = "Black bear", name2 = "White-tailed deer", name3 = "Hunters", 
+                                                       dhat = bear_wtd_hunt_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                       curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (bear_wtd_hunt_overlap_plot <- bear_wtd_overPlot_h[[2]] + theme(legend.position = c(0.40, 0.88)) + bear_wtd_overPlot_h[[1]] + theme(legend.position = c(0.40, 0.86)))
   ggsave(bear_wtd_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_wtd_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[12]], name1 = "Black bear", name2 = "Moose", name3 = "Hunters", dhat = bear_moose_hunt_out, y_up = 0.6)
-  (bear_moose_hunt_overlap_plot <- bear_moose_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + bear_moose_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bear_moose_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[12]], name1 = "Black bear", name2 = "Moose", name3 = "Hunters", 
+                                                         dhat = bear_moose_hunt_out, y_up = 0.6, overlapcolor = "skyblue3", 
+                                                         curvecolor1 = c("black", "royalblue4", "steelblue1"), curvecolor2 = c("royalblue4", "steelblue1"))
+  (bear_moose_hunt_overlap_plot <- bear_moose_overPlot_h[[2]] + theme(legend.position = c(0.30, 0.88)) + bear_moose_overPlot_h[[1]] + theme(legend.position = c(0.30, 0.86)))
   ggsave(bear_moose_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bear_moose_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bob_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[13]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Hunters", dhat = bob_md_hunt_out, y_up = 0.6)
-  (bob_md_hunt_overlap_plot <- bob_md_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + bob_md_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bob_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[13]], name1 = "Bobcat", name2 = "Mule deer", name3 = "Hunters", 
+                                                     dhat = bob_md_hunt_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                     curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (bob_md_hunt_overlap_plot <- bob_md_overPlot_h[[2]] + theme(legend.position = c(0.35, 0.88)) + bob_md_overPlot_h[[1]] + theme(legend.position = c(0.35, 0.86)))
   ggsave(bob_md_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bob_md_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  bob_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[14]], name1 = "Bobcat", name2 = "White-tailed deer", name3 = "Hunters", dhat = bob_wtd_hunt_out, y_up = 0.6)
-  (bob_wtd_hunt_overlap_plot <- bob_wtd_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + bob_wtd_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  bob_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[14]], name1 = "Bobcat", name2 = "White-tailed deer", name3 = "Hunters", 
+                                                      dhat = bob_wtd_hunt_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                      curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (bob_wtd_hunt_overlap_plot <- bob_wtd_overPlot_h[[2]] + theme(legend.position = c(0.40, 0.88)) + bob_wtd_overPlot_h[[1]] + theme(legend.position = c(0.40, 0.86)))
   ggsave(bob_wtd_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_bob_wtd_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[15]], name1 = "Coyote", name2 = "Mule deer", name3 = "Hunters", dhat = coy_md_hunt_out, y_up = 0.6)
-  (coy_md_hunt_overlap_plot <- coy_md_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coy_md_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coy_md_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[15]], name1 = "Coyote", name2 = "Mule deer", name3 = "Hunters", 
+                                                     dhat = coy_md_hunt_out, y_up = 0.6, overlapcolor = "hotpink", 
+                                                     curvecolor1 = c("black", "maroon", "pink1"), curvecolor2 = c("maroon", "pink1"))
+  (coy_md_hunt_overlap_plot <- coy_md_overPlot_h[[2]] + theme(legend.position = c(0.35, 0.88)) + coy_md_overPlot_h[[1]] + theme(legend.position = c(0.35, 0.86)))
   ggsave(coy_md_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coy_md_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[16]], name1 = "Coyote", name2 = "White-tailed deer", name3 = "Hunters", dhat = coy_wtd_hunt_out, y_up = 0.6)
-  (coy_wtd_hunt_overlap_plot <- coy_wtd_overPlot_h[[2]] + theme(legend.position = c(0.29, 0.92)) + coy_wtd_overPlot_h[[1]] + theme(legend.position = c(0.29, 0.895)))
+  coy_wtd_overPlot_h <- overlap_anthro_activity_plots(pred_prey_hunt_overlap[[16]], name1 = "Coyote", name2 = "White-tailed deer", name3 = "Hunters", 
+                                                      dhat = coy_wtd_hunt_out, y_up = 0.6, overlapcolor = "forestgreen", 
+                                                      curvecolor1 = c("black", "darkgreen", "chartreuse3"), curvecolor2 = c("darkgreen", "chartreuse3"))
+  (coy_wtd_hunt_overlap_plot <- coy_wtd_overPlot_h[[2]] + theme(legend.position = c(0.40, 0.88)) + coy_wtd_overPlot_h[[1]] + theme(legend.position = c(0.40, 0.86)))
   ggsave(coy_wtd_hunt_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coy_wtd_hunter.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
+  
+  
+  #####  Patchwork plots for publication  #####
+  #'  Figure for main text
+  pred_prey_overlap_example <- coug_md_graze_overlap_plot / bear_md_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'a') + 
+    plot_annotation(title = "Effects of cattle and hunter activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_prey_overlap_example
+  ggsave(pred_prey_overlap_example, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_prey_cattle_hunter.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  #'  Cattle effects (supplemental figures)
+  pred_moose_overlap_cattle <- bear_moose_graze_overlap_plot / coug_moose_graze_overlap_plot +
+    plot_annotation(tag_levels = 'i') + 
+    plot_annotation(title = "Effects of cattle activity on predator - moose overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_moose_overlap_cattle
+  ggsave(pred_moose_overlap_cattle, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_moose_cattle.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_md_overlap_cattle_a <- bob_md_graze_overlap_plot / coug_md_graze_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  
+    plot_annotation(title = "Effects of cattle activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_md_overlap_cattle_a
+  ggsave(pred_md_overlap_cattle_a, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_md_cattle_1.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_md_overlap_cattle_b <- coy_md_graze_overlap_plot +
+    plot_annotation(tag_levels = 'i') + plot_layout(nrow = 2, ncol = 2) +
+    plot_annotation(title = "Effects of cattle activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_md_overlap_cattle_b
+  ggsave(pred_md_overlap_cattle_b, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_md_cattle_2.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_wtd_overlap_cattle_a <- bear_wtd_graze_overlap_plot / coug_wtd_graze_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  
+    plot_annotation(title = "Effects of hunter activity on predator - white-tailed deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_wtd_overlap_cattle_a
+  ggsave(pred_wtd_overlap_cattle_a, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_wtd_cattle_1.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_wtd_overlap_cattle_b <- coy_wtd_graze_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  plot_layout(nrow = 2, ncol = 2) +
+    plot_annotation(title = "Effects of hunter activity on predator - white-tailed deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_wtd_overlap_cattle_b
+  ggsave(pred_wtd_overlap_cattle_b, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_wtd_cattle_2.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  
+  #'  Hunter effects (supplemental figures)
+  pred_elk_overlap_hunt <- bear_elk_hunt_overlap_plot / coug_elk_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') + 
+    plot_annotation(title = "Effects of hunter activity on predator - elk overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_elk_overlap_hunt
+  ggsave(pred_elk_overlap_hunt, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_elk_hunter.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_moose_overlap_hunt <- coug_moose_hunt_overlap_plot / bear_moose_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') + 
+    plot_annotation(title = "Effects of hunter activity on predator - moose overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_moose_overlap_hunt
+  ggsave(pred_moose_overlap_hunt, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_moose_hunter.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_md_overlap_hunt_a <- bob_md_hunt_overlap_plot / coug_md_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  #plot_layout(widths = c(1, 1, 1, 1)) + #plot_layout(nrow = 2, ncol = 2) +
+    plot_annotation(title = "Effects of hunter activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_md_overlap_hunt_a
+  ggsave(pred_md_overlap_hunt_a, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_md_hunter_1.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_md_overlap_hunt_b <- coy_md_hunt_overlap_plot / wolf_md_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  
+    plot_annotation(title = "Effects of hunter activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_md_overlap_hunt_b
+  ggsave(pred_md_overlap_hunt_b, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_md_hunter_2.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_wtd_overlap_hunt_a <- bear_wtd_hunt_overlap_plot / bob_wtd_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  
+    plot_annotation(title = "Effects of hunter activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_wtd_overlap_hunt_a
+  ggsave(pred_wtd_overlap_hunt_a, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_wtd_hunter_1.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  pred_wtd_overlap_hunt_b <- coug_wtd_hunt_overlap_plot / coy_wtd_hunt_overlap_plot +
+    plot_annotation(tag_levels = 'i') +  
+    plot_annotation(title = "Effects of hunter activity on predator - mule deer overlap",
+                    theme = theme(plot.title = element_text(size = 24)))
+  pred_wtd_overlap_hunt_b
+  ggsave(pred_wtd_overlap_hunt_b, filename = "./Outputs/Temporal Overlap/Figures/Overlap_pred_wtd_hunter_2.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  
+  
   
   #'  Plot temporal overlap on and off allotments/public land
   overlap_landuse_plots <- function(dat, name1, name2, name3, dhat, y_up) {
@@ -1281,20 +1428,6 @@
   coy_wtd_overPlot_public <- overlap_landuse_plots(pred_prey_public_overlap[[16]], name1 = "Coyote", name2 = "White-tailed deer", name3 = "Public hunting", dhat = coy_wtd_public_out, y_up = 0.6)
   (coy_wtd_public_overlap_plot <- coy_wtd_overPlot_public[[2]] + theme(legend.position = c(0.29, 0.92)) + coy_wtd_overPlot_public[[1]] + theme(legend.position = c(0.29, 0.92)))
   ggsave(coy_wtd_public_overlap_plot, filename = "./Outputs/Temporal Overlap/Figures/Overlap_Plot_coy_wtd_public.tiff", width = 9, height = 6, dpi = 600, units = "in", device='tiff')
-  
-  
-  
-  ####  MASSIVE patchwork figures  ####
-  
-  #  Currently not working.... viewed each overlap plot separately instead of in pairs
-  moose_graze_pw <- bear_moose_graze_overlap_plot + coug_moose_graze_overlap_plot +
-    plot_annotation(tag_levels = 'a') + plot_layout(widths = c(1, 1, 2, 2)) + plot_layout(ncol = 2) + 
-    plot_annotation(
-      title = "Livestock grazing effects on predator-moose diel activity overlap",
-      theme = theme(plot.title = element_text(size = 24)))
-  
-  
-    
   
   
   #'  --------------------------------------------
@@ -1602,26 +1735,28 @@
   #'  ---------------------------------------------------------
   #'  Plot coefficient of overlap estimates for each species
   #'  Make one single facet_grid plot 
-  spp_overlap <- rbind(grazing_effects, allot_effects, hunter_effects, public_effects)
+  spp_overlap <- rbind(grazing_effects, hunter_effects) #allot_effects, public_effects
   
   spp_overlap_facet <- ggplot(spp_overlap, aes(x = Species, y = Dhat)) +   
-    geom_errorbar(aes(ymin = l95, ymax = u95, col = `Anthropogenic \ndisturbance`), width = 0.3) +
-    geom_point(stat = 'identity', aes(col = `Anthropogenic \ndisturbance`), size = 2.5) + 
-    scale_colour_bright() +
+    geom_errorbar(aes(ymin = l95, ymax = u95, col = `Anthropogenic \ndisturbance`), width = 0.4) +
+    geom_point(stat = 'identity', aes(col = `Anthropogenic \ndisturbance`), size = 3) + 
+    scale_colour_vibrant() +
+    # scale_colour_bright() +
     ylim(0,1) + theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    theme(text = element_text(size = 22),
+          axis.text.x = element_text(angle = 45, hjust = 1)) + 
     guides(color = "none") + 
     ggtitle("Species-specific differences in diel activity patterns") +
     xlab("Species") + ylab("Coefficient of overlap (Dhat)") +
     facet_grid(~`Anthropogenic \ndisturbance`, scales = "free", space = "free")
   spp_overlap_facet
-  ggsave(spp_overlap_facet, filename = "./Outputs/Temporal Overlap/Figures/SpeciesSpecific_Overlap_Plot.tiff", width = 9, height = 7, dpi = 600, units = "in", device='tiff')
+  ggsave(spp_overlap_facet, filename = "./Outputs/Temporal Overlap/Figures/SpeciesSpecific_Overlap_Plot.tiff", width = 10, height = 8, dpi = 600, units = "in", device='tiff')
   
   
   ####  Overlap plots  ####
   #'  ------------------
   #'  Plot temporal overlap when cattle and hunter activity are present vs absent
-  overlap_singlespp_plots <- function(dat, name1, name3, dhat, anthro, lp, y_up) {
+  overlap_singlespp_plots <- function(dat, name1, name3, dhat, anthro, lp, y_up, overlapcolor, curvecolor) {
     #'  Sample sizes for predators[1] and prey[2] when cattle/hunters are [p]resent or [a]bsent
     n1p <- dat[[4]]; n1a <- dat[[5]]
     #'  Create labels
@@ -1636,11 +1771,11 @@
     abs <- overdensity[overdensity$Anthro_Activity == "Absent",]
     
     overlap <- ggplot(overdensity, aes(x, densityA, colour = Anthro_Activity.x)) +
-      geom_line(lwd = 0.75) + 
-      geom_line(aes(x, densityB, colour = Anthro_Activity.y), lwd = 0.75) +  
+      geom_line(lwd = 1) + 
+      geom_line(aes(x, densityB, colour = Anthro_Activity.y), lwd = 1) +  
       geom_area(aes(y = pmin(densityA, densityB)),
-                alpha = 0.3, color = NA) +
-      geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 0.75) +  
+                alpha = 0.3, color = NA, fill = overlapcolor) + 
+      geom_line(aes(x, y, colour =  Species.z), linetype = "dashed", lwd = 1) +  
       scale_x_continuous(breaks = c(0, 1.57, 3.0, 4.71, 6.0),
                          labels = c('Midnight', 'Dawn', 'Noon', 'Dusk', 'Midnight')) +
       geom_vline(xintercept = pi/2, linetype="dotted") +
@@ -1649,49 +1784,90 @@
       theme(legend.background = element_rect(fill = "transparent"),
             legend.key = element_rect(colour = NA, fill = NA),
             legend.position = c(lp, 0.85)) +
-      theme(text = element_text(size = 16)) +
+      theme(text = element_text(size = 20)) +
       ylim(0, y_up) +
-      labs(x = "Time of day", y = "Density", color = paste0("\u0394 = ", Dhat, " (", Dhatl, " - ", Dhatu, ")"), title = paste0(name1, " activity curves")) +
-      scale_colour_manual(breaks = c("Absent", "Present", name3), labels = c(spp1a, spp1p, spp3), values = c("red", "blue", "black"))
+      labs(x = "Time of day", y = "Density", color = paste0("\u0394 = ", Dhat, " (", Dhatl, " - ", Dhatu, ")"), title = paste0(name1, " activity")) +
+      scale_colour_manual(breaks = c("Absent", "Present", name3), labels = c(spp1a, spp1p, spp3), values = curvecolor)
     plot(overlap)
     
     return(overlap)
   }
   ####  Cattle Activity Overlap Plots  ####
-  coug_overPlot_g <- overlap_singlespp_plots(graze_overlap[[1]], name1 = "Cougar", name3 = "Cattle", dhat = coug_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  coug_overPlot_g <- overlap_singlespp_plots(graze_overlap[[1]], name1 = "Cougar", name3 = "Cattle", dhat = coug_graze_out, 
+                                             anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(coug_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_coug_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_overPlot_g <- overlap_singlespp_plots(graze_overlap[[2]], name1 = "Black bear", name3 = "Cattle", dhat = bear_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  bear_overPlot_g <- overlap_singlespp_plots(graze_overlap[[2]], name1 = "Black bear", name3 = "Cattle", dhat = bear_graze_out, 
+                                             anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(bear_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_bear_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  bob_overPlot_g <- overlap_singlespp_plots(graze_overlap[[3]], name1 = "Bobcat", name3 = "Cattle", dhat = bob_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  bob_overPlot_g <- overlap_singlespp_plots(graze_overlap[[3]], name1 = "Bobcat", name3 = "Cattle", dhat = bob_graze_out, 
+                                            anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(bob_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_bob_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_overPlot_g <- overlap_singlespp_plots(graze_overlap[[4]], name1 = "Coyote", name3 = "Cattle", dhat = coy_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  coy_overPlot_g <- overlap_singlespp_plots(graze_overlap[[4]], name1 = "Coyote", name3 = "Cattle", dhat = coy_graze_out, 
+                                            anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(coy_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_coy_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  md_overPlot_g <- overlap_singlespp_plots(graze_overlap[[5]], name1 = "Mule deer", name3 = "Cattle", dhat = md_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  md_overPlot_g <- overlap_singlespp_plots(graze_overlap[[5]], name1 = "Mule deer", name3 = "Cattle", dhat = md_graze_out, 
+                                           anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(md_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_md_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  wtd_overPlot_g <- overlap_singlespp_plots(graze_overlap[[6]], name1 = "White-tailed deer", name3 = "Cattle", dhat = wtd_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  wtd_overPlot_g <- overlap_singlespp_plots(graze_overlap[[6]], name1 = "White-tailed deer", name3 = "Cattle", dhat = wtd_graze_out, 
+                                            anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(wtd_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_wtd_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  moose_overPlot_g <- overlap_singlespp_plots(graze_overlap[[7]], name1 = "Moose", name3 = "Cattle", dhat = moose_graze_out, anthro = "Cattle", lp = 0.22, y_up = 0.6)
+  moose_overPlot_g <- overlap_singlespp_plots(graze_overlap[[7]], name1 = "Moose", name3 = "Cattle", dhat = moose_graze_out, 
+                                              anthro = "Cattle", lp = 0.30, y_up = 0.85, overlapcolor = "darkorange3", curvecolor = c("orangered3", "sienna1", "black"))
   ggsave(moose_overPlot_g, filename = "./Outputs/Temporal Overlap/Figures/Overlap_moose_graze.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  
+
   ####  Hunter Activity Overlap Plots  ####
-  coug_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[1]], name1 = "Cougar", name3 = "Hunters", dhat = coug_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  coug_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[1]], name1 = "Cougar", name3 = "Hunters", dhat = coug_hunt_out, 
+                                             anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(coug_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_coug_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  wolf_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[2]], name1 = "Wolf", name3 = "Hunters", dhat = wolf_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  wolf_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[2]], name1 = "Wolf", name3 = "Hunters", dhat = wolf_hunt_out, 
+                                             anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(wolf_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_wolf_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  bear_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[3]], name1 = "Black bear", name3 = "Hunters", dhat = bear_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  bear_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[3]], name1 = "Black bear", name3 = "Hunters", dhat = bear_hunt_out, 
+                                             anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(bear_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_bear_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  bob_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[4]], name1 = "Bobcat", name3 = "Hunters", dhat = bob_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  bob_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[4]], name1 = "Bobcat", name3 = "Hunters", dhat = bob_hunt_out, 
+                                            anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(bob_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_bob_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  coy_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[5]], name1 = "Coyote", name3 = "Hunters", dhat = coy_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  coy_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[5]], name1 = "Coyote", name3 = "Hunters", dhat = coy_hunt_out, 
+                                            anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(coy_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_coy_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  md_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[6]], name1 = "Mule deer", name3 = "Hunters", dhat = md_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  md_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[6]], name1 = "Mule deer", name3 = "Hunters", dhat = md_hunt_out, 
+                                           anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(md_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_md_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  elk_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[7]], name1 = "Elk", name3 = "Hunters", dhat = elk_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  elk_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[7]], name1 = "Elk", name3 = "Hunters", dhat = elk_hunt_out, 
+                                            anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(elk_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_elk_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  wtd_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[8]], name1 = "White-tailed deer", name3 = "Hunters", dhat = wtd_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  wtd_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[8]], name1 = "White-tailed deer", name3 = "Hunters", dhat = wtd_hunt_out, 
+                                            anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(wtd_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_wtd_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
-  moose_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[9]], name1 = "Moose", name3 = "Hunters", dhat = moose_hunt_out, anthro = "Hunter", lp = 0.23, y_up = 0.6)
+  moose_overPlot_h <- overlap_singlespp_plots(hunt_overlap[[9]], name1 = "Moose", name3 = "Hunters", dhat = moose_hunt_out, 
+                                              anthro = "Hunter", lp = 0.30, y_up = 0.85, overlapcolor = "steelblue", curvecolor = c("navy", "deepskyblue", "black"))
   ggsave(moose_overPlot_h, filename = "./Outputs/Temporal Overlap/Figures/Overlap_moose_hunt.tiff", width = 6, height = 6, dpi = 600, units = "in", device='tiff')
+  
+  
+  #####  Patchwork figure for publication  #####
+  individual_spp_overlap <- (coug_overPlot_g + wtd_overPlot_g) / (wolf_overPlot_h + moose_overPlot_h) +
+    plot_annotation(tag_levels = 'a') + 
+    plot_annotation(title = "Effects of cattle and hunter activity on species-specific activity curves",
+                    theme = theme(plot.title = element_text(size = 24)))
+  individual_spp_overlap
+  ggsave(individual_spp_overlap, filename = "./Outputs/Temporal Overlap/Figures/Overlap_spp_specific_example.tiff", width = 12, height = 12, dpi = 600, units = "in", device='tiff')
+  
+  #'  Patchwork figures for supplemental materials
+  cattle_overlap_spp_specific <- bear_overPlot_g + bob_overPlot_g + coy_overPlot_g + 
+    md_overPlot_g + moose_overPlot_g + plot_annotation(tag_levels = 'a') + plot_layout(nrow = 3, ncol = 2) +
+    plot_annotation(title = "Effects of cattle activity on species-specific activity curves",
+                    theme = theme(plot.title = element_text(size = 24)))
+  cattle_overlap_spp_specific
+  ggsave(cattle_overlap_spp_specific, filename = "./Outputs/Temporal Overlap/Figures/Overlap_spp_specific_cattle.tiff", width = 14, height = 18, dpi = 600, units = "in", device='tiff')
+  
+  hunter_overlap_spp_specific <- bear_overPlot_h + bob_overPlot_h + coug_overPlot_h + coy_overPlot_h + 
+    elk_overPlot_h + md_overPlot_h + wtd_overPlot_h + plot_annotation(tag_levels = 'a') + plot_layout(nrow = 4, ncol = 2) +
+    plot_annotation(title = "Effects of hunter activity on species-specific activity curves",
+                    theme = theme(plot.title = element_text(size = 24)))
+  hunter_overlap_spp_specific
+  ggsave(hunter_overlap_spp_specific, filename = "./Outputs/Temporal Overlap/Figures/Overlap_spp_specific_hunter.tiff", width = 13, height = 21, dpi = 600, units = "in", device='tiff')
+  
   
   #'  Plot temporal overlap when on and off allotments/public land
   overlap_singlespp_landuse_plots <- function(dat, name1, name3, dhat, anthro, lp, y_up) {
